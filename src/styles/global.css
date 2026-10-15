@@ -257,43 +257,30 @@ p {
   will-change: transform;
 }
 
-/* A highlighted headline word: set in the pixel face, with a slim brand-blue marker stroke along
-   its baseline that draws in from the left once the word has risen into place. */
-.hl-word {
-  /* the key words are set in a pixel typeface, sized and spaced to sit on the headline's
-     baseline and x-height without crowding the light Geist around them */
-  font-family: 'Pixelify Sans Variable', 'Pixelify Sans', var(--font);
-  font-weight: 500;
-  font-size: 0.78em;
-  letter-spacing: -0.02em;
-  word-spacing: -0.08em;
-  padding-inline: 0.06em;
-  margin-inline: 0.02em -0.02em;
-  /* a pixel-thick brand-blue underline just below the letters */
-  background: linear-gradient(
-      transparent 86%,
-      var(--blue) 86%,
-      var(--blue) 96%,
-      transparent 96%
-    )
-    no-repeat 0 0 / 0% 100%;
-  animation: hl-draw 0.9s var(--ease) forwards;
-  animation-delay: var(--hl-delay, 0ms);
-  -webkit-box-decoration-break: clone;
-  box-decoration-break: clone;
+/* A word built from pixels: the real text keeps the layout and stays readable to assistive tech,
+   the canvas paints it in the headline's own font, a step heavier so strokes fill whole cells. */
+.pixel-word {
+  position: relative;
+  display: inline-block;
+  font-size: 0.9em;
+  font-weight: 520;
+  letter-spacing: 0.005em;
 }
 
-@keyframes hl-draw {
-  to {
-    background-size: 100% 100%;
-  }
+.pixel-word__text {
+  color: transparent;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .hl-word {
-    animation: none;
-    background-size: 100% 100%;
-  }
+.pixel-word__text::selection {
+  color: var(--white);
+}
+
+.pixel-word__canvas {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  max-width: none;
+  pointer-events: none;
 }
 
 /* ---------- Buttons & links ---------- */

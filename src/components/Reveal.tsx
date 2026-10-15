@@ -1,5 +1,6 @@
 import { motion, useReducedMotion, type HTMLMotionProps } from 'motion/react'
 import { Fragment, type ElementType, type ReactNode } from 'react'
+import { PixelWord } from './PixelWord'
 
 export const EASE_OUT = [0.16, 1, 0.3, 1] as const
 
@@ -14,7 +15,7 @@ interface RevealTextProps {
   immediate?: boolean
   stagger?: number
   id?: string
-  /** Words (without trailing punctuation) to highlight with a marker stroke. */
+  /** Words (without trailing punctuation) to build from pixels. */
   highlight?: string[]
 }
 
@@ -32,17 +33,14 @@ export function RevealText({
   const reduce = useReducedMotion()
   const Tag = as as ElementType
   const words = text.split(' ')
-  // a highlighted word gets its marker stroke once its line of the reveal has risen into place
+  // highlighted words are built from pixels like the footer wordmark, once their line has risen
   const renderWord = (word: string, i: number) => {
     const m = /^(.*?)([,.;:!?]*)$/.exec(word)
     const base = m ? m[1] : word
     if (!highlight.includes(base)) return word
-    const at = (delay + i * stagger) * 1000 + 650
     return (
       <>
-        <span className="hl-word" style={{ ['--hl-delay' as string]: `${reduce ? 0 : at}ms` }}>
-          {base}
-        </span>
+        <PixelWord text={base} delay={reduce ? 0 : (delay + i * stagger) * 1000 + 650} />
         {m?.[2]}
       </>
     )
