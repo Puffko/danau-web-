@@ -1,7 +1,8 @@
 import { motion, useReducedMotion } from 'motion/react'
 import { ArrowUpRight, Mail, Phone, Pin, ServiceIcon } from '../components/Icons'
 import { PageHero } from '../components/PageHero'
-import { EASE_OUT, Reveal, RevealText } from '../components/Reveal'
+import { EASE_OUT, Reveal } from '../components/Reveal'
+import { SectionTitle } from '../components/SectionTitle'
 import { PixelGlyph } from '../components/PixelGlyph'
 import { PixelCluster } from '../components/PixelCluster'
 import { PixelMountains } from '../components/PixelMountains'
@@ -25,7 +26,7 @@ export default function About() {
       <section className="section about-what" aria-labelledby="what-title">
         <div className="container">
           <div className="about-what__intro">
-            <RevealText as="h2" id="what-title" className="display-2" text={about.whatTitle} />
+            <SectionTitle id="what-title" className="display-2" text={about.whatTitle} />
             <Reveal>
               <p className="about-what__statement">
                 {about.whatParts.map((part, i) =>
@@ -59,7 +60,7 @@ export default function About() {
         <div className="container">
           <div className="skills-panel" data-theme="dark" data-pixel-host>
             <PixelMountains className="skills-panel__mountains" variant="low" seed={23} />
-            <RevealText as="h2" id="skills-title" className="display-2 skills-panel__title" text={about.skillsTitle} />
+            <SectionTitle id="skills-title" className="display-2 skills-panel__title" text={about.skillsTitle} tone="light" />
             <ul className="skills-panel__grid">
               {about.skills.map((skill) => (
                 <SkillCell key={skill.name} name={skill.name} area={skill.area} />

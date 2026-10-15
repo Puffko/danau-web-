@@ -20,7 +20,7 @@ interface Props {
   cell?: number
   /** Palette while active: pale blues for a blue or night ground, or the resting blues for light cards. */
   activeRamp?: 'live' | 'rest'
-  /** At rest show only a light scatter of pixels around the corner; the full mosaic grows in while active. */
+  /** Show nothing at rest; the mosaic ripples out of the corner only while active. */
   sparse?: boolean
 }
 
@@ -96,8 +96,8 @@ export function PixelCluster({
           const stray = d < R * 1.28 && hash(i, j, seed + 11) < 0.1
           if (d > edge && !stray) continue
 
-          // the resting scatter: stray pixels and a thin sprinkle towards the rim
-          const scatter = stray || (d > radius * 0.5 && hash(i, j, seed + 17) < 0.16)
+          // without sparse mode, the resting corner keeps a scatter of stray pixels
+          const scatter = !sparse && stray
 
           let grow = 1
           if (sparse && !scatter) {

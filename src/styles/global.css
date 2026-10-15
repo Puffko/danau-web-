@@ -257,6 +257,33 @@ p {
   will-change: transform;
 }
 
+/* A word drawn in pixels: the real text keeps the layout and stays readable to assistive tech,
+   the canvas paints over it. Set a step heavier so the strokes survive the grid. */
+.pixel-word {
+  position: relative;
+  display: inline-block;
+  font-weight: 600;
+  letter-spacing: -0.045em;
+}
+
+.pixel-word__text {
+  color: transparent;
+}
+
+.pixel-word__text::selection {
+  color: var(--white);
+}
+
+.pixel-word__canvas {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  max-width: none;
+  pointer-events: none;
+  /* a soft blue bloom, as if the pixels were lit */
+  filter: drop-shadow(0 0 0.12em rgba(93, 104, 255, 0.55));
+}
+
 /* ---------- Buttons & links ---------- */
 
 .btn {
@@ -1170,6 +1197,15 @@ p {
 }
 
 /* corner of pixel mosaic, the sphere's material on every card */
+.service-card__frame {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
 .service-card__pixels {
   position: absolute;
   top: 0;
@@ -1303,7 +1339,9 @@ p {
 }
 
 .process__title {
-  max-width: 14ch;
+  max-width: 20ch;
+  margin-inline: auto;
+  text-align: center;
 }
 
 .process-stage {
@@ -1582,16 +1620,17 @@ p {
 
 .expertise__grid {
   display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-  gap: clamp(36px, 6vw, 96px);
-  align-items: start;
+  gap: clamp(40px, 5vw, 72px);
 }
 
+/* heading and lead centred above the full-width grid, like the other section heads */
 .expertise__intro {
   display: grid;
+  justify-items: center;
   gap: 24px;
-  position: sticky;
-  top: calc(var(--header-h) + 32px);
+  max-width: 760px;
+  margin-inline: auto;
+  text-align: center;
 }
 
 .expertise__intro .display-2 {
@@ -1600,7 +1639,7 @@ p {
 
 .domains {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   border-top: 1px solid var(--line);
 }
 
@@ -1616,7 +1655,7 @@ p {
   transition: background-color 0.4s var(--ease);
 }
 
-.domains__cell:nth-child(even) {
+.domains__cell:not(:nth-child(3n + 1)) {
   border-left: 1px solid var(--line);
 }
 
@@ -1711,6 +1750,7 @@ p {
 
 .clients__title {
   margin-bottom: clamp(32px, 5vh, 64px);
+  text-align: center;
 }
 
 .clients__stage {
@@ -2231,7 +2271,9 @@ p {
 }
 
 .skills-panel__title {
-  max-width: 14ch;
+  max-width: 20ch;
+  margin-inline: auto;
+  text-align: center;
 }
 
 .skills-panel__grid {
@@ -2867,13 +2909,20 @@ p {
   }
 
   /* below the full nav the side-by-side intro squeezes the grids into narrow cells */
-  .expertise__grid,
   .site-footer__top {
     grid-template-columns: 1fr;
   }
 
-  .expertise__intro {
-    position: static;
+  .domains {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .domains__cell:not(:nth-child(3n + 1)) {
+    border-left: 0;
+  }
+
+  .domains__cell:nth-child(even) {
+    border-left: 1px solid var(--line);
   }
 
   .skills-panel__grid {

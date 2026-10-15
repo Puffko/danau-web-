@@ -7,6 +7,7 @@ import { EASE_OUT, Reveal, RevealText } from '../components/Reveal'
 import { PixelCluster } from '../components/PixelCluster'
 import { SphereDiagram } from '../components/SphereDiagram'
 import { useHover } from '../hooks/useHover'
+import { SectionTitle } from '../components/SectionTitle'
 import { ServiceCard } from '../components/ServiceCard'
 import { home, routes, services } from '../data/site'
 import { scrollToTarget, useLenis } from '../hooks/smoothScroll'
@@ -18,7 +19,15 @@ function Hero() {
       <div className="hero-glow" aria-hidden="true" />
       <PixelMountains className="hero__mountains" variant="hero" seed={3} />
       <div className="container hero__inner">
-        <RevealText as="h1" immediate className="hero__title" text={home.hero.title} delay={0.2} stagger={0.05} />
+        <RevealText
+          as="h1"
+          immediate
+          className="hero__title"
+          text={home.hero.title}
+          delay={0.2}
+          stagger={0.05}
+          pixel={home.hero.pixelWords}
+        />
         <Reveal immediate delay={0.75} className="hero__aside">
           <p className="hero__text">{home.hero.text}</p>
           <div className="hero__actions">
@@ -51,7 +60,7 @@ function Partner() {
   return (
     <section id="o-nas" className="section partner" aria-labelledby="partner-title">
       <div className="container">
-        <RevealText as="h2" id="partner-title" className="display-2 process__title" text={partner.title} />
+        <SectionTitle id="partner-title" className="display-2 process__title" text={partner.title} />
         <SphereDiagram
           mirrored
           resultLast
@@ -80,7 +89,7 @@ function Services() {
   return (
     <section id="sluzby" className="section services" tabIndex={-1}>
       <div className="container">
-        <RevealText as="h2" className="display-2 section-title--center" text={home.services.title} />
+        <SectionTitle className="display-2 section-title--center" text={home.services.title} />
         <ul className="service-grid">
           {services.map((s, i) => (
             <Reveal as="li" key={s.slug} delay={(i % 3) * 0.08} className="service-grid__item">
@@ -98,7 +107,7 @@ function Process() {
   return (
     <section className="section process" aria-labelledby="process-title">
       <div className="container">
-        <RevealText as="h2" id="process-title" className="display-2 process__title" text={home.process.title} />
+        <SectionTitle id="process-title" className="display-2 process__title" text={home.process.title} />
         <SphereDiagram
           resultLast
           notes={[
@@ -118,7 +127,7 @@ function Expertise() {
     <section className="section expertise" aria-labelledby="expertise-title">
       <div className="container expertise__grid">
         <div className="expertise__intro">
-          <RevealText as="h2" id="expertise-title" className="display-2" text={expertise.title} />
+          <SectionTitle id="expertise-title" className="display-2" text={expertise.title} />
           <Reveal>
             <p className="lead">{expertise.lead}</p>
           </Reveal>
@@ -222,7 +231,7 @@ function Clients() {
       <div className="clients__sticky">
         <div className="clients__bg" aria-hidden="true" />
         <div className="container clients__inner" ref={innerRef}>
-          <RevealText as="h2" className="display-2 clients__title" text={home.clients.title} />
+          <SectionTitle className="display-2 clients__title" text={home.clients.title} tone="light" />
           <div className="clients__stage">
             <ol className="clients__list">
               {items.map((item, i) => (

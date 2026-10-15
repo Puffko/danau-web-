@@ -6,6 +6,7 @@ import { PageHero } from '../components/PageHero'
 import { PixelCluster } from '../components/PixelCluster'
 import { useHover } from '../hooks/useHover'
 import { Reveal, RevealText } from '../components/Reveal'
+import { SectionTitle } from '../components/SectionTitle'
 import { ServiceCard } from '../components/ServiceCard'
 import { serviceBySlug, services } from '../data/site'
 import NotFound from './NotFound'
@@ -90,7 +91,7 @@ export default function Service() {
 
       <section className="section section--tight related">
         <div className="container">
-          <RevealText as="h2" className="display-3" text="Ďalšie služby" />
+          <SectionTitle className="display-3 section-title--center" text="Ďalšie služby" />
           <ul className="related__grid">
             {others.map((s, i) => (
               <Reveal as="li" key={s.slug} delay={i * 0.05}>

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import type { Service } from '../data/site'
 import { ArrowRight, ServiceIcon } from './Icons'
 import { PixelCluster } from './PixelCluster'
+import { PixelFrame } from './PixelFrame'
 
 interface Props {
   service: Service
@@ -23,6 +24,7 @@ export function ServiceCard({ service, compact = false, moreLabel = 'Zistiť via
       onFocus={() => setActive(true)}
       onBlur={() => setActive(false)}
     >
+      <PixelFrame className="service-card__frame" active={active} seed={seed} cell={compact ? 7 : 8} />
       <PixelCluster
         className="service-card__pixels"
         active={active}
