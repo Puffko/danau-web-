@@ -1082,6 +1082,8 @@ a.lang-switch__item:hover {
 }
 
 .about-hero__inner {
+  --about-h1: clamp(3rem, 1.25rem + 5.2vw, 6.25rem);
+  --copy-pad: clamp(0px, 2vh, 24px);
   flex: 1;
   display: grid;
   grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
@@ -1092,11 +1094,11 @@ a.lang-switch__item:hover {
   grid-column: 2;
   grid-row: 1;
   align-self: start;
-  padding-top: clamp(0px, 2vh, 24px);
+  padding-top: var(--copy-pad);
 }
 
 .about-hero__title {
-  font-size: clamp(3rem, 1.25rem + 5.2vw, 6.25rem);
+  font-size: var(--about-h1);
   font-weight: 300;
   line-height: 1.02;
   letter-spacing: -0.045em;
@@ -1196,6 +1198,37 @@ a.lang-switch__item:hover {
   width: min(100%, 62vh, 600px);
   width: min(100%, 62svh, 600px);
   aspect-ratio: 1;
+}
+
+.about-hero__mark-box {
+  position: absolute;
+  inset: 0;
+}
+
+/* Two columns: the D stands beside the copy, its top level with the title's capitals and its
+   foot no lower than the copy's last line. The mark spans the copy's row; its square is the
+   largest that fits below that top line. */
+@media (min-width: 961px) {
+  .about-hero__inner {
+    /* cap height of the title: 0.148em below the top of its line box */
+    --mark-top: calc(var(--copy-pad) + var(--about-h1) * 0.148);
+    align-content: start;
+  }
+
+  .about-hero__mark {
+    --mark-snap: 0;
+    container-type: size;
+    align-self: stretch;
+    justify-self: stretch;
+    width: auto;
+    aspect-ratio: auto;
+  }
+
+  .about-hero__mark-box {
+    inset: var(--mark-top) auto auto 0;
+    width: min(100cqw, 100cqh - var(--mark-top));
+    aspect-ratio: 1;
+  }
 }
 
 /* the canvas bleeds 9% around the mark for its field; a replaced element needs explicit sizes */

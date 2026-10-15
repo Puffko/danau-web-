@@ -9,9 +9,10 @@ import { PixelMountains } from './PixelMountains'
 import { EASE_OUT, Reveal, RevealReady, RevealText } from './Reveal'
 
 /**
- * The About hero: DANAU's own mark, built from the site's matrix, stands in the range beside the
- * sentence that says who the company is, with one action and the company's signature under a
- * hairline. Under 960px the mark and the title lock up like the wordmark.
+ * The About hero: DANAU's own mark, built from the site's matrix, stands beside the sentence that
+ * says who the company is (its top level with the title, its foot with the copy's last line), with
+ * one action and the company's signature under a hairline. Under 960px the mark and the title lock
+ * up like the wordmark.
  */
 export function AboutHero() {
   const { t, paths } = useI18n()
@@ -83,7 +84,10 @@ export function AboutHero() {
           </div>
         </div>
         <div className="about-hero__mark" aria-hidden="true">
-          <PixelMark className="about-hero__mark-canvas" />
+          {/* the D's own square: top-aligned with the title on desktop, filling the mark below */}
+          <div className="about-hero__mark-box">
+            <PixelMark className="about-hero__mark-canvas" />
+          </div>
         </div>
       </div>
     </section>
