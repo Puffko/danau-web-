@@ -7,8 +7,8 @@ import { hash, noise1, noise2, smooth } from '../lib/noise'
  * One fixed magnitude ramp (size + colour) carries height and light: dots are
  * small and blue on the ridges and grow paler and denser towards the base, where
  * the hero's glow is brightest. On load the range ignites bottom-up in a scan
- * sweep, then idles with sparse twinkles and a slow scan band; the pointer acts
- * as a lens that enlarges and brightens nearby dots.
+ * sweep, then idles with sparse twinkles; the pointer acts as a lens that
+ * enlarges and brightens nearby dots.
  */
 
 type Variant = 'hero' | 'low'
@@ -136,8 +136,6 @@ export function PixelMountains({ variant = 'hero', seed = 3, className }: Props)
       pointer.x += (pointer.tx - pointer.x) * 0.14
       pointer.y += (pointer.ty - pointer.y) * 0.14
       const lensR = width < 700 ? 90 : 150
-      // slow scan band sweeping left to right
-      const scanX = reduce ? -9999 : ((t / 7000) % 1.25) * width * 1.1 - width * 0.05
       for (let l = 0; l < 6; l++) levelSizes[l] = SIZE[l] * cell
 
       let anyIntro = false
@@ -161,8 +159,6 @@ export function PixelMountains({ variant = 'hero', seed = 3, className }: Props)
             }
           } else if (!reduce) {
             if (d.twinkle && Math.sin(t * 0.0011 + d.phase) > 0.93) lvl = Math.min(5, lvl + 1)
-            const sd = Math.abs(d.x - scanX)
-            if (sd < 46 && d.level > 0) lvl = Math.min(5, lvl + (sd < 18 ? 2 : 1))
           }
           let size = levelSizes[d.level] * grow
           if (pointer.active) {

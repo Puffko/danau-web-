@@ -1230,85 +1230,57 @@ p {
   padding-bottom: clamp(56px, 7vw, 96px);
 }
 
-.marquee {
-  margin-top: clamp(56px, 7vw, 96px);
-  padding-block: clamp(20px, 3vw, 36px);
-  border-block: 1px solid var(--line);
-  overflow: hidden;
-}
-
-.marquee__track {
-  display: flex;
-  width: max-content;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
-  animation: marquee 42s linear infinite;
-}
-
-.marquee {
-  position: relative;
-}
-
-.marquee__track:hover,
-.marquee.is-paused .marquee__track {
-  animation-play-state: paused;
-}
-
-.marquee__toggle {
-  position: absolute;
-  right: var(--gutter);
-  bottom: 10px;
-  z-index: 1;
+.certs {
   display: grid;
-  place-items: center;
-  width: 32px;
-  height: 32px;
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  background: var(--white);
-  color: var(--ink);
-  transition:
-    background-color 0.3s var(--ease),
-    color 0.3s var(--ease);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: clamp(56px, 7vw, 96px);
+  border-top: 1px solid var(--line);
 }
 
-.marquee__toggle:hover {
-  background: var(--blue);
-  border-color: var(--blue);
-  color: var(--white);
-}
-
-.marquee__group {
+.certs__item {
   display: flex;
-}
-
-.marquee__item {
-  display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: space-between;
   gap: clamp(28px, 4vw, 56px);
-  padding-right: clamp(28px, 4vw, 56px);
+  min-width: 0;
+  padding: clamp(20px, 2.4vw, 32px) clamp(16px, 2vw, 28px) clamp(24px, 3vw, 40px);
+  border-bottom: 1px solid var(--line);
 }
 
-.marquee__text {
-  font-size: clamp(2.25rem, 1.3rem + 3.4vw, 4.75rem);
-  font-weight: 280;
-  letter-spacing: -0.045em;
-  line-height: 1.1;
-  white-space: nowrap;
-  color: var(--ink);
+.certs__item + .certs__item {
+  border-left: 1px solid var(--line);
 }
 
-.marquee__sep {
-  width: clamp(22px, 2vw, 32px);
+/* the long certification takes two cells, so 7 items fill two full rows of four */
+.certs__item--wide {
+  grid-column: span 2;
+}
+
+/* first cell of the second row starts flush, without a divider */
+.certs__item:nth-child(4) {
+  border-left: 0;
+}
+
+.certs__mark {
+  width: 22px;
   height: auto;
   color: var(--blue);
+  transition: transform 0.8s var(--ease);
 }
 
-@keyframes marquee {
-  to {
-    transform: translateX(-50%);
-  }
+.certs__item:hover .certs__mark {
+  transform: rotate(90deg);
 }
+
+.certs__name {
+  font-size: clamp(1.75rem, 1.1rem + 2.1vw, 3.25rem);
+  font-weight: 280;
+  letter-spacing: -0.04em;
+  line-height: 1.08;
+  color: var(--ink);
+  overflow-wrap: break-word;
+}
+
 
 /* ---------- Clients ---------- */
 
@@ -1554,27 +1526,24 @@ p {
   padding: clamp(64px, 9vw, 128px) clamp(24px, 6vw, 96px);
   border-radius: var(--radius-xl);
   background:
-    radial-gradient(80% 90% at 50% 120%, rgba(179, 194, 255, 0.45), transparent 60%),
-    var(--blue);
+    radial-gradient(90% 80% at 50% 115%, #3a44ff 0%, rgba(24, 24, 236, 0) 70%),
+    linear-gradient(180deg, #0d0f9e 0%, var(--blue) 70%);
   color: var(--white);
   text-align: center;
 }
 
-.cta-band__pattern {
+.cta-band__mountains {
   position: absolute;
-  inset: 0;
+  inset: auto 0 0;
+  width: 100%;
+  height: 90%;
   z-index: -1;
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.28) 1px, transparent 1.5px);
-  background-size: 12px 12px;
-  -webkit-mask-image: radial-gradient(70% 80% at 50% 105%, #000, transparent 75%);
-  mask-image: radial-gradient(70% 80% at 50% 105%, #000, transparent 75%);
+  -webkit-mask-image: linear-gradient(to top, #000 50%, transparent 100%);
+  mask-image: linear-gradient(to top, #000 50%, transparent 100%);
 }
 
-.cta-band__symbol {
-  position: absolute;
-  z-index: -1;
-  color: var(--white);
-  opacity: 0.08;
+.cta-band__inner {
+  position: relative;
 }
 
 .cta-band__title {
@@ -2237,6 +2206,20 @@ p {
 }
 
 @media (max-width: 960px) {
+  .certs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .certs__item:nth-child(n) {
+    border-left: 0;
+  }
+
+  .certs__item:not(.certs__item--wide):nth-child(2),
+  .certs__item:not(.certs__item--wide):nth-child(5),
+  .certs__item:not(.certs__item--wide):nth-child(7) {
+    border-left: 1px solid var(--line);
+  }
+
   .hero__inner {
     grid-template-columns: 1fr;
     align-items: start;
@@ -2334,33 +2317,6 @@ p {
     animation: none;
   }
 
-  .marquee__track {
-    animation: none;
-    width: auto;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .marquee__group + .marquee__group,
-  .marquee__toggle {
-    display: none;
-  }
-
-  .marquee__group {
-    flex-wrap: wrap;
-    justify-content: center;
-    row-gap: 12px;
-  }
-
-  .marquee__track {
-    -webkit-mask-image: none;
-    mask-image: none;
-  }
-
-  .marquee__text {
-    white-space: normal;
-    font-size: clamp(1.75rem, 1.2rem + 2.6vw, 4.75rem);
-  }
 
   .service-card,
   .skill,

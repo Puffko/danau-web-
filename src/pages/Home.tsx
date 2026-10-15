@@ -1,7 +1,7 @@
 import { motion, useMotionValueEvent, useReducedMotion, useScroll } from 'motion/react'
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, ArrowUpRight, DSymbol, Pause, Play } from '../components/Icons'
+import { ArrowRight, ArrowUpRight, DSymbol } from '../components/Icons'
 import { PixelMountains } from '../components/PixelMountains'
 import { EASE_OUT, Reveal, RevealText } from '../components/Reveal'
 import { PixelSphere } from '../components/PixelSphere'
@@ -235,7 +235,6 @@ function Process() {
 
 function Expertise() {
   const certs = home.expertise.items
-  const [paused, setPaused] = useState(false)
   return (
     <section className="section expertise">
       <div className="container split">
@@ -252,33 +251,15 @@ function Expertise() {
         </div>
       </div>
 
-      <ul className="sr-only">
-        {certs.map((c) => (
-          <li key={c}>{c}</li>
-        ))}
-      </ul>
-      <div className={`marquee${paused ? ' is-paused' : ''}`}>
-        <button
-          type="button"
-          className="marquee__toggle"
-          aria-pressed={paused}
-          aria-label="Pozastaviť posúvanie certifikácií"
-          onClick={() => setPaused((v) => !v)}
-        >
-          {paused ? <Play /> : <Pause />}
-        </button>
-        <div className="marquee__track" aria-hidden="true">
-          {[0, 1].map((copy) => (
-            <div className="marquee__group" key={copy}>
-              {certs.map((c) => (
-                <span className="marquee__item" key={c}>
-                  <span className="marquee__text">{c}</span>
-                  <DSymbol className="marquee__sep" />
-                </span>
-              ))}
-            </div>
+      <div className="container">
+        <ul className="certs">
+          {certs.map((c) => (
+            <li key={c} className={`certs__item${c.length > 14 ? ' certs__item--wide' : ''}`}>
+              <DSymbol className="certs__mark" />
+              <span className="certs__name">{c}</span>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   )

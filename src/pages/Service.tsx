@@ -81,7 +81,7 @@ export default function Service() {
         </div>
       </section>
 
-      <CtaBand title={service.ctaTitle} />
+      <CtaBand title={service.ctaTitle} seed={index * 3 + 2} />
 
       <section className="section section--tight related">
         <div className="container">

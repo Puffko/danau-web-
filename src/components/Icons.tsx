@@ -112,19 +112,6 @@ export const Star = (props: P) => (
   </svg>
 )
 
-export const Pause = (props: P) => (
-  <svg {...base({ viewBox: '0 0 16 16', width: 14, height: 14, strokeWidth: 2, ...props })}>
-    <path d="M5.5 3.5v9" />
-    <path d="M10.5 3.5v9" />
-  </svg>
-)
-
-export const Play = (props: P) => (
-  <svg {...base({ viewBox: '0 0 16 16', width: 14, height: 14, strokeWidth: 1.6, ...props })}>
-    <path d="M5 3.2v9.6a.5.5 0 0 0 .76.43l7.6-4.8a.5.5 0 0 0 0-.86l-7.6-4.8A.5.5 0 0 0 5 3.2Z" fill="currentColor" />
-  </svg>
-)
-
 export const Menu = (props: P) => (
   <svg {...base(props)}>
     <path d="M4 8h16" />
