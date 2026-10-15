@@ -748,7 +748,8 @@ p {
   background:
     radial-gradient(34% 30% at 28% 82%, rgba(93, 104, 255, 0.5), transparent 70%),
     radial-gradient(30% 26% at 76% 78%, rgba(179, 194, 255, 0.28), transparent 70%);
-  mix-blend-mode: screen;
+  /* a plain composited layer (no blend mode), so the drift costs no repaint */
+  will-change: transform;
   animation: glow-drift 16s var(--ease-io) infinite alternate;
 }
 
@@ -898,9 +899,7 @@ p {
   border-radius: var(--radius-lg);
   background:
     radial-gradient(90% 80% at 100% 115%, rgba(24, 24, 236, 0.55), transparent 70%),
-    rgba(10, 12, 52, 0.62);
-  -webkit-backdrop-filter: blur(14px);
-  backdrop-filter: blur(14px);
+    rgba(10, 12, 52, 0.88);
   box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.7);
   color: rgba(255, 255, 255, 0.78);
 }
@@ -1383,7 +1382,15 @@ p {
   clip-path: inset(-30% -30% -30% 50%);
 }
 
-.pixel-sphere__soft canvas {
+.pixel-sphere .pixel-sphere__soft canvas {
+  inset: -12%;
+  width: 124%;
+  max-width: none;
+  height: 124%;
+}
+
+/* fallback for browsers that cannot blur inside a canvas */
+.pixel-sphere.is-css-blur .pixel-sphere__soft canvas {
   filter: blur(clamp(10px, 1.7cqi, 22px)) saturate(1.1);
 }
 
@@ -2807,7 +2814,7 @@ p {
     font-size: 1.0625rem;
   }
 
-  .pixel-sphere__soft canvas {
+  .pixel-sphere.is-css-blur .pixel-sphere__soft canvas {
     filter: blur(14px);
   }
 }

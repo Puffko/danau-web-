@@ -12,6 +12,8 @@ import { hash, noise2 } from '../lib/noise'
 const RAMP = ['#0b0d8a', '#0d0f9e', '#1010dc', '#1818ec', '#2a35ff', '#4a55ff', '#5d68ff', '#8796ff', '#b3c2ff', '#dae3ff']
 // The out-of-focus half carries white text, so it keeps to the deep end of the ramp.
 const DEEP = 6
+// The soft canvas overhangs the sphere by this fraction per side, so the blur has room to spread.
+const PAD = 0.12
 
 interface Props {
   cells?: number
@@ -51,17 +53,36 @@ export function PixelSphere({ cells = 34, className, mirrored = false, seed = 0,
     let visible = false
     let started = -1
     let last = 0
+    let frame = 0
+    let introOver = reduce
     const pointer = { x: -1e4, y: -1e4, on: false }
+
+    // The out-of-focus half is painted small and blurred inside the canvas, then scaled up by
+    // the browser: a CSS blur on a full-size canvas would be re-rendered on every change and is
+    // what made the page stutter. Browsers without canvas filters fall back to the CSS blur.
+    const off = document.createElement('canvas')
+    const o = off.getContext('2d')
+    if (!o) return
+    const canvasBlur = 'filter' in c2
+    wrap.classList.toggle('is-css-blur', !canvasBlur)
+    let res = 0
+    let dpr = 1
+    // Once assembled, the crisp half repaints only the cells whose colour changed.
+    let shown = new Int8Array(cells * cells).fill(-1)
+    let fullPaint = true
 
     const resize = () => {
       size = wrap.getBoundingClientRect().width
-      const dpr = Math.min(window.devicePixelRatio || 1, 2)
-      for (const cv of [crisp, soft]) {
-        cv.width = Math.round(size * dpr)
-        cv.height = Math.round(size * dpr)
-      }
+      dpr = Math.min(window.devicePixelRatio || 1, 2)
+      shown = new Int8Array(cells * cells).fill(-1)
+      fullPaint = true
+      crisp.width = Math.round(size * dpr)
+      crisp.height = Math.round(size * dpr)
       c1.setTransform(dpr, 0, 0, dpr, 0, 0)
-      c2.setTransform(dpr, 0, 0, dpr, 0, 0)
+      res = Math.round(cells * 3 * (1 + 2 * PAD))
+      soft.width = soft.height = off.width = off.height = res
+      const k = size ? res / (size * (1 + 2 * PAD)) : 1
+      o.setTransform(k, 0, 0, k, size * PAD * k, size * PAD * k)
     }
 
     const field = (i: number, j: number, t: number) => {
@@ -76,20 +97,31 @@ export function PixelSphere({ cells = 34, className, mirrored = false, seed = 0,
       raf = 0
       if (started < 0) started = now
       const t = reduce ? 0 : now - started
-      // ~30fps is plenty for a slow flow
-      if (now - last < 32 && started !== now) {
+      // ~30fps while assembling; afterwards the flow is slow, so ~15fps reads the same
+      if (now - last < (introOver ? 66 : 32) && started !== now) {
         schedule()
         return
       }
       last = now
+      // The out-of-focus half is re-blurred by the compositor every time it changes, which is
+      // the costly part; once assembled it only needs refreshing a few times a second.
+      const paintSoft = !introOver || ++frame % 4 === 0
 
       const n = cells
       const cell = size / n
       const c = n / 2
       // leave a margin of cells around the disc for the stray rim pixels
       const r = c - 1.4
-      c1.clearRect(0, 0, size, size)
-      c2.clearRect(0, 0, size, size)
+      // during the intro every cell is moving, so the whole half is redrawn
+      const steady = introOver && !fullPaint
+      if (!steady) c1.clearRect(0, 0, size, size)
+      if (introOver) fullPaint = false
+      if (paintSoft) {
+        o.save()
+        o.setTransform(1, 0, 0, 1, 0, 0)
+        o.clearRect(0, 0, res, res)
+        o.restore()
+      }
       let intro = false
 
       for (let i = 0; i < n; i++) {
@@ -128,20 +160,42 @@ export function PixelSphere({ cells = 34, className, mirrored = false, seed = 0,
               const pd = Math.hypot(x + cell / 2 - pointer.x, y + cell / 2 - pointer.y) / cell
               if (pd < 3) k = Math.min(RAMP.length - 1, k + (pd < 1.5 ? 3 : 2))
             }
-            const s = cell * grow
-            c1.globalAlpha = Math.min(1, grow * 1.4)
-            c1.fillStyle = RAMP[k]
-            c1.fillRect(x + (cell - s) / 2, y + (cell - s) / 2, s + 0.5, s + 0.5)
+            if (introOver) {
+              const at = i * n + j
+              if (!steady || shown[at] !== k) {
+                shown[at] = k
+                // snapped to device pixels so a repainted cell covers exactly its old square
+                const x0 = Math.round(x * dpr) / dpr
+                const y0 = Math.round(y * dpr) / dpr
+                c1.fillStyle = RAMP[k]
+                c1.fillRect(x0, y0, Math.round((x + cell) * dpr) / dpr - x0, Math.round((y + cell) * dpr) / dpr - y0)
+              }
+            } else {
+              const s = cell * grow
+              c1.globalAlpha = Math.min(1, grow * 1.4)
+              c1.fillStyle = RAMP[k]
+              c1.fillRect(x + (cell - s) / 2, y + (cell - s) / 2, s + 0.5, s + 0.5)
+            }
           }
-          if (i >= c - 2 && d <= r + 0.6) {
-            c2.globalAlpha = grow
-            c2.fillStyle = RAMP[Math.floor(v * DEEP)]
-            c2.fillRect(x, y, cell + 0.5, cell + 0.5)
+          if (paintSoft && i >= c - 2 && d <= r + 0.6) {
+            o.globalAlpha = grow
+            o.fillStyle = RAMP[Math.floor(v * DEEP)]
+            o.fillRect(x, y, cell + 0.5, cell + 0.5)
           }
         }
       }
       c1.globalAlpha = 1
-      c2.globalAlpha = 1
+      o.globalAlpha = 1
+      if (paintSoft) {
+        c2.clearRect(0, 0, res, res)
+        if (canvasBlur) c2.filter = `blur(${(res * 0.03).toFixed(1)}px) saturate(1.1)`
+        c2.drawImage(off, 0, 0)
+        c2.filter = 'none'
+      }
+      if (!intro && !introOver) {
+        introOver = true
+        fullPaint = true
+      }
 
       if (!reduce || intro || pointer.on) schedule()
     }

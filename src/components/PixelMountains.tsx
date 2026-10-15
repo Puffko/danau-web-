@@ -9,6 +9,10 @@ import { hash, noise1, noise2, smooth } from '../lib/noise'
  * the hero's glow is brightest. On load the range ignites bottom-up in a scan
  * sweep, then idles with sparse twinkles; the pointer acts as a lens that
  * enlarges and brightens nearby dots.
+ *
+ * Only the intro repaints the whole canvas. Once it is over, a frame repaints just
+ * the cells whose twinkle flipped and the box around the lens, so an idle hero
+ * costs next to nothing to keep alive.
  */
 
 type Variant = 'hero' | 'low'
@@ -46,6 +50,8 @@ function profile(u: number, variant: Variant, seed: number, narrow: boolean) {
 interface Dot {
   x: number
   y: number
+  col: number
+  row: number
   level: number
   delay: number
   phase: number
@@ -63,6 +69,14 @@ export function PixelMountains({ variant = 'hero', seed = 3, className }: Props)
 
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     let dots: Dot[] = []
+    let twinkles: number[] = []
+    let lit = new Uint8Array(0)
+    // dot index per grid cell (column-major, row 0 at the bottom), -1 where the cell is empty
+    let grid = new Int32Array(0)
+    let cols = 0
+    let rows = 0
+    let lensBox: [number, number, number, number] | null = null
+    let lastIdle = 0
     let cell = 8
     let width = 0
     let height = 0
@@ -78,16 +92,18 @@ export function PixelMountains({ variant = 'hero', seed = 3, className }: Props)
       width = rect.width
       height = rect.height
       if (!width || !height) return
-      dpr = Math.min(window.devicePixelRatio || 1, 2)
+      // dots are crisp squares; 1.5x is indistinguishable from 2x and paints ~45% fewer pixels
+      dpr = Math.min(window.devicePixelRatio || 1, 1.5)
       canvas.width = Math.round(width * dpr)
       canvas.height = Math.round(height * dpr)
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
 
       const narrow = width < 700
       cell = narrow ? 6 : width > 1600 ? 9 : 8
-      const cols = Math.ceil(width / cell)
-      const rows = Math.ceil(height / cell)
+      cols = Math.ceil(width / cell)
+      rows = Math.ceil(height / cell)
       const next: Dot[] = []
+      grid = new Int32Array(cols * rows).fill(-1)
 
       for (let i = 0; i < cols; i++) {
         const u = (i + 0.5) / cols
@@ -114,9 +130,12 @@ export function PixelMountains({ variant = 'hero', seed = 3, className }: Props)
             level = 0
           }
 
+          grid[i * rows + j] = next.length
           next.push({
             x: i * cell + cell / 2,
             y: height - yb - cell / 2,
+            col: i,
+            row: j,
             level,
             delay: (yb / height) * 950 + Math.abs(u - 0.6) * 260 + hash(j, i, seed + 3) * 320,
             phase: hash(i, j, seed + 5) * Math.PI * 2,
@@ -125,19 +144,74 @@ export function PixelMountains({ variant = 'hero', seed = 3, className }: Props)
         }
       }
       dots = next
+      twinkles = []
+      for (let k = 0; k < dots.length; k++) if (dots[k].twinkle) twinkles.push(k)
+      lit = new Uint8Array(dots.length)
+      lensBox = null
     }
 
     const levelSizes = new Float32Array(6)
-    const draw = (now: number) => {
-      if (startedAt < 0) startedAt = now
-      const t = now - startedAt
+    const lensRadius = () => (width < 700 ? 90 : 150)
+
+    /** Size and level of a settled dot right now: its twinkle and the lens can lift it. */
+    const paintDot = (d: Dot, k: number) => {
+      let lvl = d.level
+      if (lit[k]) lvl = Math.min(5, lvl + 1)
+      let size = levelSizes[d.level]
+      if (pointer.active) {
+        const dx = d.x - pointer.x
+        const dy = d.y - pointer.y
+        const dist2 = dx * dx + dy * dy
+        const lensR = lensRadius()
+        if (dist2 < lensR * lensR) {
+          const f = 1 - Math.sqrt(dist2) / lensR
+          size *= 1 + f * 0.9
+          if (f > 0.35) lvl = Math.min(5, lvl + 1)
+        }
+      }
+      const s = Math.min(size, cell - 1)
+      ctx.fillStyle = COLORS[lvl]
+      ctx.globalAlpha = ALPHA[lvl]
+      ctx.fillRect(d.x - s / 2, d.y - s / 2, s, s)
+    }
+
+    /** Clear and repaint a block of grid cells (inclusive bounds, clamped to the grid). */
+    const paintCells = (i0: number, i1: number, j0: number, j1: number) => {
+      i0 = Math.max(0, i0)
+      j0 = Math.max(0, j0)
+      i1 = Math.min(cols - 1, i1)
+      j1 = Math.min(rows - 1, j1)
+      if (i0 > i1 || j0 > j1) return
+      ctx.clearRect(i0 * cell, height - (j1 + 1) * cell, (i1 - i0 + 1) * cell, (j1 - j0 + 1) * cell)
+      for (let i = i0; i <= i1; i++) {
+        for (let j = j0; j <= j1; j++) {
+          const k = grid[i * rows + j]
+          if (k >= 0) paintDot(dots[k], k)
+        }
+      }
+    }
+
+    const paintAll = () => {
       ctx.clearRect(0, 0, width, height)
+      for (let k = 0; k < dots.length; k++) paintDot(dots[k], k)
+      ctx.globalAlpha = 1
+    }
 
-      pointer.x += (pointer.tx - pointer.x) * 0.14
-      pointer.y += (pointer.ty - pointer.y) * 0.14
-      const lensR = width < 700 ? 90 : 150
-      for (let l = 0; l < 6; l++) levelSizes[l] = SIZE[l] * cell
+    /** The grid cells under the lens, or null when the pointer is away. */
+    const currentLensBox = (): [number, number, number, number] | null => {
+      if (!pointer.active) return null
+      const r = lensRadius()
+      return [
+        Math.floor((pointer.x - r) / cell),
+        Math.ceil((pointer.x + r) / cell),
+        Math.floor((height - pointer.y - r) / cell),
+        Math.ceil((height - pointer.y + r) / cell),
+      ]
+    }
 
+    const drawIntro = (t: number) => {
+      ctx.clearRect(0, 0, width, height)
+      const lensR = lensRadius()
       let anyIntro = false
       for (let pass = 0; pass < 6; pass++) {
         ctx.fillStyle = COLORS[pass]
@@ -146,19 +220,15 @@ export function PixelMountains({ variant = 'hero', seed = 3, className }: Props)
           const d = dots[k]
           let grow = 1
           let lvl = d.level
-          if (!introDone) {
-            const p = (t - d.delay) / 520
-            if (p <= 0) {
-              anyIntro = true
-              continue
-            }
-            if (p < 1) {
-              anyIntro = true
-              grow = 1 - Math.pow(1 - p, 4)
-              if (p < 0.35) lvl = Math.min(5, lvl + 2) // the ignition front flashes bright
-            }
-          } else if (!reduce) {
-            if (d.twinkle && Math.sin(t * 0.0011 + d.phase) > 0.93) lvl = Math.min(5, lvl + 1)
+          const p = (t - d.delay) / 520
+          if (p <= 0) {
+            anyIntro = true
+            continue
+          }
+          if (p < 1) {
+            anyIntro = true
+            grow = 1 - Math.pow(1 - p, 4)
+            if (p < 0.35) lvl = Math.min(5, lvl + 2) // the ignition front flashes bright
           }
           let size = levelSizes[d.level] * grow
           if (pointer.active) {
@@ -177,14 +247,56 @@ export function PixelMountains({ variant = 'hero', seed = 3, className }: Props)
         }
       }
       ctx.globalAlpha = 1
-      if (!introDone && !anyIntro) introDone = true
+      return anyIntro
+    }
 
-      if (reduce && introDone && !pointer.active) {
-        raf = 0
-        return
+    let needsFull = true
+    const draw = (now: number) => {
+      raf = 0
+      if (startedAt < 0) startedAt = now
+      const t = now - startedAt
+      for (let l = 0; l < 6; l++) levelSizes[l] = SIZE[l] * cell
+      pointer.x += (pointer.tx - pointer.x) * 0.14
+      pointer.y += (pointer.ty - pointer.y) * 0.14
+
+      if (!introDone) {
+        if (!drawIntro(t)) {
+          introDone = true
+          needsFull = true
+        }
       }
-      if (visible) raf = requestAnimationFrame(draw)
-      else raf = 0
+      if (introDone) {
+        if (needsFull) {
+          needsFull = false
+          paintAll()
+          lensBox = currentLensBox()
+        } else {
+          // the lens: repaint where it was and where it is now, only when it has moved
+          const box = currentLensBox()
+          const moved = Math.abs(pointer.tx - pointer.x) + Math.abs(pointer.ty - pointer.y) > 0.3
+          if ((box && (moved || !lensBox)) || (!box && lensBox)) {
+            const a = box ?? lensBox!
+            const b = lensBox ?? box!
+            paintCells(Math.min(a[0], b[0]), Math.max(a[1], b[1]), Math.min(a[2], b[2]), Math.max(a[3], b[3]))
+          }
+          lensBox = box
+          // twinkles: ~25 times a second is plenty for a slow sparkle
+          if (!reduce && now - lastIdle > 40) {
+            lastIdle = now
+            for (const k of twinkles) {
+              const on = Math.sin(t * 0.0011 + dots[k].phase) > 0.93 ? 1 : 0
+              if (on === lit[k]) continue
+              lit[k] = on
+              const d = dots[k]
+              paintCells(d.col, d.col, d.row, d.row)
+            }
+          }
+          ctx.globalAlpha = 1
+        }
+      }
+
+      if (reduce && introDone && !pointer.active && !lensBox) return
+      if (visible && !document.hidden) raf = requestAnimationFrame(draw)
     }
 
     const start = () => {
@@ -196,6 +308,7 @@ export function PixelMountains({ variant = 'hero', seed = 3, className }: Props)
 
     const ro = new ResizeObserver(() => {
       build()
+      needsFull = true
       if (!raf) raf = requestAnimationFrame(draw)
     })
     ro.observe(canvas)
@@ -206,7 +319,12 @@ export function PixelMountains({ variant = 'hero', seed = 3, className }: Props)
     })
     io.observe(canvas)
 
-    const onVisibility = () => (document.hidden ? cancelAnimationFrame(raf) : ((raf = 0), start()))
+    const onVisibility = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(raf)
+        raf = 0
+      } else start()
+    }
     document.addEventListener('visibilitychange', onVisibility)
 
     const host = canvas.closest('[data-pixel-host]') ?? canvas.parentElement
