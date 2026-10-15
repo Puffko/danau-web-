@@ -3,6 +3,7 @@ import { Route, Routes, useLocation, useNavigationType } from 'react-router-dom'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import { PixelWordmark } from './components/PixelWordmark'
+import { RevealReady } from './components/Reveal'
 import { cookies, pageMeta, privacy } from './data/site'
 import { prefersReducedMotion, scrollToTarget, useLenis } from './hooks/smoothScroll'
 import About from './pages/About'
@@ -187,6 +188,7 @@ export default function App() {
     <>
       <Header />
       <div id="page" ref={pageRef} key={shown.pathname} style={loading ? { opacity: 0 } : undefined}>
+        <RevealReady.Provider value={!loading}>
         <main id="obsah" tabIndex={-1}>
           <Routes location={shown}>
             <Route path="/" element={<Home />} />
@@ -198,6 +200,7 @@ export default function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
+        </RevealReady.Provider>
         <Footer />
       </div>
       {!reduce && (

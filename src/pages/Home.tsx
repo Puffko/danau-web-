@@ -28,9 +28,10 @@ function Hero() {
           stagger={0.05}
           shine="light"
         />
-        <Reveal immediate delay={0.75} className="hero__aside">
-          <p className="hero__text">{home.hero.text}</p>
-          <div className="hero__actions">
+        <div className="hero__aside">
+          {/* the lead's words follow the headline in, then the buttons */}
+          <RevealText as="p" immediate className="hero__text" text={home.hero.text} delay={0.7} stagger={0.014} />
+          <Reveal immediate delay={1.25} className="hero__actions">
             <Link to={routes.contact} className="btn btn--pill btn--light">
               <span>{home.hero.primary}</span>
               <ArrowUpRight />
@@ -48,8 +49,8 @@ function Hero() {
             >
               <span>{home.hero.secondary}</span>
             </a>
-          </div>
-        </Reveal>
+          </Reveal>
+        </div>
       </div>
     </section>
   )

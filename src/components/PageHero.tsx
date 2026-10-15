@@ -33,9 +33,7 @@ export function PageHero({ title, text, back, aside, seed = 5, size = 'md', chil
           )}
           <RevealText as="h1" immediate className="page-hero__title" text={title} delay={0.1} />
           {text && (
-            <Reveal immediate delay={0.45}>
-              <p className="page-hero__text">{text}</p>
-            </Reveal>
+            <RevealText as="p" immediate className="page-hero__text" text={text} delay={0.5} stagger={0.014} />
           )}
           {children}
         </div>

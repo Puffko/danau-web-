@@ -19,3 +19,9 @@
   pointer-events: none;
   user-select: none;
 }
+
+/* switched off: plain text in the inherited colour, nothing clipped */
+.shiny-text.is-off {
+  background: none !important;
+  -webkit-text-fill-color: currentColor;
+}
