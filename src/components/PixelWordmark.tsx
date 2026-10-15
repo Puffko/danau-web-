@@ -18,7 +18,18 @@ interface Cell {
   delay: number
 }
 
-export function PixelWordmark({ className, columns = 150 }: { className?: string; columns?: number }) {
+/** Space above the drawn mark in the wordmark's viewBox; `crop` removes it so the mark centres. */
+const CROP_TOP = 12.1
+
+export function PixelWordmark({
+  className,
+  columns = 150,
+  crop = false,
+}: {
+  className?: string
+  columns?: number
+  crop?: boolean
+}) {
   const ref = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
@@ -46,7 +57,7 @@ export function PixelWordmark({ className, columns = 150 }: { className?: string
       canvas.height = Math.round(h * dpr)
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
 
-      const cols = w < 600 ? Math.round(columns * 0.6) : columns
+      const cols = w < 600 && !crop ? Math.round(columns * 0.6) : columns
       cell = w / cols
       const rows = Math.ceil(h / cell)
       const ss = 3 // samples per cell edge
@@ -58,6 +69,7 @@ export function PixelWordmark({ className, columns = 150 }: { className?: string
       // cols * cell === w, so one uniform scale maps logo units onto the sample grid
       const scale = (cols * ss) / VIEW_W
       o.scale(scale, scale)
+      if (crop) o.translate(0, -CROP_TOP)
       o.fillStyle = '#fff'
       o.save()
       o.translate(0, 12.1131)
@@ -164,7 +176,7 @@ export function PixelWordmark({ className, columns = 150 }: { className?: string
       canvas.removeEventListener('pointerleave', onLeave)
       document.removeEventListener('visibilitychange', kick)
     }
-  }, [columns])
+  }, [columns, crop])
 
   return <canvas ref={ref} className={className} aria-hidden="true" />
 }

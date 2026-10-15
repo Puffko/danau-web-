@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Route, Routes, useLocation, useNavigationType } from 'react-router-dom'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
-import { LoaderMark } from './components/LoaderMark'
+import { PixelWordmark } from './components/PixelWordmark'
 import { cookies, pageMeta, privacy } from './data/site'
 import { prefersReducedMotion, scrollToTarget, useLenis } from './hooks/smoothScroll'
 import About from './pages/About'
@@ -98,7 +98,7 @@ export default function App() {
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
   }, [])
 
-  // First load: the logo turns into pixels, then the screen lifts away once the fonts are in.
+  // First load: the footer's pixel wordmark builds itself, then the screen lifts away once the fonts are in.
   useEffect(() => {
     if (reduce) return
     let cancelled = false
@@ -202,7 +202,7 @@ export default function App() {
       </div>
       {!reduce && (
         <div className={`loader${loading ? '' : ' is-done'}`} aria-hidden="true">
-          <LoaderMark className="loader__logo" />
+          <PixelWordmark className="loader__logo" columns={104} crop />
         </div>
       )}
     </>

@@ -2884,7 +2884,7 @@ p {
 }
 
 .loader__logo {
-  width: clamp(180px, 26vw, 260px);
+  width: clamp(220px, 30vw, 320px);
   transition:
     transform 0.8s var(--ease-io) 0.1s,
     opacity 0.5s var(--ease) 0.1s;
@@ -2895,46 +2895,11 @@ p {
   opacity: 0;
 }
 
-/* the mark's box is cropped to the drawn logo, so it sits exactly in the centre */
-.loader-mark {
-  position: relative;
+/* the footer's pixel wordmark, cropped to the drawn mark so it sits exactly in the centre */
+.loader__logo {
   display: block;
   aspect-ratio: 134 / 30.04;
-}
-
-.loader-mark__vector {
-  display: block;
-  width: 100%;
-  height: 100%;
-  fill: currentColor;
-  opacity: 0;
-  /* fades in crisp, then a wipe runs left to right as the pixels take over */
-  animation:
-    loader-fade-in 0.45s var(--ease) 0.05s forwards,
-    loader-wipe 0.62s linear 0.72s forwards;
-}
-
-.loader-mark__pixels {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
   max-width: none;
-}
-
-@keyframes loader-fade-in {
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes loader-wipe {
-  from {
-    clip-path: inset(-10% -10% -10% 0);
-  }
-  to {
-    clip-path: inset(-10% -10% -10% 100%);
-  }
 }
 
 /* ---------- Preview build only ---------- */
