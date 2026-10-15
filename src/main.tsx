@@ -1,4 +1,5 @@
 import '@fontsource-variable/geist'
+import '@fontsource-variable/pixelify-sans'
 import 'lenis/dist/lenis.css'
 import './styles/global.css'
 

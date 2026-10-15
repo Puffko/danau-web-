@@ -12,7 +12,7 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (prefersReducedMotion()) return
-    const instance = new Lenis({ autoRaf: true, lerp: 0.11, wheelMultiplier: 0.95 })
+    const instance = new Lenis({ autoRaf: true, lerp: 0.07, wheelMultiplier: 0.8, touchMultiplier: 1 })
     ref.current = instance
     setLenis(instance)
     return () => {
@@ -33,7 +33,7 @@ export function scrollToTarget(lenis: Lenis | null, target: string | HTMLElement
     // A navigation that closes the mobile menu scrolls while Lenis is still stopped. Restart it
     // first: starting it again afterwards would reset and cancel this scroll.
     if (lenis.isStopped) lenis.start()
-    lenis.scrollTo(target, { offset, immediate, duration: immediate ? 0 : 1.1 })
+    lenis.scrollTo(target, { offset, immediate, duration: immediate ? 0 : 1.5 })
     return
   }
   if (typeof target === 'number') {

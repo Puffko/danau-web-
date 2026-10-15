@@ -228,11 +228,12 @@ export const serviceBySlug = (slug: string | undefined) => services.find((s) => 
 
 export const home = {
   hero: {
-    title: 'Riadenie IT projektov, kybernetická bezpečnosť, GDPR a odborná podpora',
+    // a non-breaking space keeps 'IT projektov' together on one line
+    title: 'Riadenie IT\u00a0projektov, kybernetická bezpečnosť, GDPR a\u00a0odborná podpora',
     text: 'Pomáhame organizáciám pripraviť, riadiť a doručiť zmeny v oblastiach IT, bezpečnosti, ochrany osobných údajov, dát a procesov. Spájame projektové riadenie, kybernetickú bezpečnosť, GDPR, analytiku a realizáciu riešení do jedného funkčného celku.',
     primary: 'Kontakt',
     // headline words set off with a marker stroke: "IT projektov", "kybernetická bezpečnosť", "GDPR"
-    highlightWords: ['IT', 'projektov', 'kybernetická', 'bezpečnosť', 'GDPR'],
+    highlightWords: ['IT\u00a0projektov', 'kybernetická', 'bezpečnosť', 'GDPR'],
     secondary: 'Naše služby',
   },
   partner: {

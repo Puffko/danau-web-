@@ -257,16 +257,24 @@ p {
   will-change: transform;
 }
 
-/* A highlighted headline word: the headline's own type with a slim brand-blue marker stroke along
+/* A highlighted headline word: set in the pixel face, with a slim brand-blue marker stroke along
    its baseline that draws in from the left once the word has risen into place. */
 .hl-word {
-  padding-inline: 0.04em;
-  margin-inline: -0.04em;
+  /* the key words are set in a pixel typeface, sized and spaced to sit on the headline's
+     baseline and x-height without crowding the light Geist around them */
+  font-family: 'Pixelify Sans Variable', 'Pixelify Sans', var(--font);
+  font-weight: 500;
+  font-size: 0.78em;
+  letter-spacing: -0.02em;
+  word-spacing: -0.08em;
+  padding-inline: 0.06em;
+  margin-inline: 0.02em -0.02em;
+  /* a pixel-thick brand-blue underline just below the letters */
   background: linear-gradient(
-      transparent 66%,
-      rgba(24, 24, 236, 0.78) 66%,
-      rgba(24, 24, 236, 0.78) 90%,
-      transparent 90%
+      transparent 86%,
+      var(--blue) 86%,
+      var(--blue) 96%,
+      transparent 96%
     )
     no-repeat 0 0 / 0% 100%;
   animation: hl-draw 0.9s var(--ease) forwards;
@@ -821,7 +829,7 @@ p {
 
 .hero__inner {
   display: grid;
-  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.85fr) minmax(0, 1fr);
   align-items: end;
   gap: clamp(32px, 5vw, 80px);
   padding-top: clamp(150px, 24vh, 240px);
