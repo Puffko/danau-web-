@@ -20,7 +20,7 @@ interface Props {
   cell?: number
   /** Palette while active: pale blues for a blue or night ground, or the resting blues for light cards. */
   activeRamp?: 'live' | 'rest'
-  /** Show nothing at rest; the mosaic ripples out of the corner only while active. */
+  /** At rest only a faint hint of a few pixels in the corner; the mosaic ripples out while active. */
   sparse?: boolean
 }
 
@@ -96,8 +96,8 @@ export function PixelCluster({
           const stray = d < R * 1.28 && hash(i, j, seed + 11) < 0.1
           if (d > edge && !stray) continue
 
-          // without sparse mode, the resting corner keeps a scatter of stray pixels
-          const scatter = !sparse && stray
+          // the resting pixels: stray ones around a full corner, or in sparse mode a faint few
+          const scatter = sparse ? d < radius * 0.5 && hash(i, j, seed + 17) < 0.2 : stray
 
           let grow = 1
           if (sparse && !scatter) {
@@ -125,11 +125,14 @@ export function PixelCluster({
           v += (d / R) * 0.45 - 0.15
           const k = Math.max(0, Math.min(ramp.length - 1, Math.floor(v * ramp.length)))
           const s = (cell - 1) * grow
+          // the sparse hint stays quiet at rest
+          ctx.globalAlpha = sparse && !on && scatter ? 0.4 : 1
           ctx.fillStyle = ramp[k]
           ctx.fillRect(w - (i + 1) * cell + (cell - s) / 2, j * cell + (cell - s) / 2, s, s)
         }
       }
 
+      ctx.globalAlpha = 1
       if (settling || (on && !reduce)) raf = requestAnimationFrame(draw)
     }
 
