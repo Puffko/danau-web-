@@ -59,8 +59,9 @@ export function PixelWord({ text, delay = 0 }: { text: string; delay?: number })
       canvas.height = Math.round(h * dpr)
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
 
-      // about 15 cells to the em: clearly pixels, and every letter still reads (rn stays rn)
-      cell = Math.max(2.3, size / 15)
+      // fine enough that even the light weight's thin strokes are two cells wide, so each letter
+      // keeps exactly the headline font's shape, only built from pixels
+      cell = Math.max(2, size / 22)
       const cols = Math.ceil(w / cell)
       const rows = Math.ceil(h / cell)
       const ss = 4
@@ -76,28 +77,66 @@ export function PixelWord({ text, delay = 0 }: { text: string; delay?: number })
       o.textBaseline = 'alphabetic'
       const ascent = o.measureText('Hg').fontBoundingBoxAscent || size * 0.8
 
-      // draw each character exactly where the browser laid it out (kerning, tracking included)
+      // Rasterise each character on its own, exactly where the browser laid it out (kerning and
+      // tracking included), and remember which letter owns each cell. Tightly set pairs like
+      // "rn" or "IT" would otherwise melt into one shape on the grid.
       const range = document.createRange()
-      for (let i = 0; i < text.length; i++) {
-        range.setStart(node, i)
-        range.setEnd(node, i + 1)
+      const best = new Float32Array(cols * rows)
+      const owner = new Int16Array(cols * rows).fill(-1)
+      for (let c = 0; c < text.length; c++) {
+        if (text[c] === ' ') continue
+        range.setStart(node, c)
+        range.setEnd(node, c + 1)
         const r = range.getBoundingClientRect()
-        o.fillText(text[i], r.left - box.left, r.top - box.top + padTop + ascent)
+        const x = r.left - box.left
+        o.save()
+        o.setTransform(1, 0, 0, 1, 0, 0)
+        o.clearRect(0, 0, off.width, off.height)
+        o.restore()
+        o.fillText(text[c], x, r.top - box.top + padTop + ascent)
+        // only the columns this glyph can reach (with room for overhangs) need sampling
+        const i0 = Math.max(0, Math.floor((x - size * 0.2) / cell))
+        const i1 = Math.min(cols - 1, Math.ceil((x + r.width + size * 0.2) / cell))
+        const sx = i0 * ss
+        const sw = (i1 - i0 + 1) * ss
+        const data = o.getImageData(sx, 0, sw, off.height).data
+        for (let i = i0; i <= i1; i++) {
+          for (let j = 0; j < rows; j++) {
+            let cover = 0
+            for (let a = 0; a < ss; a++)
+              for (let b = 0; b < ss; b++) cover += data[((j * ss + b) * sw + ((i - i0) * ss + a)) * 4 + 3]
+            cover /= ss * ss * 255
+            const at = i * rows + j
+            if (cover > best[at]) {
+              best[at] = cover
+              owner[at] = c
+            }
+          }
+        }
       }
 
-      const data = o.getImageData(0, 0, off.width, off.height).data
       const next: Cell[] = []
       for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
-          let cover = 0
-          for (let a = 0; a < ss; a++)
-            for (let b = 0; b < ss; b++) cover += data[((j * ss + b) * off.width + (i * ss + a)) * 4 + 3]
-          cover /= ss * ss * 255
-          if (cover <= 0.5) continue
+          const at = i * rows + j
+          const cover = best[at]
+          if (cover <= 0.3) continue
+          // keep one empty column between neighbouring letters: a cell that touches a cell of
+          // another letter directly to its left (or diagonally) gives way to it
+          let touches = false
+          if (i > 0) {
+            for (let dj = -1; dj <= 1; dj++) {
+              const jj = j + dj
+              if (jj < 0 || jj >= rows) continue
+              const left = (i - 1) * rows + jj
+              if (best[left] > 0.3 && owner[left] !== owner[at]) touches = true
+            }
+          }
+          if (touches) continue
           next.push({
             x: i * cell,
             y: j * cell,
-            edge: cover < 0.75,
+            edge: cover < 0.6,
             delay: delay + (i / cols) * 520 + hash(i, j, 7) * 160,
           })
         }

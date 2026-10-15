@@ -258,13 +258,11 @@ p {
 }
 
 /* A word drawn in pixels: the real text keeps the layout and stays readable to assistive tech,
-   the canvas paints over it. Set a step heavier so the strokes survive the grid. */
+   the canvas paints over it in the headline's own weight and tracking. */
 .pixel-word {
   position: relative;
   display: inline-block;
-  font-weight: 560;
-  /* open tracking so neighbouring strokes keep a pixel of air between them (rn never reads as m) */
-  letter-spacing: 0.02em;
+
 }
 
 .pixel-word__text {
@@ -824,14 +822,14 @@ p {
 }
 
 .hero__title {
-  font-size: clamp(2.25rem, 1rem + 3.4vw, 4rem);
+  font-size: clamp(2.5rem, 1rem + 4.6vw, 5.25rem);
   font-weight: 300;
   line-height: 1.02;
   letter-spacing: -0.042em;
 }
 
 .hero__text {
-  font-size: 1.0625rem;
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
   line-height: 1.65;
   color: rgba(255, 255, 255, 0.78);
   max-width: 46ch;
@@ -3135,7 +3133,7 @@ p {
   }
 
   .hero__title {
-    font-size: clamp(2rem, 1.2rem + 4vw, 2.5rem);
+    font-size: clamp(2.25rem, 1.2rem + 5vw, 2.875rem);
   }
 
   .hero__actions .btn {
