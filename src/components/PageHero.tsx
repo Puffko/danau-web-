@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { routes } from '../data/site'
+import { useI18n } from '../i18n'
 import { ArrowRight } from './Icons'
 import { PixelMountains } from './PixelMountains'
 import { Reveal, RevealText } from './Reveal'
@@ -17,6 +17,7 @@ interface Props {
 
 /** Dark sub-page hero: the home hero's glow and pixel range at a lower altitude. */
 export function PageHero({ title, text, back, aside, seed = 5, size = 'md', children }: Props) {
+  const { t, servicesSection } = useI18n()
   return (
     <section className={`page-hero page-hero--${size}`} data-pixel-host data-theme="dark">
       <div className="hero-glow" aria-hidden="true" />
@@ -25,9 +26,9 @@ export function PageHero({ title, text, back, aside, seed = 5, size = 'md', chil
         <div className="page-hero__copy">
           {back && (
             <Reveal immediate y={10}>
-              <Link to={routes.services} className="back-link">
+              <Link to={servicesSection} className="back-link">
                 <ArrowRight className="back-link__icon" />
-                <span>Späť na služby</span>
+                <span>{t.ui.backToServices}</span>
               </Link>
             </Reveal>
           )}

@@ -1,7 +1,8 @@
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'motion/react'
 import { useEffect, useId, useRef, useState, type FocusEvent, type PointerEvent } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
-import { contact, home, routes, services } from '../data/site'
+import { contact } from '../data/site'
+import { alternatePath, useI18n, type Lang } from '../i18n'
 import { useLenis } from '../hooks/smoothScroll'
 import { ArrowRight, ArrowUpRight, Caret, Close, Menu, Phone, ServiceIcon } from './Icons'
 import { Wordmark } from './Logo'
@@ -10,9 +11,45 @@ import { EASE_OUT } from './Reveal'
 
 const DESKTOP_NAV = '(min-width: 1101px)'
 
+const LANGS: { lang: Lang; name: string }[] = [
+  { lang: 'sk', name: 'Slovenčina' },
+  { lang: 'en', name: 'English' },
+]
+
+/** SK / EN: the page on screen in the other language, at the same scroll position. */
+function LangSwitch() {
+  const location = useLocation()
+  const { lang, t } = useI18n()
+  return (
+    <div className="lang-switch" role="group" aria-label={t.ui.language}>
+      {LANGS.map((l) =>
+        l.lang === lang ? (
+          <span key={l.lang} className="lang-switch__item is-active" lang={l.lang} title={l.name} aria-current="true">
+            {l.lang.toUpperCase()}
+          </span>
+        ) : (
+          <Link
+            key={l.lang}
+            to={alternatePath(location.pathname, l.lang)}
+            state={{ keepScroll: true }}
+            className="lang-switch__item"
+            lang={l.lang}
+            hrefLang={l.lang}
+            title={l.name}
+          >
+            {l.lang.toUpperCase()}
+          </Link>
+        ),
+      )}
+    </div>
+  )
+}
+
 export function Header() {
   const location = useLocation()
   const lenis = useLenis()
+  const { t, paths, servicesSection, servicePath } = useI18n()
+  const nav = t.ui.nav
   const { scrollY } = useScroll()
   const [scrolled, setScrolled] = useState(false)
   const [servicesOpen, setServicesOpen] = useState(false)
@@ -104,13 +141,13 @@ export function Header() {
     if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setServicesOpen(false)
   }
 
-  const onServicesPage = location.pathname.startsWith('/sluzby')
+  const onServicesPage = location.pathname.toLowerCase().startsWith(`${paths.services}/`)
 
   return (
     <>
       {!mobileOpen && (
         <a className="skip-link" href="#obsah">
-          Preskočiť na obsah
+          {t.ui.skip}
         </a>
       )}
       <motion.header
@@ -121,14 +158,14 @@ export function Header() {
         transition={{ duration: 0.8, delay: 0.2, ease: EASE_OUT }}
       >
         <div className="site-header__inner container">
-          <Link to="/" className="brand" aria-label="Danau – domov">
+          <Link to={paths.home} className="brand" aria-label={t.ui.brandLabel}>
             {/* viewBox cropped to the drawn mark, so it centres in the bar */}
             <Wordmark className="brand__mark" viewBox="0 12.1 134 30.04" aria-hidden="true" />
           </Link>
 
-          <nav className="primary-nav" aria-label="Hlavná navigácia">
-            <NavLink to="/" end className="primary-nav__link">
-              Domov
+          <nav className="primary-nav" aria-label={t.ui.mainNav}>
+            <NavLink to={paths.home} end className="primary-nav__link">
+              {nav.home}
             </NavLink>
             <div
               className="nav-dropdown"
@@ -145,7 +182,7 @@ export function Header() {
                 aria-controls={panelId}
                 onClick={onServicesClick}
               >
-                Služby
+                {nav.services}
                 <Caret className={`caret${servicesOpen ? ' is-open' : ''}`} />
               </button>
               <AnimatePresence>
@@ -158,23 +195,23 @@ export function Header() {
                     exit={{ opacity: 0, y: -8, scale: 0.985, transition: { duration: 0.18 } }}
                     transition={{ duration: 0.45, ease: EASE_OUT }}
                   >
-                    <Link to={routes.services} className="nav-dropdown__feature">
+                    <Link to={servicesSection} className="nav-dropdown__feature">
                       <PixelCluster className="nav-dropdown__pixels" active seed={5} radius={150} cell={10} />
-                      <span className="nav-dropdown__feature-title">{home.services.title}</span>
+                      <span className="nav-dropdown__feature-title">{t.home.services.title}</span>
                       <span className="nav-dropdown__feature-cta">
-                        <span>Všetky služby</span>
+                        <span>{t.ui.allServices}</span>
                         <ArrowRight />
                       </span>
                     </Link>
                     <ul className="nav-dropdown__grid">
-                      {services.map((s, i) => (
+                      {t.services.map((s, i) => (
                         <motion.li
-                          key={s.slug}
+                          key={s.id}
                           initial={{ opacity: 0, y: 8 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: 0.04 * i + 0.06, duration: 0.5, ease: EASE_OUT }}
                         >
-                          <NavLink to={`/sluzby/${s.slug}`} className="nav-dropdown__item">
+                          <NavLink to={servicePath(s)} className="nav-dropdown__item">
                             <span className="chip chip--sm">
                               <ServiceIcon name={s.icon} width={18} height={18} />
                             </span>
@@ -188,17 +225,19 @@ export function Header() {
                 )}
               </AnimatePresence>
             </div>
-            <NavLink to={routes.about} className="primary-nav__link">
-              O nás
+            <NavLink to={paths.about} className="primary-nav__link">
+              {nav.about}
             </NavLink>
-            <NavLink to={routes.contact} className="primary-nav__link">
-              Kontakt
+            <NavLink to={paths.contact} className="primary-nav__link">
+              {nav.contact}
             </NavLink>
           </nav>
 
-          <Link to={routes.contact} className="btn btn--header">
+          <LangSwitch />
+
+          <Link to={paths.contact} className="btn btn--header">
             <Phone />
-            <span>Kontakt</span>
+            <span>{nav.contact}</span>
           </Link>
 
           <button
@@ -207,7 +246,7 @@ export function Header() {
             className="menu-toggle"
             aria-expanded={mobileOpen}
             aria-controls="mobile-menu"
-            aria-label={mobileOpen ? 'Zatvoriť hlavnú navigáciu' : 'Otvoriť hlavnú navigáciu'}
+            aria-label={mobileOpen ? t.ui.closeMenu : t.ui.openMenu}
             onClick={() => setMobileOpen((v) => !v)}
           >
             {mobileOpen ? <Close /> : <Menu />}
@@ -226,12 +265,12 @@ export function Header() {
             exit={{ clipPath: 'inset(0 0 100% 0)', transition: { duration: 0.35, ease: EASE_OUT } }}
             transition={{ duration: 0.6, ease: EASE_OUT }}
           >
-            <nav className="mobile-menu__nav container" aria-label="Mobilná navigácia">
+            <nav className="mobile-menu__nav container" aria-label={t.ui.mobileNav}>
               {[
-                { to: '/', label: 'Domov' },
-                { to: routes.services, label: 'Služby' },
-                { to: routes.about, label: 'O nás' },
-                { to: routes.contact, label: 'Kontakt' },
+                { to: paths.home, label: nav.home },
+                { to: servicesSection, label: nav.services },
+                { to: paths.about, label: nav.about },
+                { to: paths.contact, label: nav.contact },
               ].map((item, i) => (
                 <motion.div
                   key={item.label}
@@ -250,9 +289,9 @@ export function Header() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.4, duration: 0.5 }}
               >
-                {services.map((s) => (
-                  <li key={s.slug}>
-                    <Link to={`/sluzby/${s.slug}`}>
+                {t.services.map((s) => (
+                  <li key={s.id}>
+                    <Link to={servicePath(s)}>
                       <ServiceIcon name={s.icon} width={16} height={16} />
                       {s.navLabel}
                     </Link>
@@ -265,8 +304,8 @@ export function Header() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5, duration: 0.5 }}
               >
-                <Link to={routes.contact} className="btn btn--pill btn--light mobile-menu__cta">
-                  <span>Kontakt</span>
+                <Link to={paths.contact} className="btn btn--pill btn--light mobile-menu__cta">
+                  <span>{nav.contact}</span>
                   <ArrowUpRight />
                 </Link>
                 <a href={`mailto:${contact.email}`}>{contact.email}</a>

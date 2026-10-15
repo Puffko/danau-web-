@@ -8,16 +8,17 @@ import { useHover } from '../hooks/useHover'
 import { Reveal, RevealText } from '../components/Reveal'
 import { SectionTitle } from '../components/SectionTitle'
 import { ServiceCard } from '../components/ServiceCard'
-import { serviceBySlug, services } from '../data/site'
+import { serviceBySlug, useI18n } from '../i18n'
 import NotFound from './NotFound'
 
 export default function Service() {
   const { slug } = useParams()
-  const service = serviceBySlug(slug)
+  const { lang, t, servicePath, serviceById } = useI18n()
+  const service = serviceBySlug(lang, slug)
   if (!service) return <NotFound />
 
-  const index = services.indexOf(service)
-  const others = services.filter((s) => s !== service)
+  const index = t.services.indexOf(service)
+  const others = t.services.filter((s) => s !== service)
 
   return (
     <>
@@ -40,7 +41,7 @@ export default function Service() {
               // a link block has no heading of its own: the card spans the full width
               <div className="split split--rule split--link" key={block.title}>
                 <Reveal>
-                  <LinkCard to={block.to} title={block.title} body={block.body} />
+                  <LinkCard to={servicePath(serviceById(block.service)!)} title={block.title} body={block.body} />
                 </Reveal>
               </div>
             ) : (
@@ -91,10 +92,10 @@ export default function Service() {
 
       <section className="section section--tight related">
         <div className="container">
-          <SectionTitle className="display-3 section-title--center" text="Ďalšie služby" />
+          <SectionTitle className="display-3 section-title--center" text={t.ui.moreServices} />
           <ul className="related__grid">
             {others.map((s, i) => (
-              <Reveal as="li" key={s.slug} delay={i * 0.05}>
+              <Reveal as="li" key={s.id} delay={i * 0.05}>
                 <ServiceCard service={s} compact seed={i * 5} />
               </Reveal>
             ))}

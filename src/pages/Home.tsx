@@ -9,11 +9,13 @@ import { SphereDiagram } from '../components/SphereDiagram'
 import { useHover } from '../hooks/useHover'
 import { SectionTitle } from '../components/SectionTitle'
 import { ServiceCard } from '../components/ServiceCard'
-import { home, routes, services } from '../data/site'
+import { useI18n } from '../i18n'
 import { scrollToTarget, useLenis } from '../hooks/smoothScroll'
 
 function Hero() {
   const lenis = useLenis()
+  const { t, paths } = useI18n()
+  const { home } = t
   return (
     <section className="hero" data-pixel-host data-theme="dark">
       <div className="hero-glow" aria-hidden="true" />
@@ -32,15 +34,15 @@ function Hero() {
           {/* the lead's words follow the headline in, then the buttons */}
           <RevealText as="p" immediate className="hero__text" text={home.hero.text} delay={0.7} stagger={0.014} />
           <Reveal immediate delay={1.25} className="hero__actions">
-            <Link to={routes.contact} className="btn btn--pill btn--light">
+            <Link to={paths.contact} className="btn btn--pill btn--light">
               <span>{home.hero.primary}</span>
               <ArrowUpRight />
             </Link>
             <a
-              href="#sluzby"
+              href={`#${paths.servicesAnchor}`}
               className="btn btn--pill btn--ghost"
               onClick={(e) => {
-                const target = document.getElementById('sluzby')
+                const target = document.getElementById(paths.servicesAnchor)
                 if (!target) return
                 e.preventDefault()
                 scrollToTarget(lenis, target)
@@ -57,7 +59,8 @@ function Hero() {
 }
 
 function Partner() {
-  const { partner } = home
+  const { t, paths } = useI18n()
+  const { partner } = t.home
   return (
     <section id="o-nas" className="section partner" aria-labelledby="partner-title">
       <div className="container">
@@ -74,8 +77,8 @@ function Partner() {
             title: partner.labels.outcome,
             text: partner.outcome,
             extra: (
-              <Link to={routes.about} className="process-orb__link">
-                <span>O nás</span>
+              <Link to={paths.about} className="process-orb__link">
+                <span>{t.ui.nav.about}</span>
                 <ArrowRight />
               </Link>
             ),
@@ -87,13 +90,15 @@ function Partner() {
 }
 
 function Services() {
+  const { t, paths } = useI18n()
+  const { home } = t
   return (
-    <section id="sluzby" className="section services" tabIndex={-1}>
+    <section id={paths.servicesAnchor} className="section services" tabIndex={-1}>
       <div className="container">
         <SectionTitle className="display-2 section-title--center" text={home.services.title} />
         <ul className="service-grid">
-          {services.map((s, i) => (
-            <Reveal as="li" key={s.slug} delay={(i % 3) * 0.08} className="service-grid__item">
+          {t.services.map((s, i) => (
+            <Reveal as="li" key={s.id} delay={(i % 3) * 0.08} className="service-grid__item">
               <ServiceCard service={s} moreLabel={home.services.more} seed={i * 7} />
             </Reveal>
           ))}
@@ -104,18 +109,18 @@ function Services() {
 }
 
 function Process() {
-  const [challenge, solution, goal] = home.process.paragraphs
+  const { process } = useI18n().t.home
   return (
     <section className="section process" aria-labelledby="process-title">
       <div className="container">
-        <SectionTitle id="process-title" className="display-2 process__title" text={home.process.title} />
+        <SectionTitle id="process-title" className="display-2 process__title" text={process.title} />
         <SphereDiagram
           resultLast
           notes={[
-            { label: 'Výzva', text: challenge },
-            { label: 'Cieľ', text: goal },
+            { label: process.labels.challenge, text: process.challenge },
+            { label: process.labels.need, text: process.need },
           ]}
-          result={{ title: 'Riešenie', text: solution }}
+          result={{ title: process.labels.solution, text: process.solution }}
         />
       </div>
     </section>
@@ -123,7 +128,7 @@ function Process() {
 }
 
 function Expertise() {
-  const { expertise } = home
+  const { expertise } = useI18n().t.home
   return (
     <section className="section expertise" aria-labelledby="expertise-title">
       <div className="container expertise__grid">
@@ -158,30 +163,34 @@ function Expertise() {
 function Clients() {
   const ref = useRef<HTMLElement>(null)
   const lenis = useLenis()
-  const items = home.clients.items
+  const { clients } = useI18n().t.home
+  const items = clients.items
   const [active, setActive] = useState(0)
   const [isStatic, setIsStatic] = useState(false)
   const innerRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] })
 
-  // The pinned, scroll-driven list only works when the whole panel fits on screen; small,
-  // short or text-spaced viewports get a plain list with every description visible.
+  // The pinned, scroll-driven list only works when the whole panel fits on screen; short or
+  // text-spaced viewports get a plain list with every description visible. Phones keep the
+  // pinned list too, with the description stacked under the names.
   const staticRef = useRef(false)
   staticRef.current = isStatic
 
   useEffect(() => {
     const inner = innerRef.current
     if (!inner) return
-    const mq = window.matchMedia('(max-width: 960px), (max-height: 640px)')
+    const mq = window.matchMedia('(max-height: 520px)')
+    const stacked = window.matchMedia('(max-width: 960px)')
     // Height the pinned layout needed the last time it was measured. The static layout wraps
     // differently, so measuring it would flip the mode back and forth every frame.
     let pinnedNeed = 0
-    // Measure only what the pinned layout shows (title and names), so the decision does not
-    // depend on the descriptions the static layout adds.
+    // Measure only what the pinned layout shows (title, names and, stacked, the description
+    // panel), so the decision does not depend on the descriptions the static layout adds.
     const needed = () => {
       const title = inner.querySelector<HTMLElement>('.clients__title')?.offsetHeight ?? 0
       const names = [...inner.querySelectorAll<HTMLElement>('.clients__name')].reduce((h, el) => h + el.offsetHeight, 0)
-      return title + names + 260
+      const detail = stacked.matches ? (inner.querySelector<HTMLElement>('.clients__detail')?.offsetHeight ?? 0) : 0
+      return title + names + detail + (stacked.matches ? 150 : 260)
     }
     const update = () => {
       if (mq.matches) return setIsStatic(true)
@@ -201,11 +210,13 @@ function Clients() {
     })
     ro.observe(inner)
     mq.addEventListener('change', update)
+    stacked.addEventListener('change', update)
     window.addEventListener('resize', update)
     document.fonts?.ready.then(() => !staticRef.current && update())
     return () => {
       ro.disconnect()
       mq.removeEventListener('change', update)
+      stacked.removeEventListener('change', update)
       window.removeEventListener('resize', update)
     }
   }, [])
@@ -232,7 +243,7 @@ function Clients() {
       <div className="clients__sticky">
         <div className="clients__bg" aria-hidden="true" />
         <div className="container clients__inner" ref={innerRef}>
-          <SectionTitle className="display-2 clients__title" text={home.clients.title} tone="light" />
+          <SectionTitle className="display-2 clients__title" text={clients.title} tone="light" />
           <div className="clients__stage">
             <ol className="clients__list">
               {items.map((item, i) => (

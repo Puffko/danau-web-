@@ -5,7 +5,9 @@ import { PageHero } from '../components/PageHero'
 import { PixelCluster } from '../components/PixelCluster'
 import { useHover } from '../hooks/useHover'
 import { EASE_OUT, Reveal, RevealText } from '../components/Reveal'
-import { contact, contactPage, routes } from '../data/site'
+import { contact } from '../data/site'
+import { useI18n } from '../i18n'
+import type { Content } from '../data/sk'
 import { scrollToTarget, useLenis } from '../hooks/smoothScroll'
 import { isPreview } from '../lib/env'
 
@@ -22,13 +24,13 @@ const EMPTY: FormState = { fullName: '', organization: '', email: '', phone: '',
 
 type Errors = Partial<Record<keyof FormState, string>>
 
-function validate(f: FormState): Errors {
+function validate(f: FormState, msg: Content['contactPage']['errors']): Errors {
   const e: Errors = {}
-  if (!f.fullName.trim()) e.fullName = 'Vyplňte meno a priezvisko.'
-  if (!f.email.trim()) e.email = 'Vyplňte e-mail, aby sme vám mohli odpovedať.'
-  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.trim())) e.email = 'E-mail nemá správny tvar, napr. meno@firma.sk.'
-  if (!f.message.trim()) e.message = 'Napíšte, s čím vám môžeme pomôcť.'
-  if (!f.consent) e.consent = 'Bez súhlasu vás nemôžeme kontaktovať.'
+  if (!f.fullName.trim()) e.fullName = msg.fullName
+  if (!f.email.trim()) e.email = msg.email
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.trim())) e.email = msg.emailFormat
+  if (!f.message.trim()) e.message = msg.message
+  if (!f.consent) e.consent = msg.consent
   return e
 }
 
@@ -41,6 +43,8 @@ export default function Contact() {
   const statusRef = useRef<HTMLDivElement>(null)
   const [mainActive, mainHover] = useHover()
   const lenis = useLenis()
+  const { lang, t, paths } = useI18n()
+  const { contactPage } = t
 
   // Once the request settles, take keyboard and screen-reader users to the outcome.
   useEffect(() => {
@@ -61,7 +65,7 @@ export default function Contact() {
     if (sending) return
     setSuccess('')
     setFailure('')
-    const found = validate(form)
+    const found = validate(form, contactPage.errors)
     setErrors(found)
     const first = Object.keys(found)[0]
     if (first) {
@@ -69,7 +73,7 @@ export default function Contact() {
       return
     }
     if (isPreview) {
-      setFailure('Toto je náhľad návrhu webu, formulár sa z neho neodosiela.')
+      setFailure(contactPage.preview)
       return
     }
     setSending(true)
@@ -77,14 +81,15 @@ export default function Contact() {
       const res = await fetch('/api/contact.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, lang }),
       })
       const data = (await res.json().catch(() => ({}))) as { ok?: boolean; message?: string; error?: string }
       if (!res.ok || !data.ok) {
-        setFailure(data.error ?? contactPage.failure)
+        // the server answers in Slovak; other languages use their own text
+        setFailure((lang === 'sk' && data.error) || contactPage.failure)
         return
       }
-      setSuccess(data.message ?? contactPage.success)
+      setSuccess((lang === 'sk' && data.message) || contactPage.success)
       setForm(EMPTY)
     } catch {
       setFailure(contactPage.failure)
@@ -93,17 +98,17 @@ export default function Contact() {
     }
   }
 
-  const field = (key: 'fullName' | 'organization' | 'email' | 'phone', label: string, type: string, placeholder: string, required = false, autoComplete?: string) => (
+  const field = (key: 'fullName' | 'organization' | 'email' | 'phone', type: string, required = false, autoComplete?: string) => (
     <div className={`field${errors[key] ? ' has-error' : ''}`}>
       <label htmlFor={`contact-${key}`}>
-        {label}
+        {contactPage.fields[key].label}
         {required && <span aria-hidden="true"> *</span>}
       </label>
       <input
         id={`contact-${key}`}
         name={key}
         type={type}
-        placeholder={placeholder}
+        placeholder={contactPage.fields[key].placeholder}
         autoComplete={autoComplete}
         value={form[key]}
         required={required}
@@ -136,12 +141,12 @@ export default function Contact() {
               >
                 <PixelCluster className="info-card__pixels" active={mainActive} seed={4} radius={140} />
                 <span className="info-card__label">
-                  <Pin width={16} height={16} /> Sídlo spoločnosti
+                  <Pin width={16} height={16} /> {t.ui.seat}
                 </span>
                 <h2 className="info-card__title">{contact.company}</h2>
                 <p>{contact.street}</p>
                 <p>{contact.city}</p>
-                <p>{contact.country}</p>
+                <p>{t.ui.country}</p>
                 <span className="info-card__go" aria-hidden="true">
                   <ArrowUpRight />
                 </span>
@@ -151,7 +156,7 @@ export default function Contact() {
               <div className="info-card">
                 <PixelCluster className="tile-pixels" seed={6} radius={70} cell={9} />
                 <span className="info-card__label">
-                  <Mail width={16} height={16} /> E-mail
+                  <Mail width={16} height={16} /> {contactPage.fields.email.label}
                 </span>
                 <a className="info-card__value" href={`mailto:${contact.email}`}>
                   {contact.email}
@@ -162,7 +167,7 @@ export default function Contact() {
               <div className="info-card">
                 <PixelCluster className="tile-pixels" seed={8} radius={70} cell={9} />
                 <span className="info-card__label">
-                  <Phone width={16} height={16} /> Telefón
+                  <Phone width={16} height={16} /> {contactPage.fields.phone.label}
                 </span>
                 <a className="info-card__value" href={contact.phoneHref}>
                   {contact.phone}
@@ -174,25 +179,26 @@ export default function Contact() {
           <Reveal delay={0.1} className="form-card">
             <PixelCluster className="tile-pixels" seed={12} radius={150} />
             <RevealText as="h2" className="display-3" text={contactPage.formTitle} />
-            <p className="contact-form__hint">Polia označené * sú povinné.</p>
+            <p className="contact-form__hint">{contactPage.hint}</p>
             <form className="contact-form" noValidate onSubmit={onSubmit}>
               <div className="contact-form__row">
-                {field('fullName', 'Meno a priezvisko', 'text', 'Zadajte vaše meno', true, 'name')}
-                {field('organization', 'Organizácia', 'text', 'Názov vašej organizácie', false, 'organization')}
+                {field('fullName', 'text', true, 'name')}
+                {field('organization', 'text', false, 'organization')}
               </div>
               <div className="contact-form__row">
-                {field('email', 'E-mail', 'email', 'vas@email.sk', true, 'email')}
-                {field('phone', 'Telefón', 'tel', '+421', false, 'tel')}
+                {field('email', 'email', true, 'email')}
+                {field('phone', 'tel', false, 'tel')}
               </div>
               <div className={`field${errors.message ? ' has-error' : ''}`}>
                 <label htmlFor="contact-message">
-                  Správa<span aria-hidden="true"> *</span>
+                  {contactPage.fields.message.label}
+                  <span aria-hidden="true"> *</span>
                 </label>
                 <textarea
                   id="contact-message"
                   name="message"
                   rows={6}
-                  placeholder="Ako vám môžeme pomôcť?"
+                  placeholder={contactPage.fields.message.placeholder}
                   value={form.message}
                   required
                   aria-invalid={errors.message ? true : undefined}
@@ -225,9 +231,9 @@ export default function Contact() {
                     <span aria-hidden="true"> *</span>
                   </span>
                 </label>
-                <a className="consent__policy" href={routes.privacy} target="_blank" rel="noopener">
-                  Ochrana osobných údajov
-                  <span className="sr-only"> (otvorí sa v novom okne)</span>
+                <a className="consent__policy" href={paths.privacy} target="_blank" rel="noopener">
+                  {t.privacy.title}
+                  <span className="sr-only">{contactPage.newWindow}</span>
                 </a>
                 {errors.consent && (
                   <p className="field__error" id="contact-consent-error">
@@ -237,7 +243,7 @@ export default function Contact() {
               </div>
               <div className="contact-form__foot">
                 <button type="submit" className="btn btn--pill btn--primary" aria-disabled={sending} aria-busy={sending}>
-                  <span>{sending ? 'Odosielam…' : contactPage.submit}</span>
+                  <span>{sending ? contactPage.sending : contactPage.submit}</span>
                   {sending ? <span className="spinner" aria-hidden="true" /> : <ArrowUpRight />}
                 </button>
                 <div aria-live="polite" className="contact-form__status" ref={statusRef} tabIndex={-1}>
@@ -264,7 +270,7 @@ export default function Contact() {
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.4, ease: EASE_OUT }}
                       >
-                        {failure} Prípadne nám napíšte na <a href={`mailto:${contact.email}`}>{contact.email}</a>.
+                        {failure} {contactPage.writeUs} <a href={`mailto:${contact.email}`}>{contact.email}</a>.
                       </motion.p>
                     )}
                   </AnimatePresence>

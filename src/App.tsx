@@ -4,7 +4,7 @@ import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import { PixelLoader } from './components/PixelLoader'
 import { RevealReady } from './components/Reveal'
-import { cookies, pageMeta, privacy } from './data/site'
+import { CONTENT, LangProvider, PATHS, langOf, pageMeta, type Lang } from './i18n'
 import { prefersReducedMotion, scrollToTarget, useLenis } from './hooks/smoothScroll'
 import About from './pages/About'
 import Contact from './pages/Contact'
@@ -13,20 +13,27 @@ import Legal from './pages/Legal'
 import NotFound from './pages/NotFound'
 import Service from './pages/Service'
 
-const NOT_FOUND_META = {
-  title: 'Stránka neexistuje — Danau',
-  description: 'Stránka, ktorú hľadáte, na webe danau.sk neexistuje.',
-}
-
-/** Route paths match case-insensitively and with a trailing slash, so the meta lookup does too. */
-const metaKey = (pathname: string) => pathname.replace(/\/+$/, '').toLowerCase() || '/'
-
 function useDocumentMeta(pathname: string) {
   useEffect(() => {
-    const meta = pageMeta[metaKey(pathname)] ?? NOT_FOUND_META
+    const meta = pageMeta(pathname)
     document.title = meta.title
+    document.documentElement.lang = langOf(pathname)
     document.querySelector('meta[name="description"]')?.setAttribute('content', meta.description)
   }, [pathname])
+}
+
+/** Every page in one language. */
+function langRoutes(lang: Lang) {
+  const p = PATHS[lang]
+  const t = CONTENT[lang]
+  return [
+    <Route key={`${lang}-home`} path={p.home} element={<Home />} />,
+    <Route key={`${lang}-service`} path={`${p.services}/:slug`} element={<Service />} />,
+    <Route key={`${lang}-about`} path={p.about} element={<About />} />,
+    <Route key={`${lang}-contact`} path={p.contact} element={<Contact />} />,
+    <Route key={`${lang}-privacy`} path={p.privacy} element={<Legal page={t.privacy} seed={17} />} />,
+    <Route key={`${lang}-cookies`} path={p.cookies} element={<Legal page={t.cookies} seed={19} />} />,
+  ]
 }
 
 /** The element a URL hash points at. Never throws: hashes from outside can be anything. */
@@ -77,6 +84,8 @@ export default function App() {
   const shownKey = useRef<string | null>(location.key)
   const shownPath = useRef(location.pathname)
   const hasNavigated = useRef(false)
+  // Scroll position when the last navigation started.
+  const leaveY = useRef(0)
   const navSeq = useRef(0)
   const latest = useRef({ location, type: navigationType })
   latest.current = { location, type: navigationType }
@@ -132,6 +141,7 @@ export default function App() {
   useLayoutEffect(() => {
     if (location.key === shown.key) return
     if (shownKey.current) positions.current.set(shownKey.current, window.scrollY)
+    leaveY.current = window.scrollY
     const seq = ++navSeq.current
     if (location.pathname === shownPath.current || reduce) {
       setShown(location)
@@ -157,7 +167,9 @@ export default function App() {
     if (pathChanged) {
       // Lenis still holds the previous page's height until told otherwise.
       lenis?.resize()
-      const y = type === 'POP' ? (positions.current.get(shown.key) ?? 0) : 0
+      // switching language keeps the reader where they were: the page has the same layout
+      const keep = (shown.state as { keepScroll?: boolean } | null)?.keepScroll
+      const y = type === 'POP' ? (positions.current.get(shown.key) ?? 0) : keep ? leaveY.current : 0
       scrollToTarget(lenis, y, true)
       window.scrollTo(0, y)
       if (el) goToSection(lenis, el)
@@ -181,18 +193,14 @@ export default function App() {
   }, [])
 
   return (
-    <>
+    <LangProvider value={langOf(shown.pathname)}>
       <Header />
       <div id="page" ref={pageRef} key={shown.pathname} style={loading ? { opacity: 0 } : undefined}>
         <RevealReady.Provider value={!loading}>
         <main id="obsah" tabIndex={-1}>
           <Routes location={shown}>
-            <Route path="/" element={<Home />} />
-            <Route path="/sluzby/:slug" element={<Service />} />
-            <Route path="/o-nas" element={<About />} />
-            <Route path="/kontakt" element={<Contact />} />
-            <Route path="/ochrana-osobnych-udajov" element={<Legal page={privacy} seed={17} />} />
-            <Route path="/cookies" element={<Legal page={cookies} seed={19} />} />
+            {langRoutes('sk')}
+            {langRoutes('en')}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
@@ -202,6 +210,6 @@ export default function App() {
       {loaderOn && (
         <PixelLoader ready={fontsReady} onReveal={() => setLoading(false)} onDone={() => setLoaderOn(false)} />
       )}
-    </>
+    </LangProvider>
   )
 }

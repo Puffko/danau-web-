@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { Service } from '../data/site'
+import { useI18n } from '../i18n'
 import { ArrowRight, ServiceIcon } from './Icons'
 import { PixelCluster } from './PixelCluster'
 
@@ -12,11 +13,12 @@ interface Props {
   seed?: number
 }
 
-export function ServiceCard({ service, compact = false, moreLabel = 'Zistiť viac', seed = 0 }: Props) {
+export function ServiceCard({ service, compact = false, moreLabel, seed = 0 }: Props) {
   const [active, setActive] = useState(false)
+  const { t, servicePath } = useI18n()
   return (
     <Link
-      to={`/sluzby/${service.slug}`}
+      to={servicePath(service)}
       className={`service-card${compact ? ' service-card--compact' : ''}${active ? ' is-active' : ''}`}
       onPointerEnter={() => setActive(true)}
       onPointerLeave={() => setActive(false)}
@@ -37,7 +39,7 @@ export function ServiceCard({ service, compact = false, moreLabel = 'Zistiť via
       <h3 className="service-card__title">{compact ? service.navLabel : service.cardTitle}</h3>
       {!compact && <p className="service-card__text">{service.cardText}</p>}
       <span className="service-card__more">
-        {!compact && <span>{moreLabel}</span>}
+        {!compact && <span>{moreLabel ?? t.home.services.more}</span>}
         <span className="service-card__arrow">
           <ArrowRight />
         </span>

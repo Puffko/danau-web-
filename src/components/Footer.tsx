@@ -1,12 +1,15 @@
 import { motion, useReducedMotion } from 'motion/react'
 import { Link } from 'react-router-dom'
-import { contact, footer, routes, services } from '../data/site'
+import { contact } from '../data/site'
+import { useI18n } from '../i18n'
 import { ArrowUpRight, Mail, Phone, Pin } from './Icons'
 import { PixelWordmark } from './PixelWordmark'
 import { EASE_OUT, RevealText } from './Reveal'
 
 export function Footer() {
   const reduce = useReducedMotion()
+  const { t, paths, servicePath } = useI18n()
+  const { footer } = t
 
   return (
     <footer id="kontakt" className="site-footer" data-theme="dark">
@@ -14,8 +17,8 @@ export function Footer() {
       <div className="container site-footer__top">
         <div className="site-footer__claim">
           <RevealText as="p" className="site-footer__headline" text={footer.claim} />
-          <Link to={routes.contact} className="btn btn--pill btn--light">
-            <span>Kontakt</span>
+          <Link to={paths.contact} className="btn btn--pill btn--light">
+            <span>{t.ui.nav.contact}</span>
             <ArrowUpRight />
           </Link>
         </div>
@@ -24,9 +27,9 @@ export function Footer() {
           <div>
             <h2 className="site-footer__title">{footer.servicesTitle}</h2>
             <ul>
-              {services.map((s) => (
-                <li key={s.slug}>
-                  <Link to={`/sluzby/${s.slug}`}>{s.navLabel}</Link>
+              {t.services.map((s) => (
+                <li key={s.id}>
+                  <Link to={servicePath(s)}>{s.navLabel}</Link>
                 </li>
               ))}
             </ul>
@@ -35,13 +38,13 @@ export function Footer() {
             <h2 className="site-footer__title">{footer.linksTitle}</h2>
             <ul>
               <li>
-                <Link to="/">Domov</Link>
+                <Link to={paths.home}>{t.ui.nav.home}</Link>
               </li>
               <li>
-                <Link to={routes.about}>O nás</Link>
+                <Link to={paths.about}>{t.ui.nav.about}</Link>
               </li>
               <li>
-                <Link to={routes.contact}>Kontakt</Link>
+                <Link to={paths.contact}>{t.ui.nav.contact}</Link>
               </li>
             </ul>
           </div>
@@ -63,7 +66,7 @@ export function Footer() {
                   <br />
                   {contact.city}
                   <br />
-                  {contact.country}
+                  {t.ui.country}
                 </a>
               </li>
             </ul>
@@ -74,8 +77,8 @@ export function Footer() {
       <div className="container site-footer__bottom">
         <p>{footer.copyright}</p>
         <div className="site-footer__legal">
-          <Link to={routes.privacy}>Ochrana osobných údajov</Link>
-          <Link to={routes.cookies}>Cookies</Link>
+          <Link to={paths.privacy}>{t.privacy.title}</Link>
+          <Link to={paths.cookies}>{t.cookies.title}</Link>
         </div>
       </div>
 

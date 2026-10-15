@@ -1,6 +1,6 @@
 import { motion, useReducedMotion } from 'motion/react'
 import { Link } from 'react-router-dom'
-import { routes } from '../data/site'
+import { useI18n } from '../i18n'
 import { ArrowUpRight } from './Icons'
 import { PixelMountains } from './PixelMountains'
 import { EASE_OUT, RevealText } from './Reveal'
@@ -12,8 +12,9 @@ interface Props {
   seed?: number
 }
 
-export function CtaBand({ title, action = 'Ozvite sa nám', seed = 7 }: Props) {
+export function CtaBand({ title, action, seed = 7 }: Props) {
   const reduce = useReducedMotion()
+  const { t, paths } = useI18n()
   return (
     <section className="section section--tight">
       <div className="container">
@@ -29,8 +30,8 @@ export function CtaBand({ title, action = 'Ozvite sa nám', seed = 7 }: Props) {
           <PixelMountains className="cta-band__mountains" variant="low" seed={seed} />
           <div className="cta-band__inner">
             <RevealText as="h2" className="cta-band__title" text={title} />
-            <Link to={routes.contact} className="btn btn--pill btn--light">
-              <span>{action}</span>
+            <Link to={paths.contact} className="btn btn--pill btn--light">
+              <span>{action ?? t.ui.ctaAction}</span>
               <ArrowUpRight />
             </Link>
           </div>

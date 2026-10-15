@@ -155,7 +155,7 @@ p {
 
 /* targets of programmatic focus (route change, in-page section links) */
 #obsah:focus,
-#sluzby:focus,
+.services:focus,
 .contact-form__status:focus {
   outline: none;
 }
@@ -571,6 +571,53 @@ p {
 
 .btn--header:hover svg {
   transform: rotate(-12deg);
+}
+
+/* SK / EN: two small tabs beside the action, the current language filled */
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 0.75rem;
+  font-weight: 560;
+  letter-spacing: 0.04em;
+}
+
+.lang-switch__item {
+  display: inline-grid;
+  place-items: center;
+  min-width: 38px;
+  height: 38px;
+  padding: 0 8px;
+  border-radius: 10px;
+  color: var(--subtle);
+  transition:
+    background-color 0.3s var(--ease),
+    color 0.5s var(--ease);
+}
+
+a.lang-switch__item:hover {
+  background: var(--surface-2);
+  color: var(--blue);
+}
+
+.lang-switch__item.is-active {
+  background: var(--surface-2);
+  color: var(--ink);
+}
+
+.site-header:not(.is-solid) .lang-switch__item {
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.site-header:not(.is-solid) a.lang-switch__item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--white);
+}
+
+.site-header:not(.is-solid) .lang-switch__item.is-active {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--white);
 }
 
 .nav-dropdown {
@@ -3015,6 +3062,50 @@ p {
 
   .pixel-sphere.is-css-blur .pixel-sphere__soft canvas {
     filter: blur(14px);
+  }
+}
+
+/* Phones and tablets: the same pinned, scroll-driven list, with the description stacked under
+   the names instead of beside them. */
+@media (max-width: 960px) {
+  .clients__sticky {
+    padding-top: calc(var(--header-h) - 12px);
+    padding-bottom: 24px;
+  }
+
+  .clients__title {
+    margin-bottom: clamp(20px, 4vh, 36px);
+  }
+
+  .clients__stage {
+    grid-template-columns: 1fr;
+    gap: clamp(18px, 3vh, 28px);
+  }
+
+  .clients__name {
+    gap: 12px;
+    padding: 3px 0;
+    font-size: clamp(1.25rem, 0.95rem + 2vw, 1.875rem);
+  }
+
+  .clients__list .is-active .clients__name {
+    transform: translateX(6px);
+  }
+
+  .clients__detail {
+    padding: 18px 0 0;
+    border-left: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+  }
+
+  .clients__text {
+    font-size: 1rem;
+    line-height: 1.6;
+    min-height: 8em;
+  }
+
+  .clients__progress {
+    margin-top: 18px;
   }
 }
 

@@ -9,11 +9,14 @@ import { PixelMountains } from '../components/PixelMountains'
 import { useHover } from '../hooks/useHover'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { about, contact, home, routes, serviceBySlug, type Service } from '../data/site'
+import { contact, type Service, type ServiceId } from '../data/site'
+import { useI18n } from '../i18n'
 
 export default function About() {
   // the area under the pointer or focus, shared by the paragraph and the hub
-  const [activeArea, setActiveArea] = useState<string | null>(null)
+  const [activeArea, setActiveArea] = useState<ServiceId | null>(null)
+  const { t, servicePath, serviceById } = useI18n()
+  const { about } = t
   return (
     <>
       <PageHero
@@ -35,7 +38,7 @@ export default function About() {
                   ) : (
                     <Link
                       key={i}
-                      to={`/sluzby/${part.area}`}
+                      to={servicePath(serviceById(part.area)!)}
                       className={`area-link${activeArea === part.area ? ' is-active' : ''}`}
                       onPointerEnter={() => setActiveArea(part.area)}
                       onPointerLeave={() => setActiveArea(null)}
@@ -77,9 +80,13 @@ export default function About() {
 const HUB = { w: 1000, h: 440, cx: 500, cy: 220, inner: 270, rows: [70, 220, 370] }
 
 /** The six areas from the paragraph, wired into one Danau centre: the "one approach" made visible. */
-function AreasHub({ active, onActive }: { active: string | null; onActive: (slug: string | null) => void }) {
+function AreasHub({ active, onActive }: { active: ServiceId | null; onActive: (id: ServiceId | null) => void }) {
   const reduce = useReducedMotion()
-  const areas = about.areas.map((slug) => serviceBySlug(slug)).filter((s): s is Service => Boolean(s))
+  const { t, servicePath } = useI18n()
+  // the six areas the paragraph names, in its order
+  const areas = t.about.whatParts.flatMap((part) =>
+    typeof part === 'string' ? [] : t.services.filter((s): s is Service => s.id === part.area),
+  )
   const sides = [areas.slice(0, 3), areas.slice(3, 6)]
 
   const curve = (side: number, y: number) => {
@@ -95,7 +102,7 @@ function AreasHub({ active, onActive }: { active: string | null; onActive: (slug
           list.map((service, i) => {
             const d = curve(side, HUB.rows[i])
             return (
-              <g key={`${side}-${i}`} className={active === service.slug ? 'is-active' : undefined}>
+              <g key={`${side}-${i}`} className={active === service.id ? 'is-active' : undefined}>
                 <motion.path
                   d={d}
                   className="hub__line"
@@ -119,18 +126,18 @@ function AreasHub({ active, onActive }: { active: string | null; onActive: (slug
       {sides.map((list, side) =>
         list.map((service, i) => (
           <Reveal
-            key={service.slug}
-            className={`hub__node hub__node--${side === 0 ? 'left' : 'right'}${active === service.slug ? ' is-active' : ''}`}
+            key={service.id}
+            className={`hub__node hub__node--${side === 0 ? 'left' : 'right'}${active === service.id ? ' is-active' : ''}`}
             style={{ ['--y' as string]: `${(HUB.rows[i] / HUB.h) * 100}%`, ['--i' as string]: side * 3 + i }}
             delay={0.35 + i * 0.1 + side * 0.05}
             y={12}
           >
             <Link
-              to={`/sluzby/${service.slug}`}
+              to={servicePath(service)}
               className="hub__link"
-              onPointerEnter={() => onActive(service.slug)}
+              onPointerEnter={() => onActive(service.id)}
               onPointerLeave={() => onActive(null)}
-              onFocus={() => onActive(service.slug)}
+              onFocus={() => onActive(service.id)}
               onBlur={() => onActive(null)}
             >
               <span className="chip">
@@ -157,6 +164,7 @@ function SkillCell({ name, area }: { name: string; area: string }) {
 /** The hero aside: who and where the company is, with the way to start a conversation. */
 function CompanyCard() {
   const reduce = useReducedMotion()
+  const { t, paths } = useI18n()
   const [active, hover] = useHover()
   return (
     <motion.div
@@ -168,14 +176,14 @@ function CompanyCard() {
     >
       <PixelCluster className="company-card__pixels" active={active} seed={21} radius={110} cell={10} />
       <span className="company-card__label">
-        <Pin width={16} height={16} /> Sídlo spoločnosti
+        <Pin width={16} height={16} /> {t.ui.seat}
       </span>
       <p className="company-card__name">{contact.company}</p>
       <address className="company-card__address">
         <a href={contact.mapsHref} target="_blank" rel="noreferrer">
           {contact.street}
           <br />
-          {contact.city}, {contact.country}
+          {contact.city}, {t.ui.country}
         </a>
       </address>
       <ul className="company-card__rows">
@@ -196,8 +204,8 @@ function CompanyCard() {
           </a>
         </li>
       </ul>
-      <Link to={routes.contact} className="btn btn--pill btn--light company-card__cta">
-        <span>{home.hero.primary}</span>
+      <Link to={paths.contact} className="btn btn--pill btn--light company-card__cta">
+        <span>{t.home.hero.primary}</span>
         <ArrowUpRight />
       </Link>
     </motion.div>
