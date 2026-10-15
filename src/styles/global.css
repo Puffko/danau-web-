@@ -2865,41 +2865,19 @@ p {
   position: fixed;
   inset: 0;
   z-index: 70;
-  display: grid;
-  place-items: center;
-  background:
-    radial-gradient(70% 45% at 50% 120%, rgba(24, 24, 236, 0.45), transparent 70%),
-    var(--night);
-  color: var(--white);
-  clip-path: inset(0 0 0 0);
-  transition:
-    clip-path 0.9s var(--ease-io) 0.15s,
-    visibility 0s linear 1.05s;
-}
-
-/* loaded: the screen lifts away from the bottom up, revealing the page beneath */
-.loader.is-done {
-  clip-path: inset(0 0 100% 0);
-  visibility: hidden;
+  background: var(--night);
   pointer-events: none;
 }
 
-.loader__logo {
-  width: clamp(220px, 30vw, 320px);
-  transition:
-    transform 0.8s var(--ease-io) 0.1s,
-    opacity 0.5s var(--ease) 0.1s;
+/* the tiles carry the night ground themselves once they start dropping away */
+.loader.is-revealing {
+  background: transparent;
 }
 
-.loader.is-done .loader__logo {
-  transform: translateY(-28px);
-  opacity: 0;
-}
-
-/* the footer's pixel wordmark, cropped to the drawn mark so it sits exactly in the centre */
-.loader__logo {
+.loader__canvas {
   display: block;
-  aspect-ratio: 134 / 30.04;
+  width: 100%;
+  height: 100%;
   max-width: none;
 }
 

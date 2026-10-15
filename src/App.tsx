@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Route, Routes, useLocation, useNavigationType } from 'react-router-dom'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
-import { PixelWordmark } from './components/PixelWordmark'
+import { PixelLoader } from './components/PixelLoader'
 import { RevealReady } from './components/Reveal'
 import { cookies, pageMeta, privacy } from './data/site'
 import { prefersReducedMotion, scrollToTarget, useLenis } from './hooks/smoothScroll'
@@ -55,8 +55,6 @@ function goToSection(lenis: ReturnType<typeof useLenis>, el: HTMLElement) {
   focusWhenReady(el)
 }
 
-const wait = (ms: number) => new Promise((r) => setTimeout(r, ms))
-
 const OUT = { duration: 300, easing: 'cubic-bezier(0.4, 0, 1, 1)' }
 const IN = { duration: 950, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' }
 
@@ -71,6 +69,8 @@ export default function App() {
   // so the swap and the jump to the new scroll position happen while nothing is visible.
   const [shown, setShown] = useState(location)
   const [loading, setLoading] = useState(!reduce)
+  const [loaderOn, setLoaderOn] = useState(!reduce)
+  const [fontsReady, setFontsReady] = useState(false)
 
   const positions = useRef(new Map<string, number>())
   // The history entry whose page is on screen; null while pages are swapping.
@@ -99,20 +99,16 @@ export default function App() {
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
   }, [])
 
-  // First load: the footer's pixel wordmark builds itself, then the screen lifts away once the fonts are in.
+  // First load: the pixel wordmark holds the screen until the fonts are in (see PixelLoader).
   useEffect(() => {
-    if (reduce) return
     let cancelled = false
-    Promise.all([document.fonts?.ready ?? Promise.resolve(), wait(1750)]).then(() => {
-      if (cancelled) return
-      setLoading(false)
-      fadeIn()
+    ;(document.fonts?.ready ?? Promise.resolve()).then(() => {
+      if (!cancelled) setFontsReady(true)
     })
     return () => {
       cancelled = true
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [reduce])
+  }, [])
 
   // Remember the scroll position of the page on screen, so Back/Forward can return to it.
   useEffect(() => {
@@ -203,10 +199,8 @@ export default function App() {
         </RevealReady.Provider>
         <Footer />
       </div>
-      {!reduce && (
-        <div className={`loader${loading ? '' : ' is-done'}`} aria-hidden="true">
-          <PixelWordmark className="loader__logo" columns={104} crop />
-        </div>
+      {loaderOn && (
+        <PixelLoader ready={fontsReady} onReveal={() => setLoading(false)} onDone={() => setLoaderOn(false)} />
       )}
     </>
   )

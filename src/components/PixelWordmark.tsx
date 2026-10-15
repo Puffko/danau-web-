@@ -8,8 +8,7 @@ import { LETTERS, SYMBOL } from './Logo'
  * ignite from the bottom when the mark scrolls into view; the pointer brightens them.
  */
 
-const VIEW_W = 134
-const RAMP = ['#4a55ff', '#5d68ff', '#8796ff', '#b3c2ff', '#dae3ff', '#eef1ff', '#ffffff']
+export const RAMP = ['#4a55ff', '#5d68ff', '#8796ff', '#b3c2ff', '#dae3ff', '#eef1ff', '#ffffff']
 
 interface Cell {
   x: number
@@ -19,16 +18,55 @@ interface Cell {
 }
 
 /** Space above the drawn mark in the wordmark's viewBox; `crop` removes it so the mark centres. */
-const CROP_TOP = 12.1
+export const CROP_TOP = 12.1
+/** The cropped mark's height in viewBox units (its width is VIEW_W). */
+export const MARK_H = 30.04
+export const VIEW_W = 134
+
+/**
+ * The grid cells the logo really fills when its width is split into `cols` columns: only cells
+ * more than half covered, so no stray or half-covered pixels stick out of the letters.
+ */
+export function sampleWordmark(cols: number, rows: number, crop: boolean) {
+  const ss = 3 // samples per cell edge
+  const off = document.createElement('canvas')
+  off.width = cols * ss
+  off.height = rows * ss
+  const o = off.getContext('2d')
+  const out: { i: number; j: number; cover: number }[] = []
+  if (!o) return out
+  // one uniform scale maps logo units onto the sample grid
+  const scale = (cols * ss) / VIEW_W
+  o.scale(scale, scale)
+  if (crop) o.translate(0, -CROP_TOP)
+  o.fillStyle = '#fff'
+  o.save()
+  o.translate(0, 12.1131)
+  for (const d of SYMBOL) o.fill(new Path2D(d))
+  o.restore()
+  o.save()
+  o.translate(33, 41.6829)
+  o.fill(new Path2D(LETTERS))
+  o.restore()
+  const data = o.getImageData(0, 0, off.width, off.height).data
+  for (let i = 0; i < cols; i++) {
+    for (let j = 0; j < rows; j++) {
+      let cover = 0
+      for (let a = 0; a < ss; a++)
+        for (let b = 0; b < ss; b++) cover += data[((j * ss + b) * off.width + (i * ss + a)) * 4 + 3]
+      cover /= ss * ss * 255
+      if (cover > 0.5) out.push({ i, j, cover })
+    }
+  }
+  return out
+}
 
 export function PixelWordmark({
   className,
   columns = 150,
-  crop = false,
 }: {
   className?: string
   columns?: number
-  crop?: boolean
 }) {
   const ref = useRef<HTMLCanvasElement>(null)
 
@@ -57,46 +95,17 @@ export function PixelWordmark({
       canvas.height = Math.round(h * dpr)
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
 
-      const cols = w < 600 && !crop ? Math.round(columns * 0.6) : columns
+      const cols = w < 600 ? Math.round(columns * 0.6) : columns
       cell = w / cols
       const rows = Math.ceil(h / cell)
-      const ss = 3 // samples per cell edge
-      const off = document.createElement('canvas')
-      off.width = cols * ss
-      off.height = rows * ss
-      const o = off.getContext('2d')
-      if (!o) return
-      // cols * cell === w, so one uniform scale maps logo units onto the sample grid
-      const scale = (cols * ss) / VIEW_W
-      o.scale(scale, scale)
-      if (crop) o.translate(0, -CROP_TOP)
-      o.fillStyle = '#fff'
-      o.save()
-      o.translate(0, 12.1131)
-      for (const d of SYMBOL) o.fill(new Path2D(d))
-      o.restore()
-      o.save()
-      o.translate(33, 41.6829)
-      o.fill(new Path2D(LETTERS))
-      o.restore()
-      const data = o.getImageData(0, 0, off.width, off.height).data
-
       const next: Cell[] = []
-      for (let i = 0; i < cols; i++) {
-        for (let j = 0; j < rows; j++) {
-          let cover = 0
-          for (let a = 0; a < ss; a++)
-            for (let b = 0; b < ss; b++) cover += data[((j * ss + b) * off.width + (i * ss + a)) * 4 + 3]
-          cover /= ss * ss * 255
-          // only cells the letters really fill: no stray or half-covered pixels sticking out
-          if (cover <= 0.5) continue
-          next.push({
-            x: i * cell,
-            y: j * cell,
-            edge: cover < 0.8,
-            delay: (1 - j / rows) * 650 + (i / cols) * 350 + hash(i, j, 4) * 250,
-          })
-        }
+      for (const c of sampleWordmark(cols, rows, false)) {
+        next.push({
+          x: c.i * cell,
+          y: c.j * cell,
+          edge: c.cover < 0.8,
+          delay: (1 - c.j / rows) * 650 + (c.i / cols) * 350 + hash(c.i, c.j, 4) * 250,
+        })
       }
       cells = next
     }
@@ -176,7 +185,7 @@ export function PixelWordmark({
       canvas.removeEventListener('pointerleave', onLeave)
       document.removeEventListener('visibilitychange', kick)
     }
-  }, [columns, crop])
+  }, [columns])
 
   return <canvas ref={ref} className={className} aria-hidden="true" />
 }
