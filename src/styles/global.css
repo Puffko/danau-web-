@@ -145,7 +145,6 @@ p {
 }
 
 [data-theme='dark'] :focus-visible,
-.site-header:not(.is-solid) :focus-visible,
 .mobile-menu :focus-visible {
   outline-color: var(--white);
 }
@@ -387,51 +386,59 @@ p {
 
 /* ---------- Header ---------- */
 
+/* A floating white bar: logo, small centred links and one blue action, as one compact card
+   that sits a little below the top edge on every page. */
 .site-header {
   position: fixed;
   inset: 0 0 auto;
   z-index: 50;
-  color: var(--white);
-  transition:
-    background-color 0.45s var(--ease),
-    color 0.45s var(--ease),
-    box-shadow 0.45s var(--ease),
-    backdrop-filter 0.45s var(--ease);
-}
-
-.site-header.is-solid {
-  background: rgba(255, 255, 255, 0.84);
+  padding-top: 14px;
   color: var(--ink);
-  -webkit-backdrop-filter: saturate(1.5) blur(18px);
-  backdrop-filter: saturate(1.5) blur(18px);
-  box-shadow:
-    0 1px 0 rgba(17, 24, 39, 0.06),
-    0 12px 32px -20px rgba(17, 24, 39, 0.25);
+  pointer-events: none;
 }
 
 .site-header__inner {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 24px;
-  height: var(--header-h);
+  gap: 16px;
+  width: calc(100% - var(--gutter) * 2);
+  max-width: 940px;
+  height: 56px;
+  margin-inline: auto;
+  padding: 0 8px 0 18px;
+  border: 1px solid rgba(17, 24, 39, 0.06);
+  border-radius: 16px;
+  background: var(--white);
+  box-shadow:
+    0 1px 2px rgba(17, 24, 39, 0.05),
+    0 18px 40px -22px rgba(5, 6, 26, 0.45);
+  pointer-events: auto;
+  transition: box-shadow 0.45s var(--ease);
+}
+
+.site-header.is-solid .site-header__inner {
+  box-shadow:
+    0 1px 2px rgba(17, 24, 39, 0.06),
+    0 18px 44px -20px rgba(17, 24, 39, 0.3);
 }
 
 .brand {
   display: inline-flex;
   margin-right: auto;
-  padding: 6px 0;
+  padding: 4px 0;
 }
 
 .brand__mark {
   width: auto;
-  height: 30px;
+  height: 22px;
   fill: currentColor;
 }
 
 .primary-nav {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
@@ -441,23 +448,28 @@ p {
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  height: 40px;
-  padding: 0 14px;
+  gap: 5px;
+  height: 36px;
+  padding: 0 13px;
   border: 0;
-  border-radius: 999px;
+  border-radius: 10px;
   background: transparent;
-  font-size: 0.9375rem;
-  font-weight: 450;
-  transition: background-color 0.3s var(--ease);
+  color: var(--ink);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  transition:
+    background-color 0.3s var(--ease),
+    color 0.3s var(--ease);
 }
 
 .primary-nav__link:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--surface-2);
+  color: var(--blue);
 }
 
-.is-solid .primary-nav__link:hover {
-  background: rgba(17, 24, 39, 0.05);
+.primary-nav__link.active {
+  color: var(--blue);
 }
 
 .primary-nav__link.active::after {
@@ -480,23 +492,30 @@ p {
 }
 
 .btn--header {
-  --btn-h: 44px;
-  padding: 0 16px 0 20px;
-  background: var(--white);
-  color: var(--ink);
+  --btn-h: 40px;
+  gap: 8px;
+  padding: 0 16px 0 14px;
+  border-radius: 11px;
+  background: var(--blue);
+  color: var(--white);
+  font-size: 0.8125rem;
+  font-weight: 520;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 8px 18px -10px rgba(24, 24, 236, 0.9);
 }
 
 .btn--header:hover {
-  background: var(--tint);
+  background: var(--blue-600);
 }
 
-.is-solid .btn--header {
-  background: var(--ink);
-  color: var(--white);
+.btn--header svg {
+  width: 15px;
+  height: 15px;
 }
 
-.is-solid .btn--header:hover {
-  background: var(--blue);
+.btn--header:hover svg {
+  transform: rotate(-12deg);
 }
 
 .nav-dropdown {
@@ -654,22 +673,17 @@ p {
 .menu-toggle {
   display: none;
   place-items: center;
-  width: 44px;
-  height: 44px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  background: transparent;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: var(--white);
+  color: var(--ink);
   transition: border-color 0.3s var(--ease);
 }
 
-.is-solid .menu-toggle {
-  border-color: var(--line);
-}
-
-/* over the open mobile menu the bar is part of the menu: opaque night, white marks */
-.site-header.is-menu-open {
-  background: var(--night);
-  color: var(--white);
+.menu-toggle:hover {
+  border-color: var(--blue-200);
 }
 
 .mobile-menu {
@@ -3190,7 +3204,17 @@ p {
   }
 
   .brand__mark {
-    height: 26px;
+    height: 20px;
+  }
+
+  .site-header {
+    padding-top: 10px;
+  }
+
+  .site-header__inner {
+    height: 52px;
+    padding-left: 14px;
+    padding-right: 6px;
   }
 
   .hero__title {

@@ -56,8 +56,8 @@ function goToSection(lenis: ReturnType<typeof useLenis>, el: HTMLElement) {
 
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
-const OUT = { duration: 320, easing: 'cubic-bezier(0.4, 0, 0.2, 1)' }
-const IN = { duration: 700, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' }
+const OUT = { duration: 300, easing: 'cubic-bezier(0.4, 0, 1, 1)' }
+const IN = { duration: 950, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' }
 
 export default function App() {
   const location = useLocation()
@@ -84,14 +84,14 @@ export default function App() {
   const fadeOut = async () => {
     const el = pageRef.current
     if (!el) return
-    await el.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(-12px)' }], OUT).finished
+    await el.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(-6px)' }], OUT).finished
     el.style.opacity = '0'
   }
   const fadeIn = () => {
     const el = pageRef.current
     if (!el) return
     el.style.opacity = ''
-    el.animate([{ opacity: 0, transform: 'translateY(18px)' }, { opacity: 1, transform: 'none' }], IN)
+    el.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], IN)
   }
 
   useEffect(() => {

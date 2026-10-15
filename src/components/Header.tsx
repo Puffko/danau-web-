@@ -3,7 +3,7 @@ import { useEffect, useId, useRef, useState, type FocusEvent, type PointerEvent 
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { contact, home, routes, services } from '../data/site'
 import { useLenis } from '../hooks/smoothScroll'
-import { ArrowRight, ArrowUpRight, Caret, Close, Menu, ServiceIcon } from './Icons'
+import { ArrowRight, ArrowUpRight, Caret, Close, Menu, Phone, ServiceIcon } from './Icons'
 import { Wordmark } from './Logo'
 import { PixelCluster } from './PixelCluster'
 import { EASE_OUT } from './Reveal'
@@ -195,9 +195,9 @@ export function Header() {
             </NavLink>
           </nav>
 
-          <Link to={routes.contact} className="btn btn--pill btn--header">
+          <Link to={routes.contact} className="btn btn--header">
+            <Phone />
             <span>Kontakt</span>
-            <ArrowUpRight />
           </Link>
 
           <button

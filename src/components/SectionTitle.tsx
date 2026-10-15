@@ -22,10 +22,13 @@ export function SectionTitle({ text, id, className, as = 'h2', tone = 'dark' }: 
     <Tag
       id={id}
       className={className}
-      initial={reduce ? { opacity: 0 } : { opacity: 0, y: 28 }}
+      initial={reduce ? { opacity: 0 } : { opacity: 0, y: 18 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '0px 0px -12% 0px' }}
-      transition={{ duration: reduce ? 0.4 : 1, ease: EASE_OUT }}
+      viewport={{ once: true, margin: '0px 0px -10% 0px' }}
+      transition={{
+        y: { duration: reduce ? 0 : 1.3, ease: EASE_OUT },
+        opacity: { duration: reduce ? 0.4 : 1, ease: [0.33, 1, 0.68, 1] },
+      }}
     >
       <ShinyText text={text} {...glint(tone)} />
     </Tag>

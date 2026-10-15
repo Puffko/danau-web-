@@ -48,10 +48,14 @@ export function RevealText({
             <motion.span
               className="reveal-text__word"
               variants={{
-                hidden: reduce ? { opacity: 0 } : { y: '108%', opacity: 0.001 },
+                hidden: reduce ? { opacity: 0 } : { y: '72%', opacity: 0 },
                 shown: { y: '0%', opacity: 1 },
               }}
-              transition={{ duration: reduce ? 0.4 : 0.9, ease: EASE_OUT }}
+              // a short rise with a slower fade, so each word eases in rather than pops up
+              transition={{
+                y: { duration: reduce ? 0 : 1.15, ease: EASE_OUT },
+                opacity: { duration: reduce ? 0.4 : 0.95, ease: [0.33, 1, 0.68, 1] },
+              }}
             >
               {word}
             </motion.span>
@@ -84,7 +88,7 @@ interface RevealProps extends HTMLMotionProps<'div'> {
 }
 
 /** Rise-and-fade entrance for blocks. Content stays in the layout from the start. */
-export function Reveal({ children, delay = 0, y = 24, immediate = false, as = 'div', ...rest }: RevealProps) {
+export function Reveal({ children, delay = 0, y = 16, immediate = false, as = 'div', ...rest }: RevealProps) {
   const Comp = (as === 'li' ? motion.li : motion.div) as typeof motion.div
   const reduce = useReducedMotion()
   const hidden = reduce ? { opacity: 0 } : { opacity: 0, y }
@@ -96,7 +100,15 @@ export function Reveal({ children, delay = 0, y = 24, immediate = false, as = 'd
         viewport: { once: true, margin: '0px 0px -10% 0px' },
       }
   return (
-    <Comp initial={hidden} {...trigger} transition={{ duration: 1.1, delay, ease: EASE_OUT }} {...rest}>
+    <Comp
+      initial={hidden}
+      {...trigger}
+      transition={{
+        y: { duration: 1.3, delay, ease: EASE_OUT },
+        opacity: { duration: 1, delay, ease: [0.33, 1, 0.68, 1] },
+      }}
+      {...rest}
+    >
       {children}
     </Comp>
   )
