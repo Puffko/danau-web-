@@ -2,7 +2,6 @@ import { motion, useReducedMotion } from 'motion/react'
 import { Link } from 'react-router-dom'
 import { contact, footer, routes, services } from '../data/site'
 import { ArrowUpRight, Mail, Phone, Pin } from './Icons'
-import { Wordmark } from './Logo'
 import { PixelWordmark } from './PixelWordmark'
 import { EASE_OUT, RevealText } from './Reveal'
 
@@ -14,9 +13,6 @@ export function Footer() {
       <div className="site-footer__glow" aria-hidden="true" />
       <div className="container site-footer__top">
         <div className="site-footer__claim">
-          <Link to="/" className="site-footer__brand" aria-label="Danau – domov">
-            <Wordmark aria-hidden="true" />
-          </Link>
           <RevealText as="p" className="site-footer__headline" text={footer.claim} />
           <Link to={routes.contact} className="btn btn--pill btn--light">
             <span>Kontakt</span>
