@@ -25,19 +25,21 @@ const subscribeWide = (cb: () => void) => {
 const getWide = () => window.matchMedia(WIDE).matches
 
 /**
- * The diagram builds itself in one sequence once it is in view (seconds from that moment):
- * the sphere assembles from its core, the arc grows out from its middle, each note rises,
- * its line runs to the arc and the node lands where it arrives. The nodes pulse only after that.
+ * The diagram builds itself in one continuous flow once it is in view (seconds from that
+ * moment): the arc grows out from its middle, each note rises and its line runs to the arc,
+ * the node fades in exactly where the line arrives, and the sphere's pixels pour in from the
+ * arc side as one wave behind them. The nodes pulse only once everything has settled.
  */
-const T = {
-  arc: 0.35,
-  note: (i: number) => 0.45 + i * 0.22,
-  line: (i: number) => 0.75 + i * 0.22,
-  node: (i: number) => 1.5 + i * 0.22,
-  result: 0.95,
-  live: 2.4,
-}
 const LINE_DURATION = 0.8
+const T = {
+  arc: 0.2,
+  sphere: 0.35,
+  note: (i: number) => 0.3 + i * 0.2,
+  line: (i: number) => 0.45 + i * 0.2,
+  node: (i: number) => 0.45 + i * 0.2 + LINE_DURATION - 0.08,
+  result: 1.3,
+  live: 2.8,
+}
 const EASE_IO = [0.65, 0, 0.35, 1] as const
 
 interface Note {
@@ -138,11 +140,11 @@ export function SphereDiagram({ notes, result, mirrored = false, resultLast = fa
               cy={y}
               r="6"
               fill="#1818ec"
-              initial={reduce ? false : { scale: 0, opacity: 0 }}
+              initial={reduce ? false : { scale: 0.3, opacity: 0 }}
               animate={play ? { scale: 1, opacity: 1 } : undefined}
               transition={{
-                scale: { type: 'spring', stiffness: 420, damping: 18, delay: T.node(i) },
-                opacity: { duration: 0.15, delay: T.node(i) },
+                scale: { duration: 0.5, delay: T.node(i), ease: EASE_OUT },
+                opacity: { duration: 0.35, delay: T.node(i) },
               }}
               style={{ transformOrigin: `${arcX(y)}px ${y}px`, transformBox: 'view-box' }}
             />
@@ -182,7 +184,13 @@ export function SphereDiagram({ notes, result, mirrored = false, resultLast = fa
           ['--d' as string]: `${((R * 2) / W) * 100}%`,
         }}
       >
-        <PixelSphere className="process-orb__sphere" mirrored={mirrored} seed={seed} play={wide ? play : reduce || orbSeen} />
+        <PixelSphere
+          className="process-orb__sphere"
+          mirrored={mirrored}
+          seed={seed}
+          play={wide ? play : reduce || orbSeen}
+          delay={wide ? T.sphere * 1000 : 0}
+        />
         <Step className="process-orb__solution" go={wide ? play : undefined} delay={T.result} stackDelay={0.5}>
           <h3 className="process-orb__title">{result.title}</h3>
           <p className="process-orb__text">{result.text}</p>

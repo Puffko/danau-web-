@@ -6,8 +6,8 @@ import { hash, noise1, noise2, smooth } from '../lib/noise'
  *
  * One fixed magnitude ramp (size + colour) carries height and light: dots are
  * small and blue on the ridges and grow paler and denser towards the base, where
- * the hero's glow is brightest. On load the range ignites bottom-up in a scan
- * sweep, then idles with sparse twinkles; the pointer acts as a lens that
+ * the hero's glow is brightest. On load the range fills in bottom-up as a calm
+ * wave, then idles with sparse twinkles; the pointer acts as a lens that
  * enlarges and brightens nearby dots.
  *
  * Only the intro repaints the whole canvas. Once it is over, a frame repaints just
@@ -137,7 +137,7 @@ export function PixelMountains({ variant = 'hero', seed = 3, className }: Props)
             col: i,
             row: j,
             level,
-            delay: (yb / height) * 950 + Math.abs(u - 0.6) * 260 + hash(j, i, seed + 3) * 320,
+            delay: (yb / height) * 1100 + Math.abs(u - 0.6) * 260 + hash(j, i, seed + 3) * 110,
             phase: hash(i, j, seed + 5) * Math.PI * 2,
             twinkle: hash(i, j, seed + 7) < 0.16,
           })
@@ -220,15 +220,15 @@ export function PixelMountains({ variant = 'hero', seed = 3, className }: Props)
           const d = dots[k]
           let grow = 1
           let lvl = d.level
-          const p = (t - d.delay) / 520
+          const p = (t - d.delay) / 760
           if (p <= 0) {
             anyIntro = true
             continue
           }
           if (p < 1) {
             anyIntro = true
-            grow = 1 - Math.pow(1 - p, 4)
-            if (p < 0.35) lvl = Math.min(5, lvl + 2) // the ignition front flashes bright
+            // dots grow and fade in together: a calm rising wave, no flashing front
+            grow = 1 - Math.pow(1 - p, 3)
           }
           let size = levelSizes[d.level] * grow
           if (pointer.active) {
@@ -243,6 +243,7 @@ export function PixelMountains({ variant = 'hero', seed = 3, className }: Props)
           }
           if (lvl !== pass) continue
           const s = Math.min(size, cell - 1)
+          ctx.globalAlpha = ALPHA[pass] * grow
           ctx.fillRect(d.x - s / 2, d.y - s / 2, s, s)
         }
       }

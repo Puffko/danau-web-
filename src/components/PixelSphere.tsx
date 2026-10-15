@@ -4,8 +4,9 @@ import { hash, noise2 } from '../lib/noise'
 /**
  * A sphere of blue pixels, split down the middle: the left half is a crisp
  * pixel grid, the right half the same field seen out of focus. The field flows
- * slowly; cells near the pointer light up. On entry the sphere assembles from its core
- * outwards, each cell growing and brightening into place.
+ * slowly; cells near the pointer light up. On entry the pixels flow in as one smooth wave
+ * from the arc side of the sphere (where the diagram's lines arrive) across to the far rim,
+ * each cell growing and fading into place.
  */
 
 // Live palette blues, deepest to palest.
@@ -24,9 +25,11 @@ interface Props {
   seed?: number
   /** Hold the entrance until true (for a parent that sequences it); undefined starts it on scroll-in. */
   play?: boolean
+  /** Wait this long (ms) after `play` before the wave starts, to follow the diagram's lines. */
+  delay?: number
 }
 
-export function PixelSphere({ cells = 34, className, mirrored = false, seed = 0, play }: Props) {
+export function PixelSphere({ cells = 34, className, mirrored = false, seed = 0, play, delay = 0 }: Props) {
   const wrapRef = useRef<HTMLDivElement>(null)
   const crispRef = useRef<HTMLCanvasElement>(null)
   const softRef = useRef<HTMLCanvasElement>(null)
@@ -137,16 +140,15 @@ export function PixelSphere({ cells = 34, className, mirrored = false, seed = 0,
           const crispCell = stray || (d <= r && !(d > r - 1.2 && hash(i, j, 3) < 0.4))
 
           let grow = 1
-          let lift = 0
           if (!reduce) {
-            // a wave from the core to the rim, loosened a little per cell
-            const p = (t - ((d / r) * 900 + hash(i, j, 9) * 260)) / 620
+            // one wave from the middle of the arc side (canvas left; the CSS flip puts it on the
+            // right for mirrored stages) across the sphere, barely loosened per cell
+            const reach = Math.hypot(i + 0.5, j + 0.5 - c) / n
+            const p = (t - delay - (reach * 1500 + hash(i, j, 9) * 70)) / 750
             if (p < 1) {
               intro = true
               if (p <= 0) continue
               grow = 1 - Math.pow(1 - p, 3)
-              // cells arrive pale and settle into their own blue
-              lift = (1 - grow) * 4
             }
           }
 
@@ -155,7 +157,7 @@ export function PixelSphere({ cells = 34, className, mirrored = false, seed = 0,
           const y = j * cell
 
           if (i < c && crispCell) {
-            let k = Math.min(RAMP.length - 1, Math.floor(v * RAMP.length + lift))
+            let k = Math.min(RAMP.length - 1, Math.floor(v * RAMP.length))
             if (pointer.on) {
               const pd = Math.hypot(x + cell / 2 - pointer.x, y + cell / 2 - pointer.y) / cell
               if (pd < 3) k = Math.min(RAMP.length - 1, k + (pd < 1.5 ? 3 : 2))
@@ -172,7 +174,7 @@ export function PixelSphere({ cells = 34, className, mirrored = false, seed = 0,
               }
             } else {
               const s = cell * grow
-              c1.globalAlpha = Math.min(1, grow * 1.4)
+              c1.globalAlpha = grow
               c1.fillStyle = RAMP[k]
               c1.fillRect(x + (cell - s) / 2, y + (cell - s) / 2, s + 0.5, s + 0.5)
             }
@@ -246,7 +248,7 @@ export function PixelSphere({ cells = 34, className, mirrored = false, seed = 0,
       document.removeEventListener('visibilitychange', onVis)
       kickRef.current = () => {}
     }
-  }, [cells, mirrored, seed])
+  }, [cells, mirrored, seed, delay])
 
   return (
     <div ref={wrapRef} className={`pixel-sphere ${className ?? ''}`} aria-hidden="true">
