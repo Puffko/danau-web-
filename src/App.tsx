@@ -102,7 +102,7 @@ export default function App() {
   useEffect(() => {
     if (reduce) return
     let cancelled = false
-    Promise.all([document.fonts?.ready ?? Promise.resolve(), wait(650)]).then(() => {
+    Promise.all([document.fonts?.ready ?? Promise.resolve(), wait(900)]).then(() => {
       if (cancelled) return
       setLoading(false)
       fadeIn()
@@ -203,7 +203,11 @@ export default function App() {
       {!reduce && (
         <div className={`loader${loading ? '' : ' is-done'}`} aria-hidden="true">
           <Wordmark className="loader__logo" />
-          <span className="loader__bar" />
+          <span className="loader__pixels">
+            {Array.from({ length: 12 }, (_, i) => (
+              <i key={i} style={{ ['--i' as string]: i }} />
+            ))}
+          </span>
         </div>
       )}
     </>

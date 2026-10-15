@@ -1,16 +1,14 @@
 import { useEffect, useRef } from 'react'
-import { hash, noise2 } from '../lib/noise'
+import { hash } from '../lib/noise'
 
 /**
  * A word set in the site's pixel mosaic, like the footer wordmark: the real text stays in place
  * (transparent, so it keeps the line's metrics, wraps, selects and reads aloud as usual) and a
- * canvas over it paints each glyph as square cells in pale blues. The cells assemble from left to
- * right after the headline's reveal, then shimmer slowly.
+ * canvas over it paints each glyph as touching square cells under one white-to-pale-blue light,
+ * so it reads as smooth text with a stepped pixel outline. The cells assemble from left to right
+ * after the headline's reveal, then the word stays still.
  */
 
-// The footer wordmark's ramp: brand blue on the letter edges, white at the top of the strokes.
-// The core of every stroke stays in the pale end, far above 7:1 on the night hero.
-const RAMP = ['#5d68ff', '#8796ff', '#b3c2ff', '#dae3ff', '#eef1ff', '#ffffff']
 // The clipping mask of the headline reveal leaves this much room around a word (in em).
 const PAD_TOP = 0.08
 const PAD_BOTTOM = 0.12
@@ -40,8 +38,8 @@ export function PixelWord({ text, delay = 0 }: { text: string; delay?: number })
     let h = 0
     let raf = 0
     let start = -1
-    let last = 0
     let visible = true
+    let dpr = 1
 
     const build = () => {
       const node = textEl.firstChild
@@ -54,14 +52,14 @@ export function PixelWord({ text, delay = 0 }: { text: string; delay?: number })
       h = box.height + padTop + size * PAD_BOTTOM
       canvas.style.top = `${-padTop}px`
       canvas.style.height = `${h}px`
-      const dpr = Math.min(window.devicePixelRatio || 1, 2)
+      dpr = Math.min(window.devicePixelRatio || 1, 2)
       canvas.width = Math.round(w * dpr)
       canvas.height = Math.round(h * dpr)
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
 
-      // fine enough that even the light weight's thin strokes are two cells wide, so each letter
-      // keeps exactly the headline font's shape, only built from pixels
-      cell = Math.max(2, size / 22)
+      // fine cells, so the letters keep the headline font's exact shape and read as smooth text,
+      // with just a stepped pixel outline
+      cell = Math.max(1.8, size / 24)
       const cols = Math.ceil(w / cell)
       const rows = Math.ceil(h / cell)
       const ss = 4
@@ -120,7 +118,7 @@ export function PixelWord({ text, delay = 0 }: { text: string; delay?: number })
         for (let j = 0; j < rows; j++) {
           const at = i * rows + j
           const cover = best[at]
-          if (cover <= 0.3) continue
+          if (cover <= 0.42) continue
           // keep one empty column between neighbouring letters: a cell that touches a cell of
           // another letter directly to its left (or diagonally) gives way to it
           let touches = false
@@ -129,7 +127,7 @@ export function PixelWord({ text, delay = 0 }: { text: string; delay?: number })
               const jj = j + dj
               if (jj < 0 || jj >= rows) continue
               const left = (i - 1) * rows + jj
-              if (best[left] > 0.3 && owner[left] !== owner[at]) touches = true
+              if (best[left] > 0.42 && owner[left] !== owner[at]) touches = true
             }
           }
           if (touches) continue
@@ -149,14 +147,15 @@ export function PixelWord({ text, delay = 0 }: { text: string; delay?: number })
       if (start < 0) start = now
       const t = reduce ? 1e9 : now - start
       const intro = !reduce && t < delay + 1100
-      if (!intro && now - last < 90) {
-        schedule()
-        return
-      }
-      last = now
       ctx.clearRect(0, 0, w, h)
-      const flow = reduce ? 0 : now
-      const gap = Math.max(0.6, cell * 0.14)
+      // one smooth light over the whole word: white at the top of the letters, pale blue at
+      // the baseline; the cells touch, so only the stepped outline shows the pixels
+      const light = ctx.createLinearGradient(0, h * 0.12, 0, h * 0.92)
+      light.addColorStop(0, '#ffffff')
+      light.addColorStop(0.55, '#eef1ff')
+      light.addColorStop(1, '#b3c2ff')
+      ctx.fillStyle = light
+      const snap = (v: number) => Math.round(v * dpr) / dpr
       for (const c of cells) {
         let grow = 1
         if (intro) {
@@ -164,22 +163,20 @@ export function PixelWord({ text, delay = 0 }: { text: string; delay?: number })
           if (p <= 0) continue
           if (p < 1) grow = 1 - Math.pow(1 - p, 3)
         }
-        const i = c.x / cell
-        const j = c.y / cell
-        // white at the top of the letters, settling into pale blue towards the baseline (as the
-        // footer wordmark), with a slow drift of light across
-        // a clean vertical light: white strokes cooling to pale blue at the baseline, a slow soft
-        // shimmer on top, and the letter edges one step bluer so the shapes stay crisp
-        let v = 1.08 - (c.y / h) * 0.5 + (noise2(i * 0.05 + flow * 0.00004, j * 0.05, 23) - 0.5) * 0.14
-        if (c.edge) v -= 0.3
-        const k = Math.max(0, Math.min(RAMP.length - 1, Math.floor(v * RAMP.length)))
-        const s = (cell - gap) * grow
-        ctx.globalAlpha = Math.min(1, grow * 1.3)
-        ctx.fillStyle = RAMP[k]
-        ctx.fillRect(c.x + (cell - s) / 2, c.y + (cell - s) / 2, s, s)
+        if (grow < 1) {
+          const s = cell * grow
+          ctx.globalAlpha = Math.min(1, grow * 1.3)
+          ctx.fillRect(c.x + (cell - s) / 2, c.y + (cell - s) / 2, s, s)
+          ctx.globalAlpha = 1
+        } else {
+          // snapped to device pixels so neighbouring cells meet without hairline seams
+          const x0 = snap(c.x)
+          const y0 = snap(c.y)
+          ctx.fillRect(x0, y0, snap(c.x + cell) - x0, snap(c.y + cell) - y0)
+        }
       }
-      ctx.globalAlpha = 1
-      if (!reduce) schedule()
+      // once assembled the word is still: nothing left to animate
+      if (intro) schedule()
     }
 
     const schedule = () => {
