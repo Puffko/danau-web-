@@ -9,8 +9,11 @@ import { ART } from './illustrations'
  * a pixel. Cells ignite on load, idle with sparse twinkles and swell under the pointer.
  */
 
-const COLORS = ['#4A55FF', '#9AA8FF', '#D4DCFF', '#FFFFFF']
-const ALPHA = [0.35, 0.9, 1, 1]
+// On night grounds the glyph glows pale; on light grounds it is drawn in the brand blues.
+const TONES = {
+  dark: { colors: ['#4A55FF', '#9AA8FF', '#D4DCFF', '#FFFFFF'], alpha: [0.35, 0.9, 1, 1] },
+  light: { colors: ['#B3C2FF', '#5D68FF', '#1818EC', '#1010DC'], alpha: [0.55, 1, 1, 1] },
+}
 
 interface Cell {
   x: number
@@ -20,7 +23,13 @@ interface Cell {
   phase: number
 }
 
-export function PixelGlyph({ name, className }: { name: IllustrationName; className?: string }) {
+interface Props {
+  name: IllustrationName
+  className?: string
+  tone?: keyof typeof TONES
+}
+
+export function PixelGlyph({ name, className, tone = 'dark' }: Props) {
   const ref = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
@@ -62,7 +71,11 @@ export function PixelGlyph({ name, className }: { name: IllustrationName; classN
       o.lineCap = 'round'
       o.lineJoin = 'round'
       o.strokeStyle = '#fff'
-      for (const d of art.paths) o.stroke(new Path2D(d))
+      o.fillStyle = '#fff'
+      for (const d of art.paths) {
+        if (art.fill) o.fill(new Path2D(d))
+        else o.stroke(new Path2D(d))
+      }
       const data = o.getImageData(0, 0, res, res).data
 
       const next: Cell[] = []
@@ -98,8 +111,8 @@ export function PixelGlyph({ name, className }: { name: IllustrationName; classN
       ctx.clearRect(0, 0, size, size)
       let pending = false
       for (let pass = 0; pass < 4; pass++) {
-        ctx.fillStyle = COLORS[pass]
-        ctx.globalAlpha = ALPHA[pass]
+        ctx.fillStyle = TONES[tone].colors[pass]
+        ctx.globalAlpha = TONES[tone].alpha[pass]
         for (const k of cells) {
           let lvl = k.level
           let grow = 1
@@ -164,7 +177,7 @@ export function PixelGlyph({ name, className }: { name: IllustrationName; classN
       canvas.removeEventListener('pointerleave', onLeave)
       document.removeEventListener('visibilitychange', kick)
     }
-  }, [name])
+  }, [name, tone])
 
   return <canvas ref={ref} className={className} aria-hidden="true" />
 }

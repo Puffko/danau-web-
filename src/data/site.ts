@@ -1,7 +1,7 @@
 // All copy is taken verbatim from the live danau.sk. Edit content here, not in components.
 
 export type ServiceIconName = 'project' | 'security' | 'gdpr' | 'analytics' | 'data' | 'delivery'
-export type IllustrationName = 'lock' | 'shield' | 'document' | 'chart' | 'database' | 'screen'
+export type IllustrationName = 'lock' | 'shield' | 'document' | 'chart' | 'database' | 'screen' | 'dsymbol'
 
 export const contact = {
   company: 'DANAU, s.r.o.',
@@ -308,8 +308,13 @@ export const about = {
   title: 'O nás',
   text: 'Sme odborný partner pre organizácie, ktoré potrebujú kvalitne pripraviť, riadiť a realizovať projekty, nastaviť bezpečnostné a riadiace procesy alebo posilniť interné odborné kapacity.',
   whatTitle: 'Čo robíme?',
+  // The live paragraph, split so the closing sentence can carry the emphasis.
   whatText:
-    'Pôsobíme na rozhraní projektového riadenia, analytiky, kybernetickej bezpečnosti, ochrany osobných údajov, dátového manažmentu a realizácie IT riešení. Našou výhodou je schopnosť prepájať tieto oblasti do jedného zrozumiteľného a riaditeľného prístupu.',
+    'Pôsobíme na rozhraní projektového riadenia, analytiky, kybernetickej bezpečnosti, ochrany osobných údajov, dátového manažmentu a realizácie IT riešení.',
+  whatEdge:
+    'Našou výhodou je schopnosť prepájať tieto oblasti do jedného zrozumiteľného a riaditeľného prístupu.',
+  // The six areas named in the paragraph, in its order, as the services they correspond to.
+  areas: ['projektove-riadenie', 'analyza-a-data', 'kyberneticka-bezpecnost', 'gdpr-a-dpo', 'data-governance', 'realizacia-it'],
   skillsTitle: 'Kľúčové odbornosti',
   skills: [
     'IPMA',
