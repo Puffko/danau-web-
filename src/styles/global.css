@@ -2096,6 +2096,23 @@ p {
   overflow: visible;
 }
 
+/* ---------- Preview build only ---------- */
+
+.preview-badge {
+  position: fixed;
+  left: calc(16px + env(safe-area-inset-left, 0px));
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 60;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--white);
+  font-size: 0.8125rem;
+  font-weight: 520;
+  box-shadow: 0 10px 24px -12px rgba(5, 6, 26, 0.6);
+  pointer-events: none;
+}
+
 /* ---------- Responsive ---------- */
 
 @media (max-width: 1100px) {

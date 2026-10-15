@@ -4,13 +4,15 @@ import './styles/global.css'
 
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { BrowserRouter, HashRouter } from 'react-router-dom'
+import { BrowserRouter, MemoryRouter } from 'react-router-dom'
 import { MotionConfig } from 'motion/react'
 import App from './App'
 import { SmoothScroll } from './hooks/smoothScroll'
+import { isPreview } from './lib/env'
 
-// The single-file preview build (vite.preview.config.ts) has no server rewrites, so it routes by hash.
-const Router = import.meta.env.VITE_HASH_ROUTER === '1' ? HashRouter : BrowserRouter
+// The single-file preview has no server behind it (and may run inside a sandboxed frame),
+// so it keeps the route in memory instead of the address bar.
+const Router = isPreview ? MemoryRouter : BrowserRouter
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -18,6 +20,11 @@ createRoot(document.getElementById('root')!).render(
       <Router>
         <SmoothScroll>
           <App />
+          {isPreview && (
+            <p className="preview-badge" role="note">
+              Náhľad návrhu webu
+            </p>
+          )}
         </SmoothScroll>
       </Router>
     </MotionConfig>

@@ -5,6 +5,7 @@ import { PageHero } from '../components/PageHero'
 import { EASE_OUT, Reveal, RevealText } from '../components/Reveal'
 import { contact, contactPage, routes } from '../data/site'
 import { scrollToTarget, useLenis } from '../hooks/smoothScroll'
+import { isPreview } from '../lib/env'
 
 interface FormState {
   fullName: string
@@ -62,6 +63,10 @@ export default function Contact() {
     const first = Object.keys(found)[0]
     if (first) {
       document.getElementById(`contact-${first}`)?.focus()
+      return
+    }
+    if (isPreview) {
+      setFailure('Toto je náhľad návrhu webu, formulár sa z neho neodosiela.')
       return
     }
     setSending(true)
