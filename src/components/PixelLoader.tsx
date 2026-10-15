@@ -54,8 +54,8 @@ export function PixelLoader({ ready, onReveal, onDone }: Props) {
     let rows = 0
     let logo = new Set<number>()
     let cells: { i: number; j: number }[] = []
-    // the cell the zoom dives into: the filled one nearest the middle of the mark
-    let focus = { i: 0, j: 0 }
+    // the D symbol's box in grid cells: the zoom dives into it until it fills the screen
+    let symbol = { i0: 0, i1: 1, j0: 0, j1: 1 }
     let raf = 0
     let start = -1
     let goneAt = -1
@@ -72,9 +72,14 @@ export function PixelLoader({ ready, onReveal, onDone }: Props) {
       rows = Math.ceil(COLS * (MARK_H / VIEW_W)) + 1
       cells = sampleWordmark(COLS, rows, true)
       logo = new Set(cells.map((c) => key(c.i, c.j)))
-      const mi = COLS * 0.46
-      const mj = rows * 0.5
-      focus = cells.reduce((a, c) => (Math.hypot(c.i - mi, c.j - mj) < Math.hypot(a.i - mi, a.j - mj) ? c : a), cells[0])
+      // the symbol is everything left of the letters, which start 33 units into the 134-unit mark
+      const mark = cells.filter((c) => c.i < (33 / VIEW_W) * COLS - 1)
+      symbol = {
+        i0: Math.min(...mark.map((c) => c.i)),
+        i1: Math.max(...mark.map((c) => c.i)) + 1,
+        j0: Math.min(...mark.map((c) => c.j)),
+        j1: Math.max(...mark.map((c) => c.j)) + 1,
+      }
     }
 
     const draw = (now: number) => {
@@ -87,12 +92,12 @@ export function PixelLoader({ ready, onReveal, onDone }: Props) {
       const cell0 = markW / COLS
       const ox = (w - markW) / 2
       const oy = (h - markW * (MARK_H / VIEW_W)) / 2
-      // the zoom ends with tiles of this size
-      const target = Math.max(24, Math.min(48, Math.min(w, h) / 19))
+      // the zoom ends with the D filling most of the screen
+      const target = Math.min((w * 0.62) / (symbol.i1 - symbol.i0), (h * 0.56) / (symbol.j1 - symbol.j0))
       const zoom = target / cell0
-      // the focus cell's centre ends up dead centre
-      const fx = ox + (focus.i + 0.5) * cell0
-      const fy = oy + (focus.j + 0.5) * cell0
+      // the D's centre ends up dead centre
+      const fx = ox + ((symbol.i0 + symbol.i1) / 2) * cell0
+      const fy = oy + ((symbol.j0 + symbol.j1) / 2) * cell0
 
       const pz = easeInOut(clamp01((t - ZOOM_AT) / ZOOM))
       const s = Math.exp(Math.log(zoom) * pz)
