@@ -254,33 +254,12 @@ p {
 
 .reveal-text__word {
   display: inline-block;
-  will-change: transform;
 }
 
-/* A word built from pixels: the real text keeps the layout and stays readable to assistive tech,
-   the canvas paints it in the headline's own font, a step heavier so strokes fill whole cells. */
-.pixel-word {
-  position: relative;
-  display: inline-block;
-  font-size: 0.9em;
-  font-weight: 520;
-  letter-spacing: 0.005em;
-}
-
-.pixel-word__text {
-  color: transparent;
-}
-
-.pixel-word__text::selection {
-  color: var(--white);
-}
-
-.pixel-word__canvas {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  max-width: none;
-  pointer-events: none;
+/* the glint is painted through the letters, so the words inherit its transparent fill */
+.shiny-text .reveal-text__word,
+.shiny-text .reveal-text__mask {
+  -webkit-text-fill-color: inherit;
 }
 
 /* ---------- Buttons & links ---------- */

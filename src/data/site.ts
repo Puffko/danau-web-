@@ -232,8 +232,6 @@ export const home = {
     title: 'Riadenie IT\u00a0projektov, kybernetická bezpečnosť, GDPR a\u00a0odborná podpora',
     text: 'Pomáhame organizáciám pripraviť, riadiť a doručiť zmeny v oblastiach IT, bezpečnosti, ochrany osobných údajov, dát a procesov. Spájame projektové riadenie, kybernetickú bezpečnosť, GDPR, analytiku a realizáciu riešení do jedného funkčného celku.',
     primary: 'Kontakt',
-    // headline words set off with a marker stroke: "IT projektov", "kybernetická bezpečnosť", "GDPR"
-    highlightWords: ['IT\u00a0projektov', 'kybernetická', 'bezpečnosť', 'GDPR'],
     secondary: 'Naše služby',
   },
   partner: {

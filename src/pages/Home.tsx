@@ -26,7 +26,7 @@ function Hero() {
           text={home.hero.title}
           delay={0.2}
           stagger={0.05}
-          highlight={home.hero.highlightWords}
+          shine="light"
         />
         <Reveal immediate delay={0.75} className="hero__aside">
           <p className="hero__text">{home.hero.text}</p>

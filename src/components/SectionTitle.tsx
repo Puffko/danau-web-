@@ -1,6 +1,6 @@
 import { motion, useReducedMotion } from 'motion/react'
 import { EASE_OUT } from './Reveal'
-import { ShinyText } from './ShinyText'
+import { ShinyText, glint } from './ShinyText'
 
 interface Props {
   text: string
@@ -18,7 +18,6 @@ interface Props {
 export function SectionTitle({ text, id, className, as = 'h2', tone = 'dark' }: Props) {
   const reduce = useReducedMotion()
   const Tag = as === 'h3' ? motion.h3 : motion.h2
-  const light = tone === 'light'
   return (
     <Tag
       id={id}
@@ -28,21 +27,7 @@ export function SectionTitle({ text, id, className, as = 'h2', tone = 'dark' }: 
       viewport={{ once: true, margin: '0px 0px -12% 0px' }}
       transition={{ duration: reduce ? 0.4 : 1, ease: EASE_OUT }}
     >
-      <ShinyText
-        text={text}
-        // a quick, narrow white glint now and then rather than a coloured sweep
-        color={light ? '#dde3ff' : '#111827'}
-        // white on night grounds; on white ones a grey that keeps 4.8:1 against the page, so the
-        // letters never fade into the background as the glint passes
-        shineColor={light ? '#ffffff' : '#6b7280'}
-        speed={1.4}
-        delay={3.2}
-        shineWidth={16}
-        softness={0.6}
-        angle={110}
-        easing="snappy"
-        glow={light ? 0.35 : 0}
-      />
+      <ShinyText text={text} {...glint(tone)} />
     </Tag>
   )
 }

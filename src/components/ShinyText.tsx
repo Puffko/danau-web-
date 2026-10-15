@@ -49,6 +49,24 @@ const blend = (from: Rgba, to: Rgba, amount: number) => {
   return `rgba(${r}, ${g}, ${b}, ${Math.round(alpha * 1000) / 1000})`
 }
 
+/**
+ * The site's glint: a short, bright band flicks across every few seconds, so the heading reads
+ * as catching the light. On night grounds the letters rest a shade below white and flash to
+ * white with a soft bloom; on white grounds ink flashes to a grey that still keeps 4.8:1.
+ */
+export const glint = (tone: 'light' | 'dark') =>
+  ({
+    color: tone === 'light' ? '#c3cbef' : '#111827',
+    shineColor: tone === 'light' ? '#ffffff' : '#6b7280',
+    speed: 1.1,
+    delay: 3.6,
+    shineWidth: 22,
+    softness: 0.45,
+    angle: 112,
+    easing: 'snappy',
+    glow: tone === 'light' ? 0.7 : 0,
+  }) as const
+
 interface Props {
   text?: string
   children?: ReactNode
