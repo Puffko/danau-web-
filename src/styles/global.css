@@ -2812,33 +2812,66 @@ p {
   display: grid;
   place-content: center;
   justify-items: center;
-  gap: 28px;
-  background: var(--night);
+  gap: 30px;
+  background:
+    radial-gradient(70% 45% at 50% 120%, rgba(24, 24, 236, 0.45), transparent 70%),
+    var(--night);
   color: var(--white);
+  clip-path: inset(0 0 0 0);
   transition:
-    opacity 0.7s var(--ease-io),
-    visibility 0s linear 0.7s;
+    clip-path 0.9s var(--ease-io) 0.15s,
+    visibility 0s linear 1.05s;
 }
 
+/* loaded: the screen lifts away from the bottom up, revealing the page beneath */
 .loader.is-done {
-  opacity: 0;
+  clip-path: inset(0 0 100% 0);
   visibility: hidden;
   pointer-events: none;
 }
 
 .loader__logo {
-  width: clamp(140px, 22vw, 188px);
-  height: auto;
-  fill: currentColor;
-  animation: loader-in 0.9s var(--ease) both;
+  width: clamp(150px, 22vw, 200px);
+  transition:
+    transform 0.8s var(--ease-io) 0.1s,
+    opacity 0.5s var(--ease) 0.1s;
 }
 
 .loader.is-done .loader__logo {
-  transform: translateY(-8px);
+  transform: translateY(-28px);
   opacity: 0;
-  transition:
-    transform 0.6s var(--ease),
-    opacity 0.45s var(--ease-io);
+}
+
+.loader-mark {
+  position: relative;
+  display: block;
+}
+
+.loader-mark svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  fill: currentColor;
+}
+
+.loader-mark__pixels {
+  position: absolute;
+  left: 0;
+  max-width: none;
+  animation: loader-fade-out 0.45s var(--ease) 0.78s forwards;
+}
+
+/* the crisp symbol settles over the assembled pixels */
+.loader-mark__symbol {
+  opacity: 0;
+  animation: loader-fade-in 0.45s var(--ease) 0.72s forwards;
+}
+
+/* the letters slide out from behind the symbol */
+.loader-mark__letters {
+  clip-path: inset(0 100% 0 0);
+  transform: translateX(-10px);
+  animation: loader-letters 0.85s var(--ease) 0.6s forwards;
 }
 
 .loader__pixels {
@@ -2846,45 +2879,48 @@ p {
   gap: 5px;
 }
 
-/* a wave of light runs along a row of pixels while the page loads */
+/* a row of pixels fills left to right like a progress bar while the page loads */
 .loader__pixels i {
-  width: 7px;
-  height: 7px;
-  background: var(--blue-200);
-  opacity: 0.14;
-  animation: loader-px 1.2s var(--ease-io) infinite;
-  animation-delay: calc(var(--i) * 70ms);
+  width: 6px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.12);
+  animation: loader-px-fill 0.3s var(--ease) forwards;
+  animation-delay: calc(0.2s + var(--i) * 80ms);
 }
 
-/* loaded: the whole row lights up as the screen fades away */
-.loader.is-done .loader__pixels i {
-  animation: none;
-  opacity: 1;
-  background: var(--white);
-  transition:
-    opacity 0.3s var(--ease),
-    background-color 0.3s var(--ease);
-  transition-delay: calc(var(--i) * 18ms);
+.loader.is-done .loader__pixels {
+  opacity: 0;
+  transition: opacity 0.3s var(--ease);
 }
 
-@keyframes loader-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-}
-
-@keyframes loader-px {
-  0%,
-  100% {
-    opacity: 0.14;
-  }
-  35% {
+@keyframes loader-fade-in {
+  to {
     opacity: 1;
+  }
+}
+
+@keyframes loader-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes loader-letters {
+  to {
+    clip-path: inset(0 0 0 0);
+    transform: none;
+  }
+}
+
+@keyframes loader-px-fill {
+  0% {
+    background: rgba(255, 255, 255, 0.12);
+  }
+  50% {
     background: var(--white);
   }
-  60% {
-    opacity: 0.45;
+  100% {
+    background: var(--blue-200);
   }
 }
 

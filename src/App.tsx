@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Route, Routes, useLocation, useNavigationType } from 'react-router-dom'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
-import { Wordmark } from './components/Logo'
+import { LoaderMark } from './components/LoaderMark'
 import { cookies, pageMeta, privacy } from './data/site'
 import { prefersReducedMotion, scrollToTarget, useLenis } from './hooks/smoothScroll'
 import About from './pages/About'
@@ -98,11 +98,11 @@ export default function App() {
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
   }, [])
 
-  // First load: a short logo screen that fades away once the fonts are in.
+  // First load: the wordmark assembles, then the screen lifts away once the fonts are in.
   useEffect(() => {
     if (reduce) return
     let cancelled = false
-    Promise.all([document.fonts?.ready ?? Promise.resolve(), wait(900)]).then(() => {
+    Promise.all([document.fonts?.ready ?? Promise.resolve(), wait(1350)]).then(() => {
       if (cancelled) return
       setLoading(false)
       fadeIn()
@@ -202,7 +202,7 @@ export default function App() {
       </div>
       {!reduce && (
         <div className={`loader${loading ? '' : ' is-done'}`} aria-hidden="true">
-          <Wordmark className="loader__logo" />
+          <LoaderMark className="loader__logo" />
           <span className="loader__pixels">
             {Array.from({ length: 12 }, (_, i) => (
               <i key={i} style={{ ['--i' as string]: i }} />
