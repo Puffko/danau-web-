@@ -1112,18 +1112,11 @@ p {
   margin-top: 24px;
 }
 
-/* Service blocks: the heading column carries the block's own text, so neither side stands empty.
-   It stays in view while the longer column on the right scrolls past. */
+/* Service blocks: the heading column carries the block's own text, so neither side stands empty. */
 .split--block .split__head {
   align-self: start;
 }
 
-@media (min-width: 961px) {
-  .split--block:not(.split--panel) .split__head {
-    position: sticky;
-    top: calc(var(--header-h) + 40px);
-  }
-}
 
 .split__lead {
   margin-top: clamp(20px, 2.4vw, 32px);
