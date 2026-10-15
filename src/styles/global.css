@@ -1315,12 +1315,20 @@ a.lang-switch__item:hover {
   }
 }
 
-/* Two columns on a narrow, short desktop: the pill and the seat wrap, so the hero gets more
-   height to keep the seat above the range, where it reads on night. */
+/* Two columns on a narrow, short desktop: the statement and the seat wrap to more lines, so the
+   hero gets more height to keep the seat above the range, where it reads on night. */
 @media (min-width: 961px) and (max-width: 1100px) {
   .page-hero.about-hero {
     min-height: clamp(800px, 100vh, 1040px);
     min-height: clamp(800px, 100svh, 1040px);
+  }
+}
+
+/* narrowest two-column widths: the EN statement takes a sixth line */
+@media (min-width: 961px) and (max-width: 1039px) {
+  .page-hero.about-hero {
+    min-height: clamp(880px, 100vh, 1040px);
+    min-height: clamp(880px, 100svh, 1040px);
   }
 }
 
