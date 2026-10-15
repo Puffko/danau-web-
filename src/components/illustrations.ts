@@ -1,19 +1,7 @@
 import type { IllustrationName } from '../data/site'
 
 // Stroke paths from the live danau.sk hero illustrations.
-export const ART: Record<IllustrationName, { viewBox: string; stroke: number; paths: string[]; fill?: boolean }> = {
-  // the four-quadrant Danau "D", filled rather than stroked
-  dsymbol: {
-    viewBox: '0 0 41.7 41.7',
-    stroke: 0,
-    fill: true,
-    paths: [
-      'M0 20.85h20.85c0 11.52-9.34 20.85-20.85 20.85Z',
-      'M20.85 20.85V0C32.37 0 41.7 9.34 41.7 20.85Z',
-      'M20.85 20.85H41.7c0 11.52-9.34 20.85-20.85 20.85Z',
-      'M0 0h20.85L9.92 10.68 0 20.85Z',
-    ],
-  },
+export const ART: Record<IllustrationName, { viewBox: string; stroke: number; paths: string[] }> = {
   lock: {
     viewBox: '0 0 262.842 262.842',
     stroke: 21.9035,

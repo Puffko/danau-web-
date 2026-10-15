@@ -24,6 +24,9 @@ interface Props {
   className?: string
 }
 
+/** The matrix pitch for a canvas this wide; anything drawn on the same grid (PixelMark) uses it too. */
+export const matrixCell = (width: number) => (width < 700 ? 6 : width > 1600 ? 9 : 8)
+
 // Magnitude ramp: index 0 is atmosphere, 5 is a solid "pixel" cell.
 const COLORS = ['#4A55FF', '#5D68FF', '#7884FF', '#9AA8FF', '#BCC8FF', '#D4DCFF']
 const ALPHA = [0.28, 0.62, 0.82, 0.94, 1, 1]
@@ -99,7 +102,7 @@ export function PixelMountains({ variant = 'hero', seed = 3, className }: Props)
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
 
       const narrow = width < 700
-      cell = narrow ? 6 : width > 1600 ? 9 : 8
+      cell = matrixCell(width)
       cols = Math.ceil(width / cell)
       rows = Math.ceil(height / cell)
       const next: Dot[] = []

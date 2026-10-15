@@ -1063,108 +1063,265 @@ a.lang-switch__item:hover {
   aspect-ratio: 1;
 }
 
-.company-card {
+/* ---------- About hero ---------- */
+
+/* DANAU's mark, built from the matrix, stands in the range on the left; the title, the statement
+   and the company's signature speak on the right. `.page-hero.about-hero` outranks the generic
+   .page-hero padding rules wherever they sit in this file. */
+.page-hero.about-hero {
+  display: flex;
+  flex-direction: column;
+  min-height: clamp(720px, 100vh, 1040px);
+  min-height: clamp(720px, 100svh, 1040px);
+  padding-top: calc(var(--header-h) + clamp(40px, 8vh, 104px));
+  padding-bottom: clamp(28px, 4.5vh, 56px);
+}
+
+.about-hero .page-hero__mountains {
+  height: 48%;
+}
+
+.about-hero__inner {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  column-gap: clamp(40px, 5vw, 96px);
+}
+
+.about-hero__copy {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: start;
+  padding-top: clamp(0px, 2vh, 24px);
+}
+
+.about-hero__title {
+  font-size: clamp(3rem, 1.25rem + 5.2vw, 6.25rem);
+  font-weight: 300;
+  line-height: 1.02;
+  letter-spacing: -0.045em;
+}
+
+.about-hero__statement {
+  margin-top: clamp(20px, 2.4vw, 36px);
+  max-width: 20em;
+  font-size: clamp(1.375rem, 0.95rem + 1.15vw, 2.125rem);
+  font-weight: 340;
+  line-height: 1.28;
+  letter-spacing: -0.025em;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* the signature: a hairline horizon with one pixel, then the action and the company */
+.about-hero__sign {
   position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  width: min(100%, 400px);
-  margin-left: auto;
-  padding: clamp(24px, 2.6vw, 32px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: var(--radius-lg);
-  background:
-    radial-gradient(90% 80% at 100% 115%, rgba(24, 24, 236, 0.55), transparent 70%),
-    rgba(10, 12, 52, 0.88);
-  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.7);
-  color: rgba(255, 255, 255, 0.78);
+  margin-top: clamp(32px, 3.6vw, 48px);
+  padding-top: clamp(24px, 2.4vw, 32px);
 }
 
-.company-card__pixels {
+.about-hero__rule {
   position: absolute;
-  top: 0;
-  right: 0;
-  z-index: -1;
-  width: 50%;
-  height: 70%;
-  pointer-events: none;
-  -webkit-mask-image: radial-gradient(120% 120% at 100% 0%, #000 22%, transparent 70%);
-  mask-image: radial-gradient(120% 120% at 100% 0%, #000 22%, transparent 70%);
+  inset: 0 0 auto;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.14);
+  transform-origin: left center;
 }
 
-.company-card__label {
+.about-hero__pixel {
+  position: absolute;
+  top: -2.5px;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  background: var(--blue-200);
+}
+
+.about-hero__sign-body {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
-  font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.7);
+  gap: 20px 32px;
 }
 
-.company-card__name {
-  margin-top: 16px;
-  font-size: clamp(1.5rem, 1.2rem + 0.8vw, 1.875rem);
-  font-weight: 380;
-  line-height: 1.15;
-  letter-spacing: -0.03em;
-  color: var(--white);
-}
-
-.company-card__address {
-  margin-top: 10px;
+.about-hero__seat {
   font-style: normal;
-  line-height: 1.55;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.72);
 }
 
-.company-card__address a {
-  transition: color 0.3s var(--ease);
-}
-
-.company-card__address a:hover {
+.about-hero__seat-name {
+  display: block;
+  font-weight: 450;
   color: var(--white);
 }
 
-.company-card__rows {
-  display: grid;
-  gap: 4px;
-  margin: 22px 0 0;
-  padding: 18px 0 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
-  list-style: none;
+.about-hero__seat-line {
+  display: block;
 }
 
-.company-card__rows a {
+.about-hero__seat-reach {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  min-height: 44px;
-  overflow-wrap: anywhere;
-  color: var(--white);
+  flex-wrap: wrap;
+  column-gap: 20px;
+}
+
+/* the same pixel-dash underline as the area links in "Čo robíme?", in night tones */
+.about-hero__seat-link {
+  padding-bottom: 2px;
+  background:
+    linear-gradient(var(--blue-200), var(--blue-200)) left bottom / 0% 1px no-repeat,
+    linear-gradient(90deg, rgba(135, 150, 255, 0.65) 50%, transparent 0) left bottom / 8px 1px repeat-x;
   font-variant-numeric: tabular-nums;
-  transition: color 0.3s var(--ease);
+  transition:
+    color 0.3s var(--ease),
+    background-size 0.5s var(--ease);
 }
 
-.company-card__rows a:hover {
-  color: var(--blue-200);
-}
-
-.company-card__icon {
-  display: grid;
-  flex: none;
-  place-items: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  transition: background-color 0.3s var(--ease);
-}
-
-.company-card__rows a:hover .company-card__icon {
-  background: var(--blue);
+.about-hero__seat-link:hover,
+.about-hero__seat-link:focus-visible {
   color: var(--white);
+  background-size:
+    100% 1px,
+    8px 1px;
 }
 
-.company-card__cta {
-  width: 100%;
-  margin-top: 22px;
+.about-hero__mark {
+  --mark-snap: 1;
+  position: relative;
+  grid-column: 1;
+  grid-row: 1;
+  align-self: end;
+  justify-self: start;
+  width: min(100%, 62vh, 600px);
+  width: min(100%, 62svh, 600px);
+  aspect-ratio: 1;
+}
+
+/* the canvas bleeds 9% around the mark for its field; a replaced element needs explicit sizes */
+.about-hero__mark-canvas {
+  position: absolute;
+  top: -9%;
+  left: -9%;
+  width: 118%;
+  height: 118%;
+  max-width: none;
+}
+
+@media (min-width: 961px) {
+  /* the page-hero glow, still centred below, plus a weaker lobe that seats the mark */
+  .about-hero .hero-glow {
+    background:
+      radial-gradient(38% 34% at 22% 112%, rgba(93, 104, 255, 0.5) 0%, rgba(24, 24, 236, 0.2) 50%, rgba(10, 12, 52, 0) 76%),
+      radial-gradient(100% 60% at 50% 118%, #8796ff 0%, #1818ec 30%, #0d0f9e 50%, rgba(10, 12, 52, 0) 74%),
+      linear-gradient(180deg, #05061a 0%, #06071f 40%, #0a0c34 100%);
+  }
+}
+
+/* Tablets and phones: the mark and the title lock up like the wordmark (symbol, then the letters
+   on its baseline); the statement and the signature run full width below. */
+@media (max-width: 960px) {
+  .page-hero.about-hero {
+    min-height: 0;
+    padding-top: calc(var(--header-h) + clamp(32px, 5vw, 48px));
+    padding-bottom: clamp(112px, 20vw, 184px);
+  }
+
+  .about-hero .page-hero__mountains {
+    height: 30%;
+  }
+
+  /* the drifting lobes in saturated blue only: the pale one greys out over a narrow night */
+  .about-hero .hero-glow::after {
+    background:
+      radial-gradient(40% 30% at 28% 86%, rgba(93, 104, 255, 0.5), transparent 70%),
+      radial-gradient(34% 26% at 74% 90%, rgba(24, 24, 236, 0.45), transparent 70%);
+  }
+
+  .about-hero__inner {
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: clamp(16px, 3vw, 28px);
+  }
+
+  .about-hero__copy {
+    display: contents;
+  }
+
+  .about-hero__mark {
+    --mark-snap: 0;
+    align-self: start;
+    width: clamp(136px, min(42vw, 46vh), 280px);
+    width: clamp(136px, min(42vw, 46svh), 280px);
+  }
+
+  .about-hero__title {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: end;
+    font-size: clamp(2.25rem, 1rem + 6vw, 4.5rem);
+    line-height: 1;
+    margin-bottom: -0.14em;
+  }
+
+  .about-hero__statement {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    margin-top: clamp(28px, 5vw, 44px);
+    max-width: 24em;
+    font-size: clamp(1.3125rem, 1rem + 1.4vw, 1.75rem);
+  }
+
+  .about-hero__sign {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    margin-top: 32px;
+  }
+}
+
+@media (max-width: 380px) {
+  .about-hero__statement {
+    margin-top: 24px;
+    font-size: 1.25rem;
+  }
+
+  .about-hero__sign {
+    margin-top: 24px;
+    padding-top: 20px;
+  }
+}
+
+/* Short landscape screens (phones on their side). */
+@media (max-height: 500px) and (orientation: landscape) {
+  .page-hero.about-hero {
+    padding-top: calc(var(--header-h) + 20px);
+    padding-bottom: 96px;
+  }
+}
+
+/* Touch: e-mail and phone never wrap, so they get full 44px boxes; the address can wrap, so it
+   stays inline and repeats its underline under every line. */
+@media (pointer: coarse) {
+  .about-hero__seat-link {
+    padding-block: 6px 4px;
+    background-position: left calc(100% - 4px);
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+
+  .about-hero__seat-reach .about-hero__seat-link {
+    display: inline-block;
+    padding-block: 11px 9px;
+    background-position: left calc(100% - 9px);
+  }
+}
+
+/* Two columns on a narrow, short desktop: the pill and the seat wrap, so the hero gets more
+   height to keep the seat above the range, where it reads on night. */
+@media (min-width: 961px) and (max-width: 1100px) {
+  .page-hero.about-hero {
+    min-height: clamp(800px, 100vh, 1040px);
+    min-height: clamp(800px, 100svh, 1040px);
+  }
 }
 
 /* ---------- Sections ---------- */
@@ -1210,7 +1367,6 @@ a.lang-switch__item:hover {
 .service-card__pixels,
 .link-card__pixels,
 .info-card__pixels,
-.company-card__pixels,
 .process-note__pixels,
 .btn__pixels,
 .nav-dropdown__pixels {
@@ -1383,6 +1539,154 @@ a.lang-switch__item:hover {
   margin-top: auto;
   padding-top: 16px;
   border-top: 0;
+}
+
+/* ---------- Service cards with a night window (home grid) ---------- */
+
+/* The card frames a small copy of its service page's hero: night lit from below, the service's
+   pixel glyph in the middle, the chip and the hover mosaic in its top corners. */
+.service-card--face {
+  min-height: 0;
+  padding: 8px;
+}
+
+.service-card__face {
+  --card-radius: 16px;
+  position: relative;
+  isolation: isolate;
+  flex: none;
+  aspect-ratio: 2 / 1;
+  max-height: 216px;
+  overflow: hidden;
+  border-radius: 16px;
+  background:
+    radial-gradient(95% 80% at 50% 122%, #8796ff 0%, rgba(24, 24, 236, 0.9) 24%, rgba(24, 24, 236, 0.4) 48%, rgba(10, 12, 52, 0) 74%),
+    linear-gradient(180deg, var(--night) 0%, var(--night-2) 100%);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+/* on hover the window brightens from below */
+.service-card__face::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(70% 60% at 50% 118%, rgba(179, 194, 255, 0.55) 0%, rgba(179, 194, 255, 0) 70%);
+  opacity: 0;
+  transition: opacity 0.6s var(--ease);
+}
+
+.service-card--face.is-active .service-card__face::after,
+.service-card--face:focus-visible .service-card__face::after {
+  opacity: 1;
+}
+
+.service-card--face .service-card__pixels {
+  z-index: 1;
+  /* the free strip right of the centred glyph: the ripple never reaches its cells */
+  width: 30%;
+  height: 100%;
+  -webkit-mask-image: radial-gradient(100% 100% at 100% 0%, #000 35%, transparent 92%);
+  mask-image: radial-gradient(100% 100% at 100% 0%, #000 35%, transparent 92%);
+}
+
+.service-card__glyph {
+  position: absolute;
+  z-index: 2;
+  top: 7%;
+  left: 50%;
+  height: 86%;
+  aspect-ratio: 1;
+  translate: -50% 0;
+}
+
+.service-card--face .chip {
+  position: absolute;
+  z-index: 3;
+  top: 14px;
+  left: 14px;
+  background: rgba(135, 150, 255, 0.14);
+  color: var(--blue-200);
+  box-shadow: inset 0 0 0 1px rgba(179, 194, 255, 0.18);
+  transition:
+    background-color 0.45s var(--ease),
+    color 0.45s var(--ease),
+    box-shadow 0.45s var(--ease),
+    transform 0.6s var(--ease);
+}
+
+.service-card--face.is-active .chip,
+.service-card--face:focus-visible .chip {
+  box-shadow: inset 0 0 0 1px var(--white);
+}
+
+.service-card__body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  padding: 24px 20px 14px;
+}
+
+.service-card--face .service-card__title {
+  margin-top: 0;
+  max-width: 22ch;
+  font-size: clamp(1.5rem, 1.15rem + 0.8vw, 1.875rem);
+  font-weight: 340;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+}
+
+.service-card--face .service-card__text {
+  max-width: 60ch;
+  margin-top: 14px;
+  margin-bottom: 24px;
+  padding-top: 0;
+}
+
+.service-card--face .service-card__more {
+  margin-top: auto;
+}
+
+@media (min-width: 641px) and (max-width: 1100px) {
+  .service-grid--faces {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .service-grid--faces {
+    gap: 12px;
+  }
+
+  .service-card__face {
+    aspect-ratio: 5 / 2;
+  }
+
+  .service-card--face .chip {
+    top: 10px;
+    left: 10px;
+    width: 36px;
+    height: 36px;
+  }
+
+  .service-card__body {
+    padding: 20px 16px 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .service-card--face.is-active,
+  .service-card--face:focus-visible,
+  .service-card--face.is-active .chip,
+  .service-card--face:focus-visible .chip {
+    transform: none;
+  }
+
+  .service-card--face .service-card__arrow,
+  .service-card__face::after {
+    transition: none;
+  }
 }
 
 /* ---------- Process (challenge / solution diagram) ---------- */
@@ -2403,10 +2707,18 @@ a.lang-switch__item:hover {
   }
 }
 
-.hub__glyph {
+.hub__mark {
   position: relative;
-  width: 62%;
-  aspect-ratio: 1;
+  width: 34%;
+  height: auto;
+  color: var(--blue);
+}
+
+/* a hairline of the same blue closes the anti-aliasing seams between the four quadrants */
+.hub__mark g {
+  stroke: currentColor;
+  stroke-width: 0.3;
+  stroke-linejoin: round;
 }
 
 .hub__node {
@@ -3322,14 +3634,6 @@ a.lang-switch__item:hover {
 
   .page-hero__aside {
     max-width: 180px;
-  }
-
-  .page-hero__aside:has(.company-card) {
-    max-width: none;
-  }
-
-  .company-card {
-    margin-left: 0;
   }
 
   .hero-art {

@@ -21,6 +21,8 @@ interface Cell {
   level: number
   delay: number
   phase: number
+  /** ms after a wake-up before this cell's bright wave arrives; the bottom row goes first */
+  wave: number
 }
 
 interface Props {
@@ -29,10 +31,26 @@ interface Props {
   tone?: keyof typeof TONES
   /** Multiplies the ignite timing; below 1 assembles faster (the boot screen uses 0.4). */
   pace?: number
+  /**
+   * Idle with twinkles once assembled (the default). False holds the glyph still after its
+   * ignite, so a grid of glyphs costs nothing at rest; turning it back on sends one bright wave
+   * up through the cells, then twinkles until it is switched off again.
+   */
+  live?: boolean
 }
 
-export function PixelGlyph({ name, className, tone = 'dark', pace = 1 }: Props) {
+export function PixelGlyph({ name, className, tone = 'dark', pace = 1, live = true }: Props) {
   const ref = useRef<HTMLCanvasElement>(null)
+  // read by the running loop; never an effect dependency, or every hover would rebuild and
+  // re-ignite the glyph
+  const liveRef = useRef(live)
+  const wakeRef = useRef<(wave: boolean) => void>(() => {})
+
+  useEffect(() => {
+    const wave = live && !liveRef.current
+    liveRef.current = live
+    wakeRef.current(wave)
+  }, [live])
 
   useEffect(() => {
     const canvas = ref.current
@@ -45,6 +63,7 @@ export function PixelGlyph({ name, className, tone = 'dark', pace = 1 }: Props) 
     let cell = 0
     let raf = 0
     let start = -1
+    let waveAt = -1e9
     let visible = true
     const pointer = { x: -1e4, y: -1e4, on: false }
 
@@ -73,11 +92,7 @@ export function PixelGlyph({ name, className, tone = 'dark', pace = 1 }: Props) 
       o.lineCap = 'round'
       o.lineJoin = 'round'
       o.strokeStyle = '#fff'
-      o.fillStyle = '#fff'
-      for (const d of art.paths) {
-        if (art.fill) o.fill(new Path2D(d))
-        else o.stroke(new Path2D(d))
-      }
+      for (const d of art.paths) o.stroke(new Path2D(d))
       const data = o.getImageData(0, 0, res, res).data
 
       const next: Cell[] = []
@@ -100,6 +115,7 @@ export function PixelGlyph({ name, className, tone = 'dark', pace = 1 }: Props) 
             level,
             delay: ((1 - j / n) * 700 + hash(i, j, 2) * 400) * pace,
             phase: hash(j, i, 8) * Math.PI * 2,
+            wave: (1 - j / n) * 380 + hash(i, j, 3) * 140,
           })
         }
       }
@@ -118,14 +134,23 @@ export function PixelGlyph({ name, className, tone = 'dark', pace = 1 }: Props) 
         for (const k of cells) {
           let lvl = k.level
           let grow = 1
+          let swell = 1
           const p = (t - k.delay) / (520 * pace)
           if (p < 1) {
             pending = true
             if (p <= 0) continue
             grow = 1 - Math.pow(1 - p, 4)
             if (p < 0.3 && lvl > 0) lvl = 3
-          } else if (!reduce && lvl === 2 && Math.sin(t * 0.0012 + k.phase) > 0.94) lvl = 3
-          let s = cell * (lvl === 0 ? 0.26 : 0.8) * grow
+          } else if (!reduce) {
+            if (liveRef.current && lvl === 2 && Math.sin(t * 0.0012 + k.phase) > 0.94) lvl = 3
+            // the wake-up wave: each cell flares and swells once as it passes, bottom to top
+            const q = (now - waveAt - k.wave) / 320
+            if (q > 0 && q < 1) {
+              swell = 1 + 0.22 * Math.sin(Math.PI * q)
+              lvl = lvl > 0 ? 3 : 1
+            }
+          }
+          let s = cell * (k.level === 0 ? 0.26 : 0.8) * grow * swell
           if (pointer.on) {
             const dd = Math.hypot(k.x + cell / 2 - pointer.x, k.y + cell / 2 - pointer.y) / (cell * 4)
             if (dd < 1) {
@@ -138,10 +163,16 @@ export function PixelGlyph({ name, className, tone = 'dark', pace = 1 }: Props) 
         }
       }
       ctx.globalAlpha = 1
-      if (visible && !document.hidden && (!reduce || pending || pointer.on)) raf = requestAnimationFrame(draw)
+      const waving = !reduce && now - waveAt < 840
+      const idle = liveRef.current && !reduce
+      if (visible && !document.hidden && (pending || waving || idle || (pointer.on && !reduce))) raf = requestAnimationFrame(draw)
     }
     const kick = () => {
       if (!raf) raf = requestAnimationFrame(draw)
+    }
+    wakeRef.current = (wave) => {
+      if (wave && !reduce) waveAt = performance.now()
+      kick()
     }
 
     build()
@@ -178,6 +209,7 @@ export function PixelGlyph({ name, className, tone = 'dark', pace = 1 }: Props) 
       canvas.removeEventListener('pointermove', onMove)
       canvas.removeEventListener('pointerleave', onLeave)
       document.removeEventListener('visibilitychange', kick)
+      wakeRef.current = () => {}
     }
   }, [name, tone, pace])
 

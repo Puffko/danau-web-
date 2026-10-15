@@ -1,15 +1,12 @@
 import { motion, useReducedMotion } from 'motion/react'
-import { ArrowUpRight, Mail, Phone, Pin, ServiceIcon } from '../components/Icons'
-import { PageHero } from '../components/PageHero'
-import { EASE_OUT, Reveal } from '../components/Reveal'
+import { AboutHero } from '../components/AboutHero'
+import { DSymbol, ServiceIcon } from '../components/Icons'
+import { Reveal } from '../components/Reveal'
 import { SectionTitle } from '../components/SectionTitle'
-import { PixelGlyph } from '../components/PixelGlyph'
-import { PixelCluster } from '../components/PixelCluster'
 import { PixelMountains } from '../components/PixelMountains'
-import { useHover } from '../hooks/useHover'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { contact, type Service, type ServiceId } from '../data/site'
+import { type Service, type ServiceId } from '../data/site'
 import { useI18n } from '../i18n'
 
 export default function About() {
@@ -19,12 +16,7 @@ export default function About() {
   const { about } = t
   return (
     <>
-      <PageHero
-        title={about.title}
-        text={about.text}
-        seed={9}
-        aside={<CompanyCard />}
-      />
+      <AboutHero />
 
       <section className="section about-what" aria-labelledby="what-title">
         <div className="container">
@@ -120,7 +112,7 @@ function AreasHub({ active, onActive }: { active: ServiceId | null; onActive: (i
 
       <div className="hub__core">
         <span className="hub__ring" aria-hidden="true" />
-        <PixelGlyph name="dsymbol" tone="light" className="hub__glyph" />
+        <DSymbol className="hub__mark" />
       </div>
 
       {sides.map((list, side) =>
@@ -158,56 +150,5 @@ function SkillCell({ name, area }: { name: string; area: string }) {
       <span className="skills-panel__area">{area}</span>
       <span className="skills-panel__name">{name}</span>
     </li>
-  )
-}
-
-/** The hero aside: who and where the company is, with the way to start a conversation. */
-function CompanyCard() {
-  const reduce = useReducedMotion()
-  const { t, paths } = useI18n()
-  const [active, hover] = useHover()
-  return (
-    <motion.div
-      className="company-card"
-      initial={reduce ? { opacity: 0 } : { opacity: 0, y: 28 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 1.1, delay: 0.45, ease: EASE_OUT }}
-      {...hover}
-    >
-      <PixelCluster className="company-card__pixels" active={active} seed={21} radius={110} cell={10} />
-      <span className="company-card__label">
-        <Pin width={16} height={16} /> {t.ui.seat}
-      </span>
-      <p className="company-card__name">{contact.company}</p>
-      <address className="company-card__address">
-        <a href={contact.mapsHref} target="_blank" rel="noreferrer">
-          {contact.street}
-          <br />
-          {contact.city}, {t.ui.country}
-        </a>
-      </address>
-      <ul className="company-card__rows">
-        <li>
-          <a href={`mailto:${contact.email}`}>
-            <span className="company-card__icon">
-              <Mail width={16} height={16} />
-            </span>
-            {contact.email}
-          </a>
-        </li>
-        <li>
-          <a href={contact.phoneHref}>
-            <span className="company-card__icon">
-              <Phone width={16} height={16} />
-            </span>
-            {contact.phone}
-          </a>
-        </li>
-      </ul>
-      <Link to={paths.contact} className="btn btn--pill btn--light company-card__cta">
-        <span>{t.home.hero.primary}</span>
-        <ArrowUpRight />
-      </Link>
-    </motion.div>
   )
 }

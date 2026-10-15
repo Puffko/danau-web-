@@ -1,7 +1,7 @@
 // Shared, language-independent data and the shapes of the per-language content (sk.ts, en.ts).
 
 export type ServiceIconName = 'project' | 'security' | 'gdpr' | 'analytics' | 'data' | 'delivery'
-export type IllustrationName = 'lock' | 'shield' | 'document' | 'chart' | 'database' | 'screen' | 'dsymbol'
+export type IllustrationName = 'lock' | 'shield' | 'document' | 'chart' | 'database' | 'screen'
 
 /** A service's identity across languages (its Slovak slug); URLs use each language's own `slug`. */
 export type ServiceId =

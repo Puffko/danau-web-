@@ -156,7 +156,7 @@ components:
     rounded: "{rounded.lg}"
     padding: "{spacing.card-pad}"
   service-card-hover:
-    backgroundColor: "{colors.white}"
+    backgroundColor: "{colors.brand-blue}"
   link-card:
     backgroundColor: "{colors.surface}"
     rounded: "{rounded.lg}"
@@ -269,7 +269,7 @@ A 1240px container with a fluid gutter (clamp 16–40px). Sections breathe at cl
 
 The recurring structure is the **split**: a 5fr heading column beside a 6fr body column (gap up to 112px), used on About; consecutive splits are separated by a hairline rule with symmetric padding. Grids: services 3 columns (2 under 960px, 1 under 640px, gap 16px); skills 4 columns; partners and related services 6/5 columns, collapsing to 3 then 2 (gap 12px).
 
-The home hero is full-viewport (min 720px / 100svh) with H1 bottom-left across 1.55fr and the paragraph plus actions in the right 1fr, aligned to the H1's baseline; the lower ~56% is the matrix range. Sub-page heroes put the title top-left with an optional aside (pixel glyph or wordmark) at 7fr/4fr. The "Pre koho pracujeme?" section is a sticky stage whose height scales with the item count (52vh per item); under 960px wide or 640px tall it unpins into a plain stacked list.
+The home hero is full-viewport (min 720px / 100svh) with H1 bottom-left across 1.55fr and the paragraph plus actions in the right 1fr, aligned to the H1's baseline; the lower ~56% is the matrix range. Sub-page heroes put the title top-left with an optional aside (pixel glyph or wordmark) at 7fr/4fr. The About hero is its own sibling: the four-quadrant D of the logo drawn in the matrix (on the mountains' grid, assembling quadrant by quadrant) stands in the range on the left (5fr), the H1 at display scale with the grey glint and about.text as a statement on the right (6fr), then a hairline with one periwinkle pixel and a signature row (Kontakt pill; company, address, e-mail and phone as pixel-dash links). Under 960px the D and the H1 lock up like the wordmark, H1 on the D's baseline. The "Pre koho pracujeme?" section is a sticky stage whose height scales with the item count (52vh per item); under 960px wide or 640px tall it unpins into a plain stacked list.
 
 Breakpoints: 1100px (desktop nav becomes the full-screen menu; process diagram becomes a stacked column), 960px (splits and hero collapse to one column), 640px (header 68px, single-column cards and form rows).
 
@@ -314,7 +314,7 @@ Confident, quiet pills.
 - **State:** on parent hover/focus the chip fills Danau Blue, icon turns white, chip rotates -8 to -10deg.
 
 ### Cards / Containers
-- **Service card:** surface ground, 24px radius, 28px padding, min-height 400px; title top, description pushed to the bottom, "Zistiť viac" row over a hairline with a circular arrow. Hover: turns white, gains hairline border and card-lift shadow, reveals a blue dot field in its top-right corner, chip and arrow turn blue. Compact variant (190px) for related services.
+- **Service card (home):** a #F4F4F4 frame (8px padding, 24px radius) around a night window (16px radius, 2:1, max 216px tall; 5:2 on phones) lit from below, holding the service's pixel glyph centred at 86% of its height, a glass icon chip top-left and the sparse pixel mosaic top-right (kept to the 30% strip beside the glyph). Below: title (clamp 1.5–1.875rem, weight 340, -0.03em, 22ch), description, "Zistiť viac" row pinned to the foot. Grid 3 / 2 / 1 columns at ≥1101 / 641–1100 / ≤640. The glyph assembles when its window scrolls into view and holds still at rest. Hover or focus: the card floods Danau Blue and lifts 6px with the card-lift shadow, the window brightens from below, the mosaic ripples out in pale blues, the glyph sends one bright wave upward and twinkles, the chip turns white and rotates -10deg, the arrow turns -45deg. Reduced motion keeps colour changes only. Compact variant (190px) for related services is unchanged.
 - **Link card:** surface ground, 24px, horizontal title + text + 52px arrow circle; hover to tint and lift 4px.
 - **Service detail:** the opening paragraph at statement size, inking word by word from 0.22 to full ink as it scrolls into reading position, beside the block title and its icon chip (4fr / 8fr). What DANAU provides is a full-width night band lit from below with low pixel mountains: the items as large light lines (300, up to 2.25rem) in 2–3 columns over white hairlines, each with a 12px periwinkle pixel that ignites as the line arrives. How the work is done is a path: one blue 14px pixel node per sentence, joined by a 1px blue line that draws down on scroll.
 - **Skill tile:** white with hairline border, 24px, the D symbol as its mark (rotates 90deg on hover).

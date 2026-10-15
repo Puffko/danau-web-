@@ -93,13 +93,13 @@ function Services() {
   const { t, paths } = useI18n()
   const { home } = t
   return (
-    <section id={paths.servicesAnchor} className="section services" tabIndex={-1}>
+    <section id={paths.servicesAnchor} className="section services" tabIndex={-1} aria-labelledby="services-title">
       <div className="container">
-        <SectionTitle className="display-2 section-title--center" text={home.services.title} />
-        <ul className="service-grid">
+        <SectionTitle id="services-title" className="display-2 section-title--center" text={home.services.title} />
+        <ul className="service-grid service-grid--faces">
           {t.services.map((s, i) => (
             <Reveal as="li" key={s.id} delay={(i % 3) * 0.08} className="service-grid__item">
-              <ServiceCard service={s} moreLabel={home.services.more} seed={i * 7} />
+              <ServiceCard face service={s} moreLabel={home.services.more} seed={i * 7} />
             </Reveal>
           ))}
         </ul>
