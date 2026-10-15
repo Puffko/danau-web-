@@ -1,16 +1,25 @@
+import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from 'motion/react'
+import { useRef } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { CtaBand } from '../components/CtaBand'
-import { ArrowRight, Check } from '../components/Icons'
+import { ArrowRight, ServiceIcon } from '../components/Icons'
 import { PixelGlyph } from '../components/PixelGlyph'
 import { PageHero } from '../components/PageHero'
 import { PixelCluster } from '../components/PixelCluster'
+import { PixelMountains } from '../components/PixelMountains'
 import { useHover } from '../hooks/useHover'
-import { Reveal, RevealText } from '../components/Reveal'
+import { EASE_OUT, Reveal } from '../components/Reveal'
 import { SectionTitle } from '../components/SectionTitle'
 import { ServiceCard } from '../components/ServiceCard'
+import type { Service as ServiceData, ServiceDetailBlock } from '../data/site'
 import { serviceBySlug, useI18n } from '../i18n'
 import NotFound from './NotFound'
 
+/**
+ * A service page reads as one assembled field: the night hero, the opening paragraph inked in
+ * as it is read, then the list of what DANAU provides as a night band where each item's pixel
+ * ignites, then how the work is done, the call to act and the other services.
+ */
 export default function Service() {
   const { slug } = useParams()
   const { lang, t, servicePath, serviceById } = useI18n()
@@ -34,59 +43,16 @@ export default function Service() {
         }
       />
 
-      <section className="section service-body">
-        <div className="container">
-          {service.blocks.map((block, i) =>
-            block.kind === 'link' ? (
-              // a link block has no heading of its own: the card spans the full width
-              <div className="split split--rule split--link" key={block.title}>
-                <Reveal>
-                  <LinkCard to={servicePath(serviceById(block.service)!)} title={block.title} body={block.body} />
-                </Reveal>
-              </div>
-            ) : (
-              <div
-                className={`split split--block${block.list ? '' : ' split--panel'}${i > 0 && block.list ? ' split--rule' : ''}`}
-                key={block.title}
-              >
-                {!block.list && (
-                  <PixelCluster className="split__pixels" seed={index * 5 + i} radius={150} cell={12} />
-                )}
-                <div className="split__head">
-                  <RevealText as="h2" className="display-3" text={block.title} />
-                  {block.list && (
-                    <Reveal delay={0.05}>
-                      <p className="lead split__lead">{block.body}</p>
-                    </Reveal>
-                  )}
-                </div>
-                <div className="split__body">
-                  {block.list ? (
-                    <Reveal delay={0.1} className="checklist">
-                      <PixelCluster className="checklist__pixels" seed={index * 3 + i} radius={130} />
-                      <h3 className="checklist__title">{block.listTitle}</h3>
-                      <ul>
-                        {block.list.map((item) => (
-                          <li key={item}>
-                            <span className="checklist__mark">
-                              <Check />
-                            </span>
-                            {item}
-                          </li>
-                        ))}
-                      </ul>
-                    </Reveal>
-                  ) : (
-                    <Reveal>
-                      <p className="split__statement">{block.body}</p>
-                    </Reveal>
-                  )}
-                </div>
-              </div>
-            ),
-          )}
-        </div>
-      </section>
+      {service.blocks.map((block, i) => (
+        <Block
+          key={block.title}
+          block={block}
+          first={i === 0}
+          service={service}
+          seed={index * 5 + i}
+          linkTo={block.kind === 'link' ? servicePath(serviceById(block.service)!) : undefined}
+        />
+      ))}
 
       <CtaBand title={service.ctaTitle} seed={index * 3 + 2} />
 
@@ -103,6 +69,206 @@ export default function Service() {
         </div>
       </section>
     </>
+  )
+}
+
+function Block({
+  block,
+  first,
+  service,
+  seed,
+  linkTo,
+}: {
+  block: ServiceDetailBlock
+  first: boolean
+  service: ServiceData
+  seed: number
+  linkTo?: string
+}) {
+  if (block.kind === 'link') {
+    return (
+      <section className="section section--tight svc-link">
+        <div className="container">
+          <Reveal>
+            <LinkCard to={linkTo!} title={block.title} body={block.body} />
+          </Reveal>
+        </div>
+      </section>
+    )
+  }
+  return (
+    <>
+      {first ? (
+        <Intro title={block.title} body={block.body} service={service} />
+      ) : (
+        <Approach title={block.title} body={block.body} />
+      )}
+      {block.list && <Provided title={block.listTitle ?? ''} items={block.list} seed={seed} />}
+    </>
+  )
+}
+
+/** The opening paragraph, large, inking word by word from pale to ink as it is read. */
+function Intro({ title, body, service }: { title: string; body: string; service: ServiceData }) {
+  return (
+    <section className="section svc-intro">
+      <div className="container svc-intro__grid">
+        <div className="svc-intro__head">
+          <Reveal y={10}>
+            <span className="chip svc-intro__chip">
+              <ServiceIcon name={service.icon} width={22} height={22} />
+            </span>
+          </Reveal>
+          <SectionTitle as="h2" className="svc-intro__title" text={title} />
+        </div>
+        <InkedText className="svc-intro__statement" text={body} />
+      </div>
+    </section>
+  )
+}
+
+function InkedText({ text, className }: { text: string; className?: string }) {
+  const ref = useRef<HTMLParagraphElement>(null)
+  const reduce = useReducedMotion()
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 0.88', 'end 0.6'] })
+  const words = text.split(' ')
+  return (
+    <p ref={ref} className={className}>
+      {words.map((word, i) => (
+        <InkWord
+          key={i}
+          progress={scrollYProgress}
+          from={i / words.length}
+          to={(i + 1) / words.length}
+          still={Boolean(reduce)}
+          last={i === words.length - 1}
+        >
+          {word}
+        </InkWord>
+      ))}
+    </p>
+  )
+}
+
+function InkWord({
+  progress,
+  from,
+  to,
+  still,
+  last,
+  children,
+}: {
+  progress: MotionValue<number>
+  from: number
+  to: number
+  still: boolean
+  last: boolean
+  children: string
+}) {
+  const opacity = useTransform(progress, [from, to], [0.22, 1])
+  return (
+    <>
+      <motion.span style={still ? undefined : { opacity }}>{children}</motion.span>
+      {last ? null : ' '}
+    </>
+  )
+}
+
+/** What DANAU provides: a night band, each item a line whose pixel ignites as it arrives. */
+function Provided({ title, items, seed }: { title: string; items: string[]; seed: number }) {
+  const reduce = useReducedMotion()
+  const id = `provided-${seed}`
+  return (
+    <section className="svc-list" data-theme="dark" data-pixel-host aria-labelledby={id}>
+      <div className="hero-glow svc-list__glow" aria-hidden="true" />
+      <PixelMountains className="svc-list__mountains" variant="low" seed={seed + 30} />
+      <div className="container">
+        <SectionTitle id={id} className="display-2 section-title--center svc-list__title" text={title} tone="light" />
+        <ul className="svc-list__items" style={{ ['--cols' as string]: items.length > 4 ? 3 : 2 }}>
+          {items.map((item, i) => (
+            <motion.li
+              key={item}
+              className="svc-list__item"
+              initial="rest"
+              whileInView="lit"
+              viewport={{ once: true, margin: '0px 0px -10% 0px' }}
+              transition={{ delayChildren: reduce ? 0 : 0.1 + i * 0.09 }}
+            >
+              <motion.span
+                className="svc-list__pixel"
+                aria-hidden="true"
+                variants={{ rest: { scale: 0.4, opacity: 0.25 }, lit: { scale: 1, opacity: 1 } }}
+                transition={{ duration: 0.7, ease: EASE_OUT }}
+              />
+              <motion.span
+                className="svc-list__text"
+                variants={
+                  reduce
+                    ? { rest: { opacity: 1 }, lit: { opacity: 1 } }
+                    : { rest: { opacity: 0.4, y: 14 }, lit: { opacity: 1, y: 0 } }
+                }
+                transition={{ duration: 1, ease: EASE_OUT }}
+              >
+                {item}
+              </motion.span>
+            </motion.li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}
+
+/**
+ * How the work is done: the paragraph's sentences as a path of steps, each on a pixel node,
+ * joined by a line that draws down as the reader reaches it.
+ */
+function Approach({ title, body }: { title: string; body: string }) {
+  const reduce = useReducedMotion()
+  const steps = body.split(/(?<=[.!?])\s+(?=\p{Lu})/u)
+  return (
+    <section className="section svc-approach">
+      <div className="container svc-approach__grid">
+        <SectionTitle as="h2" className="svc-approach__title" text={title} />
+        <ol className="svc-path">
+          {steps.map((step, i) => (
+            <motion.li
+              key={i}
+              className="svc-path__step"
+              initial="rest"
+              whileInView="lit"
+              viewport={{ once: true, margin: '0px 0px -18% 0px' }}
+            >
+              <motion.span
+                className="svc-path__node"
+                aria-hidden="true"
+                variants={{ rest: { scale: 0.45, opacity: 0.3 }, lit: { scale: 1, opacity: 1 } }}
+                transition={{ duration: 0.7, ease: EASE_OUT }}
+              />
+              {i < steps.length - 1 && (
+                <motion.span
+                  className="svc-path__line"
+                  aria-hidden="true"
+                  variants={{ rest: { scaleY: reduce ? 1 : 0 }, lit: { scaleY: 1 } }}
+                  transition={{ duration: 1.1, delay: 0.25, ease: [0.65, 0, 0.35, 1] }}
+                />
+              )}
+              <motion.p
+                className="svc-path__text"
+                variants={
+                  reduce
+                    ? { rest: { opacity: 1 }, lit: { opacity: 1 } }
+                    : { rest: { opacity: 0.35, y: 12 }, lit: { opacity: 1, y: 0 } }
+                }
+                transition={{ duration: 0.9, delay: 0.08, ease: EASE_OUT }}
+              >
+                {step}
+              </motion.p>
+            </motion.li>
+          ))}
+        </ol>
+      </div>
+    </section>
   )
 }
 

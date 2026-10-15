@@ -104,10 +104,6 @@ export default function App() {
     el.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], IN)
   }
 
-  useEffect(() => {
-    if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
-  }, [])
-
   // First load: the pixel wordmark holds the screen until the fonts are in (see PixelLoader).
   useEffect(() => {
     let cancelled = false
@@ -184,13 +180,6 @@ export default function App() {
     shownKey.current = shown.key
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shown.key])
-
-  // Direct load with a hash (e.g. /#sluzby): go there once the page has rendered.
-  useEffect(() => {
-    const el = hashTarget(location.hash)
-    if (el && !hasNavigated.current) requestAnimationFrame(() => goToSection(lenis, el))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   return (
     <LangProvider value={langOf(shown.pathname)}>

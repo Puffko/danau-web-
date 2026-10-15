@@ -8,6 +8,7 @@ import { ArrowRight, ArrowUpRight, Caret, Close, Menu, Phone, ServiceIcon } from
 import { Wordmark } from './Logo'
 import { PixelCluster } from './PixelCluster'
 import { EASE_OUT } from './Reveal'
+import { useHover } from '../hooks/useHover'
 
 const DESKTOP_NAV = '(min-width: 1101px)'
 
@@ -15,6 +16,28 @@ const LANGS: { lang: Lang; name: string }[] = [
   { lang: 'sk', name: 'Slovenčina' },
   { lang: 'en', name: 'English' },
 ]
+
+/**
+ * The header's blue action. On hover it turns to the other ground (night on the white card,
+ * white over the dark hero) and a pixel mosaic ripples out of its corner.
+ */
+function ContactButton({ to, label, solid }: { to: string; label: string; solid: boolean }) {
+  const [active, hover] = useHover()
+  return (
+    <Link to={to} className="btn btn--header" {...hover}>
+      <PixelCluster
+        className="btn__pixels"
+        active={active}
+        seed={11}
+        radius={24}
+        cell={4}
+        activeRamp={solid ? 'live' : 'rest'}
+      />
+      <Phone />
+      <span>{label}</span>
+    </Link>
+  )
+}
 
 /** SK / EN: the page on screen in the other language, at the same scroll position. */
 function LangSwitch() {
@@ -235,10 +258,7 @@ export function Header() {
 
           <LangSwitch />
 
-          <Link to={paths.contact} className="btn btn--header">
-            <Phone />
-            <span>{nav.contact}</span>
-          </Link>
+          <ContactButton to={paths.contact} label={nav.contact} solid={scrolled && !mobileOpen} />
 
           <button
             ref={toggleRef}

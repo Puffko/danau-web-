@@ -556,12 +556,49 @@ p {
   box-shadow: none;
 }
 
-.btn--header:hover {
+.btn--header {
+  --card-radius: 12px;
+  isolation: isolate;
+  overflow: hidden;
+  /* room in the corner for the hover mosaic, clear of the label */
+  padding-right: 30px;
+}
+
+.btn--header > svg,
+.btn--header > span {
+  position: relative;
+}
+
+/* hover: the other ground, with the mosaic rippling out of the corner */
+.btn--header:hover,
+.btn--header:focus-visible {
+  background: var(--night);
   box-shadow: none;
 }
 
-.btn--header:hover {
-  background: var(--blue-600);
+.site-header:not(.is-solid) .btn--header:hover,
+.site-header:not(.is-solid) .btn--header:focus-visible {
+  background: var(--white);
+  color: var(--ink);
+}
+
+.btn__pixels {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: -1;
+  width: 34px;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s var(--ease);
+  -webkit-mask-image: radial-gradient(130% 130% at 100% 0%, #000 30%, transparent 75%);
+  mask-image: radial-gradient(130% 130% at 100% 0%, #000 30%, transparent 75%);
+}
+
+.btn--header:hover .btn__pixels,
+.btn--header:focus-visible .btn__pixels {
+  opacity: 1;
 }
 
 .btn--header svg {
@@ -586,10 +623,11 @@ p {
 .lang-switch__item {
   display: inline-grid;
   place-items: center;
-  min-width: 38px;
+  width: 38px;
   height: 38px;
-  padding: 0 8px;
+  padding: 0 0 0 0.04em;
   border-radius: 10px;
+  line-height: 1;
   color: var(--subtle);
   transition:
     background-color 0.3s var(--ease),
@@ -1143,94 +1181,6 @@ a.lang-switch__item:hover {
   background: var(--surface-2);
 }
 
-.split {
-  display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
-  gap: clamp(28px, 6vw, 112px);
-}
-
-.split--rule {
-  margin-top: clamp(56px, 7vw, 96px);
-  padding-top: clamp(56px, 7vw, 96px);
-  border-top: 1px solid var(--line);
-}
-
-.split__body > * + * {
-  margin-top: 24px;
-}
-
-/* Service blocks: the heading column carries the block's own text, so neither side stands empty. */
-.split--block .split__head {
-  align-self: start;
-}
-
-
-.split__lead {
-  margin-top: clamp(20px, 2.4vw, 32px);
-  max-width: 44ch;
-  color: var(--ink-2);
-}
-
-/* without a list, the paragraph is the block's whole answer and is set to be read as one */
-.split__statement {
-  max-width: 34ch;
-  font-size: clamp(1.25rem, 1rem + 0.8vw, 1.75rem);
-  font-weight: 340;
-  line-height: 1.34;
-  letter-spacing: -0.022em;
-  color: var(--ink);
-  text-wrap: pretty;
-}
-
-.split--link {
-  display: block;
-}
-
-/* a block that is one paragraph sits in its own panel; the pixel corner fills the space
-   under the heading, mirrored into the bottom-left */
-.split--panel {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  margin-top: clamp(56px, 7vw, 96px);
-  padding: clamp(32px, 5vw, 72px);
-  border-radius: var(--radius-xl);
-  background: var(--tint);
-}
-
-.split--panel:first-child {
-  margin-top: 0;
-}
-
-.split__pixels {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  z-index: -1;
-  width: 38%;
-  height: 70%;
-  transform: scale(-1, -1);
-  pointer-events: none;
-  -webkit-mask-image: radial-gradient(120% 120% at 100% 0%, #000 22%, transparent 68%);
-  mask-image: radial-gradient(120% 120% at 100% 0%, #000 22%, transparent 68%);
-}
-
-.split--panel .split__statement {
-  font-size: clamp(1.1875rem, 0.95rem + 0.7vw, 1.5rem);
-  max-width: 38ch;
-}
-
-@media (max-width: 960px) {
-  .split--panel {
-    padding-bottom: 160px;
-  }
-
-  .split__pixels {
-    width: 60%;
-    height: min(45%, 150px);
-  }
-}
-
 /* ---------- Pixel corner shared by cards ---------- */
 
 .tile-pixels {
@@ -1259,17 +1209,15 @@ a.lang-switch__item:hover {
 .tile-pixels,
 .service-card__pixels,
 .link-card__pixels,
-.checklist__pixels,
 .info-card__pixels,
 .company-card__pixels,
 .process-note__pixels,
-.split__pixels,
+.btn__pixels,
 .nav-dropdown__pixels {
   border-radius: var(--card-radius, var(--radius-lg));
 }
 
-.form-card,
-.split--panel {
+.form-card {
   --card-radius: var(--radius-xl);
 }
 
@@ -1961,69 +1909,234 @@ a.lang-switch__item:hover {
 
 /* ---------- Service detail ---------- */
 
-.checklist {
+/* Intro: the block's heading with its chip, beside the opening paragraph set large and
+   inked word by word as it scrolls into reading position. */
+.svc-intro__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  gap: clamp(28px, 6vw, 112px);
+  align-items: start;
+}
+
+.svc-intro__head {
+  display: grid;
+  gap: 24px;
+  justify-items: start;
+}
+
+.svc-intro__chip {
+  width: 56px;
+  height: 56px;
+}
+
+.svc-intro__title {
+  max-width: 16ch;
+  font-size: clamp(1.625rem, 1.2rem + 1.3vw, 2.375rem);
+  font-weight: 330;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.svc-intro__statement {
+  font-size: clamp(1.5rem, 1.05rem + 1.45vw, 2.5rem);
+  font-weight: 320;
+  line-height: 1.26;
+  letter-spacing: -0.028em;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+
+/* What DANAU provides: a night band lit from below, the items as large light lines, each with
+   a square pixel that ignites as the line arrives. */
+.svc-list {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  padding: clamp(28px, 3.4vw, 44px);
-  border-radius: var(--radius-lg);
+  padding-block: clamp(88px, 11vw, 160px) clamp(170px, 19vw, 260px);
+  background: var(--night);
+  color: var(--white);
+}
+
+.svc-list__glow {
   background:
-    radial-gradient(90% 60% at 30% 120%, rgba(24, 24, 236, 0.75) 0%, rgba(24, 24, 236, 0) 70%),
-    var(--night);
-  color: var(--white);
+    radial-gradient(110% 55% at 50% 116%, #8796ff 0%, #1818ec 30%, #0d0f9e 50%, rgba(10, 12, 52, 0) 74%),
+    linear-gradient(180deg, #05061a 0%, #06071f 45%, #0a0c34 100%);
 }
 
-.checklist__pixels {
+.svc-list__mountains {
   position: absolute;
-  top: 0;
-  right: 0;
+  inset: auto 0 0;
+  width: 100%;
+  height: clamp(200px, 30vw, 380px);
   z-index: -1;
-  width: 46%;
-  height: 72%;
-  pointer-events: none;
-  -webkit-mask-image: radial-gradient(120% 120% at 100% 0%, #000 30%, transparent 70%);
-  mask-image: radial-gradient(120% 120% at 100% 0%, #000 30%, transparent 70%);
+  -webkit-mask-image: linear-gradient(to top, #000 50%, transparent 100%);
+  mask-image: linear-gradient(to top, #000 50%, transparent 100%);
 }
 
-.checklist__title {
-  margin-bottom: clamp(20px, 2.4vw, 32px);
-  font-size: clamp(1.375rem, 1.1rem + 0.6vw, 1.625rem);
-  font-weight: 380;
-  letter-spacing: -0.025em;
-  color: var(--white);
+.svc-list__title {
+  margin-bottom: clamp(40px, 6vw, 80px);
 }
 
-.checklist ul {
+.svc-list__items {
   display: grid;
+  grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+  column-gap: clamp(24px, 3.4vw, 56px);
+}
+
+.svc-list__item {
+  display: grid;
+  align-content: start;
+  gap: 20px;
+  padding-block: 28px 36px;
   border-top: 1px solid rgba(255, 255, 255, 0.14);
 }
 
-.checklist li {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding-block: 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
-  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
-  line-height: 1.45;
-  color: rgba(255, 255, 255, 0.9);
+.svc-list__pixel {
+  display: block;
+  width: 12px;
+  height: 12px;
+  background: var(--blue-200);
+  box-shadow: 0 0 18px 2px rgba(135, 150, 255, 0.75);
 }
 
-.checklist li:last-child {
-  border-bottom: 0;
+.svc-list__text {
+  display: block;
+  font-size: clamp(1.375rem, 0.95rem + 1.35vw, 2.25rem);
+  font-weight: 300;
+  line-height: 1.2;
+  letter-spacing: -0.032em;
+  text-wrap: balance;
+}
+
+/* the list continues a sentence, so most items start in lower case; as lines they read better
+   capitalised */
+.svc-list__text::first-letter {
+  text-transform: uppercase;
+}
+
+/* How the work is done: heading and answer side by side over a hairline. */
+.svc-approach__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  gap: clamp(28px, 6vw, 112px);
+  align-items: start;
+}
+
+.svc-approach__title {
+  max-width: 14ch;
+  font-size: clamp(1.625rem, 1.2rem + 1.3vw, 2.375rem);
+  font-weight: 330;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+}
+
+/* the approach paragraph as a path: one pixel node per sentence, joined by a drawn line */
+.svc-path {
+  display: grid;
+  max-width: 50ch;
+}
+
+.svc-path__step {
+  position: relative;
+  padding-left: 48px;
+  padding-bottom: clamp(28px, 3.4vw, 44px);
+}
+
+.svc-path__step:last-child {
   padding-bottom: 0;
 }
 
-.checklist__mark {
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
+.svc-path__node {
+  position: absolute;
+  top: 0.62em;
+  left: 0;
+  width: 14px;
+  height: 14px;
   background: var(--blue);
-  color: var(--white);
-  box-shadow: 0 0 0 4px rgba(24, 24, 236, 0.22);
+  box-shadow: 0 6px 16px -4px rgba(24, 24, 236, 0.6);
+}
+
+.svc-path__line {
+  position: absolute;
+  top: calc(0.62em + 22px);
+  bottom: -0.2em;
+  left: 6.5px;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--blue), var(--blue-200));
+  transform-origin: top;
+}
+
+.svc-path__text {
+  font-size: clamp(1.1875rem, 1rem + 0.6vw, 1.5rem);
+  font-weight: 360;
+  line-height: 1.5;
+  letter-spacing: -0.016em;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+
+.svc-intro + .svc-approach {
+  padding-top: 0;
+}
+
+.svc-approach__grid {
+  padding-top: clamp(40px, 5vw, 64px);
+  border-top: 1px solid var(--line);
+}
+
+.svc-list + .svc-approach .svc-approach__grid {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.svc-intro + .svc-link {
+  padding-top: 0;
+}
+
+@media (max-width: 960px) {
+  .svc-intro__grid,
+  .svc-approach__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .svc-intro__head {
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .svc-intro__chip {
+    width: 48px;
+    height: 48px;
+  }
+
+  .svc-intro__title,
+  .svc-approach__title {
+    max-width: none;
+  }
+
+  .svc-list__items {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .svc-list__items {
+    grid-template-columns: 1fr;
+  }
+
+  .svc-list__item {
+    grid-template-columns: auto 1fr;
+    gap: 16px;
+    padding-block: 20px;
+  }
+
+  .svc-list__pixel {
+    width: 10px;
+    height: 10px;
+    margin-top: 9px;
+  }
 }
 
 .link-card {
@@ -3202,7 +3315,6 @@ a.lang-switch__item:hover {
     height: 44%;
   }
 
-  .split,
   .contact__grid,
   .page-hero__inner.has-aside {
     grid-template-columns: 1fr;
@@ -3315,11 +3427,6 @@ a.lang-switch__item:hover {
     mask-image: radial-gradient(90% 90% at 100% 0%, #000 15%, transparent 60%);
   }
 
-  .checklist__pixels {
-    width: 34%;
-    height: 50%;
-  }
-
   /* the short contact cards keep a proper corner rather than a thin strip */
   .info-card .tile-pixels {
     width: 38%;
@@ -3331,8 +3438,7 @@ a.lang-switch__item:hover {
   }
 
   .form-card > .display-3,
-  .contact-form__hint,
-  .checklist__title {
+  .contact-form__hint {
     padding-right: 84px;
   }
 }

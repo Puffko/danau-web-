@@ -267,7 +267,7 @@ The live danau.sk palette: one saturated brand blue with its night and periwinkl
 
 A 1240px container with a fluid gutter (clamp 16–40px). Sections breathe at clamp(88px, 11vw, 160px) vertically; tight sections (CTA band wrapper, related services) at clamp(48px, 6vw, 80px).
 
-The recurring structure is the **split**: a 5fr heading column beside a 6fr body column (gap up to 112px), used for home "Partner", "Odbornosť", About and service-detail blocks; consecutive splits are separated by a hairline rule with symmetric padding. Grids: services 3 columns (2 under 960px, 1 under 640px, gap 16px); skills 4 columns; partners and related services 6/5 columns, collapsing to 3 then 2 (gap 12px).
+The recurring structure is the **split**: a 5fr heading column beside a 6fr body column (gap up to 112px), used on About; consecutive splits are separated by a hairline rule with symmetric padding. Grids: services 3 columns (2 under 960px, 1 under 640px, gap 16px); skills 4 columns; partners and related services 6/5 columns, collapsing to 3 then 2 (gap 12px).
 
 The home hero is full-viewport (min 720px / 100svh) with H1 bottom-left across 1.55fr and the paragraph plus actions in the right 1fr, aligned to the H1's baseline; the lower ~56% is the matrix range. Sub-page heroes put the title top-left with an optional aside (pixel glyph or wordmark) at 7fr/4fr. The "Pre koho pracujeme?" section is a sticky stage whose height scales with the item count (52vh per item); under 960px wide or 640px tall it unpins into a plain stacked list.
 
@@ -316,7 +316,7 @@ Confident, quiet pills.
 ### Cards / Containers
 - **Service card:** surface ground, 24px radius, 28px padding, min-height 400px; title top, description pushed to the bottom, "Zistiť viac" row over a hairline with a circular arrow. Hover: turns white, gains hairline border and card-lift shadow, reveals a blue dot field in its top-right corner, chip and arrow turn blue. Compact variant (190px) for related services.
 - **Link card:** surface ground, 24px, horizontal title + text + 52px arrow circle; hover to tint and lift 4px.
-- **Checklist:** surface panel, 24px, 26px blue circle check marks, ink-2 items.
+- **Service detail:** the opening paragraph at statement size, inking word by word from 0.22 to full ink as it scrolls into reading position, beside the block title and its icon chip (4fr / 8fr). What DANAU provides is a full-width night band lit from below with low pixel mountains: the items as large light lines (300, up to 2.25rem) in 2–3 columns over white hairlines, each with a 12px periwinkle pixel that ignites as the line arrives. How the work is done is a path: one blue 14px pixel node per sentence, joined by a 1px blue line that draws down on scroll.
 - **Skill tile:** white with hairline border, 24px, the D symbol as its mark (rotates 90deg on hover).
 - **Info card:** surface; the main variant is a night card with a corner glow and masked dot field.
 - **Partner tile:** white, hairline border, 20px radius, grayscale logo at 0.75 opacity, colour and lift on hover.

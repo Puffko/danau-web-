@@ -26,7 +26,7 @@ DANAU joins areas that are usually bought separately — project management, cyb
 
 - Routes: `/`, `/sluzby/projektove-riadenie`, `/sluzby/kyberneticka-bezpecnost`, `/sluzby/gdpr-a-dpo`, `/sluzby/analyza-a-data`, `/sluzby/data-governance`, `/sluzby/realizacia-it`, `/o-nas`, `/kontakt`, `/ochrana-osobnych-udajov`, `/cookies`, plus a 404.
 - Contact form fields: fullName*, organization, email*, phone, message*, consent*; POST JSON to `/api/contact.php`, which answers `{ ok, message?, error? }`.
-- Language: Slovak only. Copy must be kept verbatim from the live site (user requirement: keep content and sections).
+- Languages: Slovak at the root (copy verbatim from the live site; user requirement: keep content and sections) and English under `/en` with its own slugs, a faithful translation of the Slovak. A SK / EN switch in the header links to the same page in the other language.
 
 ## Brand Commitments
 
