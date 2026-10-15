@@ -276,6 +276,15 @@ export const home = {
     lead: 'Staviame na kombinácii praktických skúseností a odborných certifikácií v oblastiach projektového riadenia, kybernetickej bezpečnosti, ochrany osobných údajov, informačnej bezpečnosti, enterprise architektúry a riadenia IT služieb.',
     listIntro: 'Súčasťou odborného zázemia DANAU sú kompetencie a certifikácie ako:',
     items: ['IPMA', 'PRINCE2', 'Lead Auditor ISO/IEC 27001', 'ITIL', 'TOGAF', 'MKB', 'DPO'],
+    // The same certifications, grouped under the areas the lead names (in its order).
+    domains: [
+      { area: 'Projektové riadenie', certs: ['IPMA', 'PRINCE2'] },
+      { area: 'Kybernetická bezpečnosť', certs: ['MKB'] },
+      { area: 'Ochrana osobných údajov', certs: ['DPO'] },
+      { area: 'Informačná bezpečnosť', certs: ['Lead Auditor ISO/IEC 27001'] },
+      { area: 'Enterprise architektúra', certs: ['TOGAF'] },
+      { area: 'Riadenie IT služieb', certs: ['ITIL'] },
+    ],
   },
   clients: {
     title: 'Pre koho pracujeme?',
@@ -308,23 +317,37 @@ export const about = {
   title: 'O nás',
   text: 'Sme odborný partner pre organizácie, ktoré potrebujú kvalitne pripraviť, riadiť a realizovať projekty, nastaviť bezpečnostné a riadiace procesy alebo posilniť interné odborné kapacity.',
   whatTitle: 'Čo robíme?',
-  // The live paragraph, split so the closing sentence can carry the emphasis.
-  whatText:
-    'Pôsobíme na rozhraní projektového riadenia, analytiky, kybernetickej bezpečnosti, ochrany osobných údajov, dátového manažmentu a realizácie IT riešení.',
+  // The live paragraph; the six areas it names link to their service pages.
+  whatParts: [
+    'Pôsobíme na rozhraní ',
+    { area: 'projektove-riadenie', text: 'projektového riadenia' },
+    ', ',
+    { area: 'analyza-a-data', text: 'analytiky' },
+    ', ',
+    { area: 'kyberneticka-bezpecnost', text: 'kybernetickej bezpečnosti' },
+    ', ',
+    { area: 'gdpr-a-dpo', text: 'ochrany osobných údajov' },
+    ', ',
+    { area: 'data-governance', text: 'dátového manažmentu' },
+    ' a ',
+    { area: 'realizacia-it', text: 'realizácie IT riešení' },
+    '.',
+  ] as (string | { area: string; text: string })[],
   whatEdge:
     'Našou výhodou je schopnosť prepájať tieto oblasti do jedného zrozumiteľného a riaditeľného prístupu.',
   // The six areas named in the paragraph, in its order, as the services they correspond to.
   areas: ['projektove-riadenie', 'analyza-a-data', 'kyberneticka-bezpecnost', 'gdpr-a-dpo', 'data-governance', 'realizacia-it'],
   skillsTitle: 'Kľúčové odbornosti',
+  // Each expertise with the area it belongs to (the areas named under "Odbornosť a skúsenosti").
   skills: [
-    'IPMA',
-    'PRINCE2',
-    'Lead Auditor ISO/IEC 27001',
-    'ITIL',
-    'TOGAF',
-    'MKB',
-    'Audit kybernetickej bezpečnosti',
-    'Certifikovaní DPO',
+    { name: 'IPMA', area: 'Projektové riadenie' },
+    { name: 'PRINCE2', area: 'Projektové riadenie' },
+    { name: 'Lead Auditor ISO/IEC 27001', area: 'Informačná bezpečnosť' },
+    { name: 'ITIL', area: 'Riadenie IT služieb' },
+    { name: 'TOGAF', area: 'Enterprise architektúra' },
+    { name: 'MKB', area: 'Kybernetická bezpečnosť' },
+    { name: 'Audit kybernetickej bezpečnosti', area: 'Kybernetická bezpečnosť' },
+    { name: 'Certifikovaní DPO', area: 'Ochrana osobných údajov' },
   ],
 }
 

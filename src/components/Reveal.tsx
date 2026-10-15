@@ -69,15 +69,15 @@ interface RevealProps extends HTMLMotionProps<'div'> {
   as?: 'div' | 'li'
 }
 
-/** Rise-and-unblur entrance for blocks. Content stays in the layout from the start. */
-export function Reveal({ children, delay = 0, y = 28, immediate = false, as = 'div', ...rest }: RevealProps) {
+/** Rise-and-fade entrance for blocks. Content stays in the layout from the start. */
+export function Reveal({ children, delay = 0, y = 24, immediate = false, as = 'div', ...rest }: RevealProps) {
   const Comp = (as === 'li' ? motion.li : motion.div) as typeof motion.div
   const reduce = useReducedMotion()
-  const hidden = reduce ? { opacity: 0 } : { opacity: 0, y, filter: 'blur(8px)' }
-  const shown = reduce ? { opacity: 1 } : { opacity: 1, y: 0, filter: 'blur(0px)' }
+  const hidden = reduce ? { opacity: 0 } : { opacity: 0, y }
+  const shown = reduce ? { opacity: 1 } : { opacity: 1, y: 0 }
   const trigger = immediate ? { animate: shown } : { whileInView: shown, viewport: { once: true, margin: '0px 0px -10% 0px' } }
   return (
-    <Comp initial={hidden} {...trigger} transition={{ duration: 0.9, delay, ease: EASE_OUT }} {...rest}>
+    <Comp initial={hidden} {...trigger} transition={{ duration: 1.1, delay, ease: EASE_OUT }} {...rest}>
       {children}
     </Comp>
   )

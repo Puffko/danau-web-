@@ -2,7 +2,8 @@ import { motion, useReducedMotion } from 'motion/react'
 import { Link } from 'react-router-dom'
 import { contact, footer, routes, services } from '../data/site'
 import { ArrowUpRight, Mail, Phone, Pin } from './Icons'
-import { Wordmark, WordmarkShapes } from './Logo'
+import { Wordmark } from './Logo'
+import { PixelWordmark } from './PixelWordmark'
 import { EASE_OUT, RevealText } from './Reveal'
 
 export function Footer() {
@@ -89,22 +90,7 @@ export function Footer() {
           viewport={{ once: true, amount: 0.15 }}
           transition={{ duration: 1.1, ease: EASE_OUT }}
         >
-          <svg className="site-footer__wordmark" viewBox="0 0 134 42.138">
-            <defs>
-              <pattern id="footer-dots" width="0.9" height="0.9" patternUnits="userSpaceOnUse">
-                <rect x="0.1" y="0.1" width="0.7" height="0.7" fill="#fff" />
-              </pattern>
-              <mask id="footer-mark-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="134" height="42.138">
-                <WordmarkShapes paint="url(#footer-dots)" />
-              </mask>
-              <linearGradient id="footer-mark-fill" x1="0" y1="0" x2="0" y2="42.138" gradientUnits="userSpaceOnUse">
-                <stop offset="0" stopColor="#ffffff" />
-                <stop offset="0.55" stopColor="#eef1ff" />
-                <stop offset="1" stopColor="#c9d3ff" />
-              </linearGradient>
-            </defs>
-            <rect width="134" height="42.138" fill="url(#footer-mark-fill)" mask="url(#footer-mark-mask)" />
-          </svg>
+          <PixelWordmark className="site-footer__wordmark" />
         </motion.div>
       </div>
     </footer>

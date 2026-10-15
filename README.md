@@ -21,8 +21,11 @@ src/
   data/site.ts        všetok text webu (služby, sekcie, kontakty) – obsah meňte tu
   pages/              jedna stránka = jedna route
   components/         hlavička, pätička, karty, animácie
-    PixelMountains    canvas s pixelovými horami v hero
-    PixelSphere       pixelová guľa v sekcii „Ako pracujeme?“
+    PixelMountains    canvas s pixelovými horami (hero, CTA, panel odborností)
+    PixelSphere       pixelová guľa v diagramoch „Ako pracujeme?“ a „Partner…“
+    PixelCluster      pixelový roh na kartách (modrý pri prejdení myšou)
+    PixelCurtain      pixelová opona pri načítaní webu a prechode medzi stránkami
+    PixelWordmark     pixelové logo Danau v pätičke
   styles/global.css   farby, typografia a všetky štýly
 public/
   .htaccess           presmerovanie pre SPA na Apache (necháva /api/ bez zmeny)

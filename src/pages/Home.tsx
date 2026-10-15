@@ -1,10 +1,12 @@
 import { motion, useMotionValueEvent, useScroll } from 'motion/react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, ArrowUpRight, DSymbol } from '../components/Icons'
+import { ArrowRight, ArrowUpRight } from '../components/Icons'
 import { PixelMountains } from '../components/PixelMountains'
 import { EASE_OUT, Reveal, RevealText } from '../components/Reveal'
+import { PixelCluster } from '../components/PixelCluster'
 import { SphereDiagram } from '../components/SphereDiagram'
+import { useHover } from '../hooks/useHover'
 import { ServiceCard } from '../components/ServiceCard'
 import { home, routes, services } from '../data/site'
 import { scrollToTarget, useLenis } from '../hooks/smoothScroll'
@@ -105,13 +107,9 @@ function Partners() {
           )
           return (
             <Reveal as="li" key={p.name} delay={i * 0.06} y={16} className="partners__item">
-              {p.href ? (
-                <a href={p.href} target="_blank" rel="noreferrer" className="partners__tile">
-                  {mark}
-                </a>
-              ) : (
-                <div className="partners__tile">{mark}</div>
-              )}
+              <PartnerTile href={p.href} seed={i * 4}>
+                {mark}
+              </PartnerTile>
             </Reveal>
           )
         })}
@@ -128,7 +126,7 @@ function Services() {
         <ul className="service-grid">
           {services.map((s, i) => (
             <Reveal as="li" key={s.slug} delay={(i % 3) * 0.08} className="service-grid__item">
-              <ServiceCard service={s} moreLabel={home.services.more} />
+              <ServiceCard service={s} moreLabel={home.services.more} seed={i * 7} />
             </Reveal>
           ))}
         </ul>
@@ -156,30 +154,31 @@ function Process() {
 }
 
 function Expertise() {
-  const certs = home.expertise.items
+  const { expertise } = home
   return (
-    <section className="section expertise">
-      <div className="container split">
-        <div className="split__head">
-          <RevealText as="h2" className="display-2" text={home.expertise.title} />
-        </div>
-        <div className="split__body">
+    <section className="section expertise" aria-labelledby="expertise-title">
+      <div className="container expertise__grid">
+        <div className="expertise__intro">
+          <RevealText as="h2" id="expertise-title" className="display-2" text={expertise.title} />
           <Reveal>
-            <p className="lead">{home.expertise.lead}</p>
+            <p className="lead">{expertise.lead}</p>
           </Reveal>
           <Reveal delay={0.1}>
-            <p className="body-copy">{home.expertise.listIntro}</p>
+            <p className="body-copy">{expertise.listIntro}</p>
           </Reveal>
         </div>
-      </div>
-
-      <div className="container">
-        <ul className="certs">
-          {certs.map((c) => (
-            <li key={c} className={`certs__item${c.length > 14 ? ' certs__item--wide' : ''}`}>
-              <DSymbol className="certs__mark" />
-              <span className="certs__name">{c}</span>
-            </li>
+        <ul className="domains">
+          {expertise.domains.map((d, i) => (
+            <DomainCell key={d.area} seed={i * 6}>
+              <span className="domains__area">{d.area}</span>
+              <span className="domains__certs">
+                {d.certs.map((c) => (
+                  <span key={c} className="domains__cert">
+                    {c}
+                  </span>
+                ))}
+              </span>
+            </DomainCell>
           ))}
         </ul>
       </div>
@@ -321,5 +320,31 @@ export default function Home() {
       <Expertise />
       <Clients />
     </>
+  )
+}
+
+function PartnerTile({ href, seed, children }: { href?: string; seed: number; children: ReactNode }) {
+  const [active, hover] = useHover()
+  const pixels = <PixelCluster className="tile-pixels" active={active} seed={seed} radius={56} cell={8} activeRamp="rest" />
+  return href ? (
+    <a href={href} target="_blank" rel="noreferrer" className="partners__tile" {...hover}>
+      {pixels}
+      {children}
+    </a>
+  ) : (
+    <div className="partners__tile" {...hover}>
+      {pixels}
+      {children}
+    </div>
+  )
+}
+
+function DomainCell({ seed, children }: { seed: number; children: ReactNode }) {
+  const [active, hover] = useHover()
+  return (
+    <li className="domains__cell" {...hover}>
+      <PixelCluster className="tile-pixels" active={active} seed={seed} radius={84} cell={9} activeRamp="rest" />
+      {children}
+    </li>
   )
 }

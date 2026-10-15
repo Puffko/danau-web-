@@ -3,6 +3,8 @@ import { CtaBand } from '../components/CtaBand'
 import { ArrowRight, Check } from '../components/Icons'
 import { PixelGlyph } from '../components/PixelGlyph'
 import { PageHero } from '../components/PageHero'
+import { PixelCluster } from '../components/PixelCluster'
+import { useHover } from '../hooks/useHover'
 import { Reveal, RevealText } from '../components/Reveal'
 import { ServiceCard } from '../components/ServiceCard'
 import { serviceBySlug, services } from '../data/site'
@@ -38,15 +40,7 @@ export default function Service() {
                 <div className="split__head" />
                 <div className="split__body">
                   <Reveal>
-                    <Link to={block.to} className="link-card">
-                      <span>
-                        <h3 className="link-card__title">{block.title}</h3>
-                        <span className="link-card__text">{block.body}</span>
-                      </span>
-                      <span className="link-card__arrow">
-                        <ArrowRight />
-                      </span>
-                    </Link>
+                    <LinkCard to={block.to} title={block.title} body={block.body} />
                   </Reveal>
                 </div>
               </div>
@@ -61,6 +55,7 @@ export default function Service() {
                   </Reveal>
                   {block.list && (
                     <Reveal delay={0.1} className="checklist">
+                      <PixelCluster className="checklist__pixels" seed={index * 3 + i} radius={110} />
                       <h3 className="checklist__title">{block.listTitle}</h3>
                       <ul>
                         {block.list.map((item) => (
@@ -89,12 +84,28 @@ export default function Service() {
           <ul className="related__grid">
             {others.map((s, i) => (
               <Reveal as="li" key={s.slug} delay={i * 0.05}>
-                <ServiceCard service={s} compact />
+                <ServiceCard service={s} compact seed={i * 5} />
               </Reveal>
             ))}
           </ul>
         </div>
       </section>
     </>
+  )
+}
+
+function LinkCard({ to, title, body }: { to: string; title: string; body: string }) {
+  const [active, hover] = useHover()
+  return (
+    <Link to={to} className={`link-card${active ? ' is-active' : ''}`} {...hover}>
+      <PixelCluster className="link-card__pixels" active={active} seed={9} radius={120} />
+      <span>
+        <h3 className="link-card__title">{title}</h3>
+        <span className="link-card__text">{body}</span>
+      </span>
+      <span className="link-card__arrow">
+        <ArrowRight />
+      </span>
+    </Link>
   )
 }

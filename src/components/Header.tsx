@@ -1,10 +1,11 @@
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'motion/react'
 import { useEffect, useId, useRef, useState, type FocusEvent, type PointerEvent } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
-import { contact, routes, services } from '../data/site'
+import { contact, home, routes, services } from '../data/site'
 import { useLenis } from '../hooks/smoothScroll'
 import { ArrowRight, ArrowUpRight, Caret, Close, Menu, ServiceIcon } from './Icons'
 import { Wordmark } from './Logo'
+import { PixelCluster } from './PixelCluster'
 import { EASE_OUT } from './Reveal'
 
 const DESKTOP_NAV = '(min-width: 1101px)'
@@ -14,7 +15,6 @@ export function Header() {
   const lenis = useLenis()
   const { scrollY } = useScroll()
   const [scrolled, setScrolled] = useState(false)
-  const [hidden, setHidden] = useState(false)
   const [servicesOpen, setServicesOpen] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const closeTimer = useRef<number>()
@@ -25,17 +25,8 @@ export function Header() {
   const servicesButtonRef = useRef<HTMLButtonElement>(null)
   const toggleRef = useRef<HTMLButtonElement>(null)
 
-  useMotionValueEvent(scrollY, 'change', (y) => {
-    const prev = scrollY.getPrevious() ?? 0
-    setScrolled(y > 24)
-    // Only react to clear movement: Lenis ends every scroll with sub-pixel frames.
-    if (y <= 480) setHidden(false)
-    else if (y > prev + 2) {
-      // keep the bar in view while keyboard focus is inside it
-      const keyboardFocusInside = headerRef.current?.querySelector(':focus-visible')
-      if (!servicesOpen && !keyboardFocusInside) setHidden(true)
-    } else if (y < prev - 2) setHidden(false)
-  })
+  // The bar always stays in view; past the hero it turns solid.
+  useMotionValueEvent(scrollY, 'change', (y) => setScrolled(y > 24))
 
   // Close menus on every navigation, including links to the page already showing.
   useEffect(() => {
@@ -125,9 +116,9 @@ export function Header() {
       <motion.header
         ref={headerRef}
         className={`site-header${scrolled ? ' is-solid' : ''}`}
-        animate={{ y: hidden && !mobileOpen ? '-110%' : '0%' }}
-        transition={{ duration: 0.45, ease: EASE_OUT }}
-        onFocusCapture={() => setHidden(false)}
+        initial={{ opacity: 0, y: -16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.2, ease: EASE_OUT }}
       >
         <div className="site-header__inner container">
           <Link to="/" className="brand" aria-label="Danau – domov">
@@ -161,28 +152,33 @@ export function Header() {
                   <motion.div
                     id={panelId}
                     className="nav-dropdown__panel"
-                    initial={{ opacity: 0, y: -8, scale: 0.98, filter: 'blur(6px)' }}
-                    animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
-                    exit={{ opacity: 0, y: -6, scale: 0.98, transition: { duration: 0.16 } }}
-                    transition={{ duration: 0.32, ease: EASE_OUT }}
+                    initial={{ opacity: 0, y: -10, scale: 0.985 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -8, scale: 0.985, transition: { duration: 0.18 } }}
+                    transition={{ duration: 0.45, ease: EASE_OUT }}
                   >
-                    <Link to={routes.services} className="nav-dropdown__all">
-                      <span>Všetky služby</span>
-                      <ArrowRight />
+                    <Link to={routes.services} className="nav-dropdown__feature">
+                      <PixelCluster className="nav-dropdown__pixels" active seed={5} radius={150} cell={10} />
+                      <span className="nav-dropdown__feature-title">{home.services.title}</span>
+                      <span className="nav-dropdown__feature-cta">
+                        <span>Všetky služby</span>
+                        <ArrowRight />
+                      </span>
                     </Link>
                     <ul className="nav-dropdown__grid">
                       {services.map((s, i) => (
                         <motion.li
                           key={s.slug}
-                          initial={{ opacity: 0, y: 6 }}
+                          initial={{ opacity: 0, y: 8 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 0.03 * i + 0.04, duration: 0.4, ease: EASE_OUT }}
+                          transition={{ delay: 0.04 * i + 0.06, duration: 0.5, ease: EASE_OUT }}
                         >
                           <NavLink to={`/sluzby/${s.slug}`} className="nav-dropdown__item">
                             <span className="chip chip--sm">
                               <ServiceIcon name={s.icon} width={18} height={18} />
                             </span>
-                            <span>{s.navLabel}</span>
+                            <span className="nav-dropdown__label">{s.navLabel}</span>
+                            <ArrowRight className="nav-dropdown__arrow" />
                           </NavLink>
                         </motion.li>
                       ))}

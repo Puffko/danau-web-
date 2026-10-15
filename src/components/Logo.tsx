@@ -31,17 +31,3 @@ export function Wordmark({ title = 'Danau', paint = 'currentColor', children, ..
     </svg>
   )
 }
-
-/** Wordmark shapes without an <svg> wrapper, for use inside masks. */
-export function WordmarkShapes({ paint }: { paint: string }) {
-  return (
-    <g fill={paint}>
-      <g transform="translate(0 12.1131)">
-        {SYMBOL.map((d) => (
-          <path key={d} d={d} />
-        ))}
-      </g>
-      <path d={LETTERS} transform="translate(33 41.6829)" />
-    </g>
-  )
-}

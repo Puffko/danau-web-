@@ -2,6 +2,8 @@ import { AnimatePresence, motion } from 'motion/react'
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { ArrowUpRight, Check, Mail, Phone, Pin } from '../components/Icons'
 import { PageHero } from '../components/PageHero'
+import { PixelCluster } from '../components/PixelCluster'
+import { useHover } from '../hooks/useHover'
 import { EASE_OUT, Reveal, RevealText } from '../components/Reveal'
 import { contact, contactPage, routes } from '../data/site'
 import { scrollToTarget, useLenis } from '../hooks/smoothScroll'
@@ -37,6 +39,7 @@ export default function Contact() {
   const [success, setSuccess] = useState('')
   const [failure, setFailure] = useState('')
   const statusRef = useRef<HTMLDivElement>(null)
+  const [mainActive, mainHover] = useHover()
   const lenis = useLenis()
 
   // Once the request settles, take keyboard and screen-reader users to the outcome.
@@ -124,7 +127,14 @@ export default function Contact() {
         <div className="container contact__grid">
           <div className="contact__info">
             <Reveal>
-              <a className="info-card info-card--main" href={contact.mapsHref} target="_blank" rel="noreferrer">
+              <a
+                className={`info-card info-card--main${mainActive ? ' is-active' : ''}`}
+                href={contact.mapsHref}
+                target="_blank"
+                rel="noreferrer"
+                {...mainHover}
+              >
+                <PixelCluster className="info-card__pixels" active={mainActive} seed={4} radius={140} />
                 <span className="info-card__label">
                   <Pin width={16} height={16} /> Sídlo spoločnosti
                 </span>
@@ -139,6 +149,7 @@ export default function Contact() {
             </Reveal>
             <Reveal delay={0.08}>
               <div className="info-card">
+                <PixelCluster className="tile-pixels" seed={6} radius={70} cell={9} />
                 <span className="info-card__label">
                   <Mail width={16} height={16} /> E-mail
                 </span>
@@ -149,6 +160,7 @@ export default function Contact() {
             </Reveal>
             <Reveal delay={0.16}>
               <div className="info-card">
+                <PixelCluster className="tile-pixels" seed={8} radius={70} cell={9} />
                 <span className="info-card__label">
                   <Phone width={16} height={16} /> Telefón
                 </span>
@@ -160,6 +172,7 @@ export default function Contact() {
           </div>
 
           <Reveal delay={0.1} className="form-card">
+            <PixelCluster className="tile-pixels" seed={12} radius={150} />
             <RevealText as="h2" className="display-3" text={contactPage.formTitle} />
             <p className="contact-form__hint">Polia označené * sú povinné.</p>
             <form className="contact-form" noValidate onSubmit={onSubmit}>

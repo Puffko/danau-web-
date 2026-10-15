@@ -27,9 +27,11 @@ interface Props {
   name: IllustrationName
   className?: string
   tone?: keyof typeof TONES
+  /** Multiplies the ignite timing; below 1 assembles faster (the boot screen uses 0.4). */
+  pace?: number
 }
 
-export function PixelGlyph({ name, className, tone = 'dark' }: Props) {
+export function PixelGlyph({ name, className, tone = 'dark', pace = 1 }: Props) {
   const ref = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
@@ -96,7 +98,7 @@ export function PixelGlyph({ name, className, tone = 'dark' }: Props) {
             x: i * cell,
             y: j * cell,
             level,
-            delay: (1 - j / n) * 700 + hash(i, j, 2) * 400,
+            delay: ((1 - j / n) * 700 + hash(i, j, 2) * 400) * pace,
             phase: hash(j, i, 8) * Math.PI * 2,
           })
         }
@@ -116,7 +118,7 @@ export function PixelGlyph({ name, className, tone = 'dark' }: Props) {
         for (const k of cells) {
           let lvl = k.level
           let grow = 1
-          const p = (t - k.delay) / 520
+          const p = (t - k.delay) / (520 * pace)
           if (p < 1) {
             pending = true
             if (p <= 0) continue
@@ -177,7 +179,7 @@ export function PixelGlyph({ name, className, tone = 'dark' }: Props) {
       canvas.removeEventListener('pointerleave', onLeave)
       document.removeEventListener('visibilitychange', kick)
     }
-  }, [name, tone])
+  }, [name, tone, pace])
 
   return <canvas ref={ref} className={className} aria-hidden="true" />
 }
