@@ -122,7 +122,8 @@ export function Header() {
       >
         <div className="site-header__inner container">
           <Link to="/" className="brand" aria-label="Danau – domov">
-            <Wordmark className="brand__mark" aria-hidden="true" />
+            {/* viewBox cropped to the drawn mark, so it centres in the bar */}
+            <Wordmark className="brand__mark" viewBox="0 12.1 134 30.04" aria-hidden="true" />
           </Link>
 
           <nav className="primary-nav" aria-label="Hlavná navigácia">
