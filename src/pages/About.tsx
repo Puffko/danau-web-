@@ -61,8 +61,8 @@ export default function About() {
             <PixelMountains className="skills-panel__mountains" variant="low" seed={23} />
             <RevealText as="h2" id="skills-title" className="display-2 skills-panel__title" text={about.skillsTitle} />
             <ul className="skills-panel__grid">
-              {about.skills.map((skill, i) => (
-                <SkillCell key={skill.name} name={skill.name} area={skill.area} seed={i * 5} />
+              {about.skills.map((skill) => (
+                <SkillCell key={skill.name} name={skill.name} area={skill.area} />
               ))}
             </ul>
           </div>
@@ -144,11 +144,9 @@ function AreasHub({ active, onActive }: { active: string | null; onActive: (slug
   )
 }
 
-function SkillCell({ name, area, seed }: { name: string; area: string; seed: number }) {
-  const [active, hover] = useHover()
+function SkillCell({ name, area }: { name: string; area: string }) {
   return (
-    <li className="skills-panel__cell" {...hover}>
-      <PixelCluster className="tile-pixels" active={active} seed={seed} radius={70} cell={8} />
+    <li className="skills-panel__cell">
       <span className="skills-panel__area">{area}</span>
       <span className="skills-panel__name">{name}</span>
     </li>

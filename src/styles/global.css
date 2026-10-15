@@ -1129,7 +1129,6 @@ p {
 }
 
 .domains__cell,
-.skills-panel__cell,
 .info-card,
 .form-card {
   position: relative;
@@ -1394,10 +1393,12 @@ p {
 }
 
 /* where the line arrives on the right edge, the corner pixels move to the bottom-right */
-.process-stage:not(.process-stage--mirrored) .process-note__pixels {
-  top: auto;
-  bottom: 0;
-  transform: scaleY(-1);
+@media (min-width: 1201px) {
+  .process-stage:not(.process-stage--mirrored) .process-note__pixels {
+    top: auto;
+    bottom: 0;
+    transform: scaleY(-1);
+  }
 }
 
 /* the connector line ends on the card's edge in one pixel */
@@ -2263,7 +2264,6 @@ p {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding-right: 56px;
   font-size: 0.875rem;
   font-weight: 450;
   color: rgba(255, 255, 255, 0.66);
@@ -3160,7 +3160,6 @@ p {
     height: 50%;
   }
 
-  .skills-panel__area,
   .domains__area {
     padding-right: 44px;
   }
@@ -3358,25 +3357,11 @@ p {
 }
 
 
-/* Phones: the diagram reads as one connected path. A rail on the left links the notes and the
-   result (the desktop's arc and lines, folded straight), each part plugs into it with a pixel,
-   and the result becomes a blue card the sphere rises out of, like its text on the blurred half. */
+/* Phones: notes and result stack as aligned full-width cards; the result becomes a blue card the
+   sphere rises out of, like its text on the blurred half on desktop. */
 @media (max-width: 640px) {
   .process-stage {
-    position: relative;
-    gap: 16px;
-    padding-left: 26px;
-  }
-
-  .process-stage::before {
-    content: '';
-    position: absolute;
-    left: 3px;
-    top: 40px;
-    bottom: 48px;
-    width: 2px;
-    background: linear-gradient(to bottom, var(--blue-200), var(--blue) 45%, var(--blue-200));
-    opacity: 0.6;
+    gap: 14px;
   }
 
   .process-note,
@@ -3384,33 +3369,14 @@ p {
     position: relative;
   }
 
-  .process-note::before {
-    display: block;
-    content: '';
-    position: absolute;
-    top: 36px;
-    left: -27px;
-    right: auto;
-    z-index: 1;
-    width: 10px;
-    height: 10px;
-    background: var(--blue);
-    box-shadow: 0 0 0 4px var(--white);
-  }
-
-  .process .process-note::before {
-    box-shadow: 0 0 0 4px var(--surface);
-  }
 
   .process-note__card {
     padding: 22px 22px 24px;
   }
 
-  /* the result spans the full width, so the rail runs into it */
   .process-orb {
     left: auto;
     top: auto;
-    margin-left: -26px;
     overflow: hidden;
     isolation: isolate;
     padding: 196px 24px 28px;

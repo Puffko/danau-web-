@@ -100,6 +100,7 @@ function Process() {
       <div className="container">
         <RevealText as="h2" id="process-title" className="display-2 process__title" text={home.process.title} />
         <SphereDiagram
+          resultLast
           notes={[
             { label: 'Výzva', text: challenge },
             { label: 'Cieľ', text: goal },
