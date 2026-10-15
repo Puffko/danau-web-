@@ -404,10 +404,10 @@ p {
   align-items: center;
   gap: 16px;
   width: calc(100% - var(--gutter) * 2);
-  max-width: 940px;
-  height: 56px;
+  max-width: 1000px;
+  height: 62px;
   margin-inline: auto;
-  padding: 0 8px 0 18px;
+  padding: 0 9px 0 22px;
   border: 1px solid rgba(17, 24, 39, 0.06);
   border-radius: 16px;
   background: var(--white);
@@ -416,6 +416,8 @@ p {
     0 18px 40px -22px rgba(5, 6, 26, 0.45);
   pointer-events: auto;
   transition:
+    max-width 0.7s var(--ease),
+    padding 0.7s var(--ease),
     background-color 0.6s var(--ease),
     border-color 0.6s var(--ease),
     box-shadow 0.6s var(--ease),
@@ -429,6 +431,12 @@ p {
 }
 
 .site-header:not(.is-solid) .site-header__inner {
+  /* over the hero the bar spans the content width: logo on the headline's left edge, button on
+     the text's right edge; scrolled, it draws in to the floating card */
+  /* +2px: the bar's 1px border would otherwise inset the logo and button by a pixel */
+  width: calc(100% - var(--gutter) * 2 + 2px);
+  max-width: calc(var(--container) + 2px);
+  padding-inline: 0;
   border-color: rgba(255, 255, 255, 0);
   background: rgba(255, 255, 255, 0);
   /* the same shadow layers at zero strength, so the card's shadow fades rather than snaps */
@@ -475,7 +483,7 @@ p {
 
 .brand__mark {
   width: auto;
-  height: 18px;
+  height: 20px;
   fill: currentColor;
   transition: fill 0.6s var(--ease);
 }
@@ -494,13 +502,13 @@ p {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  height: 36px;
-  padding: 0 13px;
+  height: 40px;
+  padding: 0 14px;
   border: 0;
   border-radius: 10px;
   background: transparent;
   color: var(--ink);
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   font-weight: 500;
   letter-spacing: -0.005em;
   transition:
@@ -537,13 +545,13 @@ p {
 }
 
 .btn--header {
-  --btn-h: 44px;
+  --btn-h: 46px;
   gap: 9px;
-  padding: 0 20px 0 17px;
+  padding: 0 22px 0 18px;
   border-radius: 12px;
   background: var(--blue);
   color: var(--white);
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   font-weight: 520;
   box-shadow: none;
 }
@@ -720,8 +728,8 @@ p {
 .menu-toggle {
   display: none;
   place-items: center;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border: 1px solid var(--line);
   border-radius: 11px;
   background: var(--white);
@@ -3168,7 +3176,7 @@ p {
   }
 
   .brand__mark {
-    height: 17px;
+    height: 18px;
   }
 
   .site-header {
@@ -3176,9 +3184,13 @@ p {
   }
 
   .site-header__inner {
-    height: 52px;
-    padding-left: 14px;
-    padding-right: 6px;
+    height: 56px;
+    padding-left: 16px;
+    padding-right: 7px;
+  }
+
+  .site-header:not(.is-solid) .site-header__inner {
+    padding-inline: 0;
   }
 
   .hero__title {
