@@ -98,11 +98,11 @@ export default function App() {
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
   }, [])
 
-  // First load: the wordmark assembles, then the screen lifts away once the fonts are in.
+  // First load: the logo turns into pixels, then the screen lifts away once the fonts are in.
   useEffect(() => {
     if (reduce) return
     let cancelled = false
-    Promise.all([document.fonts?.ready ?? Promise.resolve(), wait(1350)]).then(() => {
+    Promise.all([document.fonts?.ready ?? Promise.resolve(), wait(1750)]).then(() => {
       if (cancelled) return
       setLoading(false)
       fadeIn()
@@ -203,11 +203,6 @@ export default function App() {
       {!reduce && (
         <div className={`loader${loading ? '' : ' is-done'}`} aria-hidden="true">
           <LoaderMark className="loader__logo" />
-          <span className="loader__pixels">
-            {Array.from({ length: 12 }, (_, i) => (
-              <i key={i} style={{ ['--i' as string]: i }} />
-            ))}
-          </span>
         </div>
       )}
     </>
