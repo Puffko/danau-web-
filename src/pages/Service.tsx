@@ -36,26 +36,32 @@ export default function Service() {
         <div className="container">
           {service.blocks.map((block, i) =>
             block.kind === 'link' ? (
-              <div className="split split--rule" key={block.title}>
-                <div className="split__head" />
-                <div className="split__body">
-                  <Reveal>
-                    <LinkCard to={block.to} title={block.title} body={block.body} />
-                  </Reveal>
-                </div>
+              // a link block has no heading of its own: the card spans the full width
+              <div className="split split--rule split--link" key={block.title}>
+                <Reveal>
+                  <LinkCard to={block.to} title={block.title} body={block.body} />
+                </Reveal>
               </div>
             ) : (
-              <div className={`split${i > 0 ? ' split--rule' : ''}`} key={block.title}>
+              <div
+                className={`split split--block${block.list ? '' : ' split--panel'}${i > 0 && block.list ? ' split--rule' : ''}`}
+                key={block.title}
+              >
+                {!block.list && (
+                  <PixelCluster className="split__pixels" seed={index * 5 + i} radius={150} cell={12} />
+                )}
                 <div className="split__head">
                   <RevealText as="h2" className="display-3" text={block.title} />
+                  {block.list && (
+                    <Reveal delay={0.05}>
+                      <p className="lead split__lead">{block.body}</p>
+                    </Reveal>
+                  )}
                 </div>
                 <div className="split__body">
-                  <Reveal>
-                    <p className="lead">{block.body}</p>
-                  </Reveal>
-                  {block.list && (
+                  {block.list ? (
                     <Reveal delay={0.1} className="checklist">
-                      <PixelCluster className="checklist__pixels" seed={index * 3 + i} radius={110} />
+                      <PixelCluster className="checklist__pixels" seed={index * 3 + i} radius={130} />
                       <h3 className="checklist__title">{block.listTitle}</h3>
                       <ul>
                         {block.list.map((item) => (
@@ -67,6 +73,10 @@ export default function Service() {
                           </li>
                         ))}
                       </ul>
+                    </Reveal>
+                  ) : (
+                    <Reveal>
+                      <p className="split__statement">{block.body}</p>
                     </Reveal>
                   )}
                 </div>
