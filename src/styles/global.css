@@ -1348,32 +1348,112 @@ p {
   position: absolute;
   left: 1.5%;
   top: var(--y);
-  width: 37%;
-  margin-top: -22px;
+  width: 33%;
+  /* the label row's centre sits on the connector line */
+  margin-top: -40px;
 }
 
-.process-note__pill {
+.process-note__card {
   position: relative;
-  z-index: 1;
-  display: inline-flex;
-  align-items: center;
-  height: 44px;
-  padding: 0 18px;
-  border-radius: 12px;
+  isolation: isolate;
+  overflow: hidden;
+  padding: 26px clamp(22px, 2.2cqi, 30px) clamp(24px, 2.4cqi, 30px);
+  border-radius: var(--radius);
   background: var(--white);
-  font-size: 0.9375rem;
-  font-weight: 520;
   box-shadow:
-    0 1px 2px rgba(17, 24, 39, 0.06),
-    0 10px 24px -14px rgba(17, 24, 39, 0.28);
+    0 1px 2px rgba(17, 24, 39, 0.05),
+    0 18px 40px -28px rgba(17, 24, 39, 0.28);
+  transition:
+    transform 0.6s var(--ease),
+    box-shadow 0.6s var(--ease);
+}
+
+/* on the white Partner section the cards sit on the light surface instead */
+.partner .process-note__card {
+  background: var(--surface);
+  box-shadow: none;
+}
+
+.process-note__card.is-active {
+  transform: translateY(-3px);
+  box-shadow:
+    0 1px 2px rgba(17, 24, 39, 0.05),
+    0 26px 48px -28px rgba(24, 24, 236, 0.35);
+}
+
+.process-note__pixels {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: -1;
+  width: 34%;
+  height: 60%;
+  pointer-events: none;
+  -webkit-mask-image: radial-gradient(120% 120% at 100% 0%, #000 22%, transparent 68%);
+  mask-image: radial-gradient(120% 120% at 100% 0%, #000 22%, transparent 68%);
+}
+
+/* where the line arrives on the right edge, the corner pixels move to the bottom-right */
+.process-stage:not(.process-stage--mirrored) .process-note__pixels {
+  top: auto;
+  bottom: 0;
+  transform: scaleY(-1);
+}
+
+/* the connector line ends on the card's edge in one pixel */
+.process-note::before {
+  content: '';
+  position: absolute;
+  top: 36px;
+  right: -4px;
+  z-index: 1;
+  width: 8px;
+  height: 8px;
+  background: var(--blue);
+}
+
+.process-stage--mirrored .process-note::before {
+  right: auto;
+  left: -4px;
+}
+
+/* label with a pixel bullet and trail, as on the expertise grid */
+.process-note__label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 28px;
+  padding-left: 20px;
+  font-size: 1rem;
+  font-weight: 520;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.process-note__label::before {
+  content: '';
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  background: var(--blue);
+  box-shadow:
+    -10px 0 0 -8px var(--blue-300),
+    -20px 0 0 -8px var(--blue-100);
+  transition: box-shadow 0.5s var(--ease);
+}
+
+.process-note__card.is-active .process-note__label::before {
+  box-shadow:
+    -10px 0 0 0 var(--blue-300),
+    -20px 0 0 0 var(--blue-100);
 }
 
 .process-note__text {
-  margin-top: 20px;
+  margin-top: 14px;
   max-width: 46ch;
   font-size: clamp(0.9375rem, 1.3cqi, 1.0625rem);
   line-height: 1.65;
-  color: var(--muted);
+  color: var(--ink-2);
 }
 
 .process-orb {
@@ -1446,7 +1526,7 @@ p {
 .process-stage--mirrored .process-note {
   left: auto;
   right: 1.5%;
-  width: 32%;
+  width: 33%;
 }
 
 .process-stage--mirrored .process-orb__sphere {
@@ -2849,6 +2929,10 @@ p {
   .process-stage--mirrored .process-note {
     right: auto;
     width: auto;
+  }
+
+  .process-note::before {
+    display: none;
   }
 
   .process-orb__sphere {

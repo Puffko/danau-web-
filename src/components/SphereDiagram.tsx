@@ -1,5 +1,7 @@
 import { motion, useInView, useReducedMotion } from 'motion/react'
 import { useEffect, useId, useRef, useState, useSyncExternalStore, type CSSProperties, type ReactNode } from 'react'
+import { useHover } from '../hooks/useHover'
+import { PixelCluster } from './PixelCluster'
 import { PixelSphere } from './PixelSphere'
 import { EASE_OUT } from './Reveal'
 
@@ -11,9 +13,10 @@ const CY = 360
 const R = 300
 const ARC = 350
 const NODE_Y = [196, 528]
-/** Where the connector lines stop short of the notes (notes sit at the left, or at the right when mirrored). */
-const LINE_END = 250
-const LINE_END_MIRRORED = 770
+/** Where the connector lines meet the note cards: their inner edge (cards span 1.5%-34.5% of the
+ *  stage, or 65.5%-98.5% when mirrored; keep in step with .process-note in global.css). */
+const LINE_END = 414
+const LINE_END_MIRRORED = 786
 
 /** Matches the CSS breakpoint above which the stage is drawn as a diagram instead of a stacked list. */
 const WIDE = '(min-width: 1201px)'
@@ -170,8 +173,7 @@ export function SphereDiagram({ notes, result, mirrored = false, resultLast = fa
           stackDelay={i * 0.12}
           style={{ ['--y' as string]: `${(NODE_Y[i] / H) * 100}%` }}
         >
-          <span className="process-note__pill">{n.label}</span>
-          <p className="process-note__text">{n.text}</p>
+          <NoteCard label={n.label} text={n.text} seed={seed + i * 4} />
         </Step>
       ))}
 
@@ -235,5 +237,17 @@ function Step({
     >
       {children}
     </motion.div>
+  )
+}
+
+/** A note as a card: the line ends on its edge in a single pixel; its corner pixels wake on hover. */
+function NoteCard({ label, text, seed }: { label: string; text: string; seed: number }) {
+  const [active, hover] = useHover()
+  return (
+    <div className={`process-note__card${active ? ' is-active' : ''}`} {...hover}>
+      <PixelCluster className="process-note__pixels" active={active} seed={seed} radius={60} cell={8} activeRamp="rest" />
+      <span className="process-note__label">{label}</span>
+      <p className="process-note__text">{text}</p>
+    </div>
   )
 }
