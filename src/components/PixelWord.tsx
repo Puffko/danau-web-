@@ -8,8 +8,9 @@ import { hash, noise2 } from '../lib/noise'
  * right after the headline's reveal, then shimmer slowly.
  */
 
-// Pale end of the brand ramp only: every step stays well above 7:1 on the night hero.
-const RAMP = ['#b3c2ff', '#c4cfff', '#dae3ff', '#eef1ff', '#ffffff']
+// The footer wordmark's ramp: brand blue on the letter edges, white at the top of the strokes.
+// The core of every stroke stays in the pale end, far above 7:1 on the night hero.
+const RAMP = ['#5d68ff', '#8796ff', '#b3c2ff', '#dae3ff', '#eef1ff', '#ffffff']
 // The clipping mask of the headline reveal leaves this much room around a word (in em).
 const PAD_TOP = 0.08
 const PAD_BOTTOM = 0.12
@@ -58,8 +59,8 @@ export function PixelWord({ text, delay = 0 }: { text: string; delay?: number })
       canvas.height = Math.round(h * dpr)
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
 
-      // about 17 cells to the em: crisp letterforms, still clearly pixels
-      cell = Math.max(2.2, size / 17)
+      // about 15 cells to the em: clearly pixels, and every letter still reads (rn stays rn)
+      cell = Math.max(2.3, size / 15)
       const cols = Math.ceil(w / cell)
       const rows = Math.ceil(h / cell)
       const ss = 4
@@ -92,7 +93,7 @@ export function PixelWord({ text, delay = 0 }: { text: string; delay?: number })
           for (let a = 0; a < ss; a++)
             for (let b = 0; b < ss; b++) cover += data[((j * ss + b) * off.width + (i * ss + a)) * 4 + 3]
           cover /= ss * ss * 255
-          if (cover <= 0.45) continue
+          if (cover <= 0.5) continue
           next.push({
             x: i * cell,
             y: j * cell,
@@ -116,7 +117,7 @@ export function PixelWord({ text, delay = 0 }: { text: string; delay?: number })
       last = now
       ctx.clearRect(0, 0, w, h)
       const flow = reduce ? 0 : now
-      const gap = Math.max(0.5, cell * 0.12)
+      const gap = Math.max(0.6, cell * 0.14)
       for (const c of cells) {
         let grow = 1
         if (intro) {
@@ -128,8 +129,10 @@ export function PixelWord({ text, delay = 0 }: { text: string; delay?: number })
         const j = c.y / cell
         // white at the top of the letters, settling into pale blue towards the baseline (as the
         // footer wordmark), with a slow drift of light across
-        let v = 1.05 - (c.y / h) * 0.75 + (noise2(i * 0.07 + flow * 0.00004, j * 0.1, 23) - 0.5) * 0.35
-        if (c.edge) v -= 0.2
+        // a clean vertical light: white strokes cooling to pale blue at the baseline, a slow soft
+        // shimmer on top, and the letter edges one step bluer so the shapes stay crisp
+        let v = 1.08 - (c.y / h) * 0.5 + (noise2(i * 0.05 + flow * 0.00004, j * 0.05, 23) - 0.5) * 0.14
+        if (c.edge) v -= 0.3
         const k = Math.max(0, Math.min(RAMP.length - 1, Math.floor(v * RAMP.length)))
         const s = (cell - gap) * grow
         ctx.globalAlpha = Math.min(1, grow * 1.3)

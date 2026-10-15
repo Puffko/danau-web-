@@ -12,9 +12,8 @@ interface Props {
 }
 
 /**
- * A section heading: rises in when scrolled to, then a band of light sweeps across it now and
- * then (ShinyText). The sweep only shifts between two high-contrast colours, so the heading stays
- * fully legible at every moment.
+ * A section heading: rises in when scrolled to, then a short white glint flicks across it every
+ * few seconds (ShinyText). The band is narrow, so the heading stays legible throughout.
  */
 export function SectionTitle({ text, id, className, as = 'h2', tone = 'dark' }: Props) {
   const reduce = useReducedMotion()
@@ -31,13 +30,18 @@ export function SectionTitle({ text, id, className, as = 'h2', tone = 'dark' }: 
     >
       <ShinyText
         text={text}
-        color={light ? '#ffffff' : '#111827'}
-        shineColor={light ? '#8796ff' : '#1818ec'}
-        speed={2.6}
-        delay={2.4}
-        shineWidth={36}
-        softness={0.85}
-        angle={115}
+        // a quick, narrow white glint now and then rather than a coloured sweep
+        color={light ? '#dde3ff' : '#111827'}
+        // white on night grounds; on white ones a grey that keeps 4.8:1 against the page, so the
+        // letters never fade into the background as the glint passes
+        shineColor={light ? '#ffffff' : '#6b7280'}
+        speed={1.4}
+        delay={3.2}
+        shineWidth={16}
+        softness={0.6}
+        angle={110}
+        easing="snappy"
+        glow={light ? 0.35 : 0}
       />
     </Tag>
   )
