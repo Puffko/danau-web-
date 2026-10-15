@@ -20,9 +20,19 @@ interface Props {
   cell?: number
   /** Palette while active: pale blues for a blue or night ground, or the resting blues for light cards. */
   activeRamp?: 'live' | 'rest'
+  /** At rest show only a light scatter of pixels around the corner; the full mosaic grows in while active. */
+  sparse?: boolean
 }
 
-export function PixelCluster({ active = false, className, seed = 0, radius = 130, cell = 11, activeRamp = 'live' }: Props) {
+export function PixelCluster({
+  active = false,
+  className,
+  seed = 0,
+  radius = 130,
+  cell = 11,
+  activeRamp = 'live',
+  sparse = false,
+}: Props) {
   const ref = useRef<HTMLCanvasElement>(null)
   const activeRef = useRef(active)
   const kickRef = useRef<() => void>(() => {})
@@ -86,8 +96,21 @@ export function PixelCluster({ active = false, className, seed = 0, radius = 130
           const stray = d < R * 1.28 && hash(i, j, seed + 11) < 0.1
           if (d > edge && !stray) continue
 
+          // the resting scatter: stray pixels and a thin sprinkle towards the rim
+          const scatter = stray || (d > radius * 0.5 && hash(i, j, seed + 17) < 0.16)
+
           let grow = 1
-          if (settling) {
+          if (sparse && !scatter) {
+            // the full mosaic: ripples out from the corner on hover, shrinks back into it after
+            const p = (since - (on ? (d / R) * 420 : (1 - d / R) * 260) - hash(i, j, seed + 5) * 120) / 340
+            if (on) {
+              if (settling && p <= 0) continue
+              if (settling && p < 1) grow = 1 - Math.pow(1 - p, 3)
+            } else {
+              if (!settling || p >= 1) continue
+              if (p > 0) grow = Math.pow(1 - p, 2)
+            }
+          } else if (settling) {
             const p = (since - (d / R) * 420 - hash(i, j, seed + 5) * 140) / 320
             if (p <= 0) {
               // cells that only exist in the larger, active disc wait for the ripple
@@ -127,7 +150,7 @@ export function PixelCluster({ active = false, className, seed = 0, radius = 130
       ro.disconnect()
       kickRef.current = () => {}
     }
-  }, [seed, radius, cell, activeRamp])
+  }, [seed, radius, cell, activeRamp, sparse])
 
   return <canvas ref={ref} className={className} aria-hidden="true" />
 }

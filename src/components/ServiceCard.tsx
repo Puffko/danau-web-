@@ -29,6 +29,7 @@ export function ServiceCard({ service, compact = false, moreLabel = 'Zistiť via
         seed={seed}
         radius={compact ? 70 : 120}
         cell={compact ? 9 : 11}
+        sparse
       />
       <span className="chip">
         <ServiceIcon name={service.icon} width={20} height={20} />
