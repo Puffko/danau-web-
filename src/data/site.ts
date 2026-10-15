@@ -241,8 +241,11 @@ export const home = {
   },
   partner: {
     title: 'Partner pre verejný aj komerčný sektor',
+    // The live copy, split across the diagram: lead -> "Pre koho", body -> "Prístup" + "Výsledok".
     lead: 'DANAU, s.r.o. je odborný partner pre orgány verejnej moci, štátne a verejné inštitúcie, regulované organizácie aj komerčné spoločnosti, ktoré potrebujú zvládnuť projekt, audit, modernizáciu prostredia alebo posilniť svoje interné kapacity.',
-    body: 'Naše služby sú postavené na prepájaní odborného obsahu, metodiky, riadenia a praktickej realizácie. Nepomáhame iba pripraviť dokument. Pomáhame klientovi pripraviť rozhodnutie, nastaviť projekt, doplniť dokumentáciu, stabilizovať riadenie a dodať výsledok, ktorý obstojí vecne, procesne aj prevádzkovo.',
+    approach: 'Naše služby sú postavené na prepájaní odborného obsahu, metodiky, riadenia a praktickej realizácie. Nepomáhame iba pripraviť dokument.',
+    outcome: 'Pomáhame klientovi pripraviť rozhodnutie, nastaviť projekt, doplniť dokumentáciu, stabilizovať riadenie a dodať výsledok, ktorý obstojí vecne, procesne aj prevádzkovo.',
+    labels: { lead: 'Pre koho', approach: 'Prístup', outcome: 'Výsledok' },
   },
   partners: {
     title: 'Naši partneri',

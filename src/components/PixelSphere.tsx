@@ -15,9 +15,13 @@ const DEEP = 6
 interface Props {
   cells?: number
   className?: string
+  /** The sphere is flipped with CSS (crisp half on the right); mirror the pointer to match. */
+  mirrored?: boolean
+  /** Varies the pixel field so two spheres on one page differ. */
+  seed?: number
 }
 
-export function PixelSphere({ cells = 34, className }: Props) {
+export function PixelSphere({ cells = 34, className, mirrored = false, seed = 0 }: Props) {
   const wrapRef = useRef<HTMLDivElement>(null)
   const crispRef = useRef<HTMLCanvasElement>(null)
   const softRef = useRef<HTMLCanvasElement>(null)
@@ -52,7 +56,7 @@ export function PixelSphere({ cells = 34, className }: Props) {
 
     const field = (i: number, j: number, t: number) => {
       const n = cells
-      let v = noise2(i * 0.2 + t * 0.00006, j * 0.2 - t * 0.00004, 41) * 0.75 + noise2(i * 0.55, j * 0.55, 7) * 0.25
+      let v = noise2(i * 0.2 + t * 0.00006, j * 0.2 - t * 0.00004, 41 + seed) * 0.75 + noise2(i * 0.55, j * 0.55, 7 + seed) * 0.25
       // paler towards the lower left, deeper in the core
       v += (j / n) * 0.32 - (i / n) * 0.12 - 0.08
       return Math.max(0, Math.min(0.999, v))
@@ -148,7 +152,7 @@ export function PixelSphere({ cells = 34, className }: Props) {
     const onMove = (e: PointerEvent) => {
       if (e.pointerType === 'touch') return
       const rect = wrap.getBoundingClientRect()
-      pointer.x = e.clientX - rect.left
+      pointer.x = mirrored ? rect.right - e.clientX : e.clientX - rect.left
       pointer.y = e.clientY - rect.top
       pointer.on = true
       schedule()
@@ -170,7 +174,7 @@ export function PixelSphere({ cells = 34, className }: Props) {
       wrap.removeEventListener('pointerleave', onLeave)
       document.removeEventListener('visibilitychange', onVis)
     }
-  }, [cells])
+  }, [cells, mirrored, seed])
 
   return (
     <div ref={wrapRef} className={`pixel-sphere ${className ?? ''}`} aria-hidden="true">

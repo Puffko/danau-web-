@@ -1,10 +1,10 @@
-import { motion, useMotionValueEvent, useReducedMotion, useScroll } from 'motion/react'
+import { motion, useMotionValueEvent, useScroll } from 'motion/react'
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, ArrowUpRight, DSymbol } from '../components/Icons'
 import { PixelMountains } from '../components/PixelMountains'
 import { EASE_OUT, Reveal, RevealText } from '../components/Reveal'
-import { PixelSphere } from '../components/PixelSphere'
+import { SphereDiagram } from '../components/SphereDiagram'
 import { ServiceCard } from '../components/ServiceCard'
 import { home, routes, services } from '../data/site'
 import { scrollToTarget, useLenis } from '../hooks/smoothScroll'
@@ -45,26 +45,30 @@ function Hero() {
 }
 
 function Partner() {
+  const { partner } = home
   return (
-    <section id="o-nas" className="section partner">
-      <div className="container split">
-        <div className="split__head">
-          <RevealText as="h2" className="display-2" text={home.partner.title} />
-        </div>
-        <div className="split__body">
-          <Reveal>
-            <p className="lead">{home.partner.lead}</p>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <p className="body-copy">{home.partner.body}</p>
-          </Reveal>
-          <Reveal delay={0.2}>
-            <Link to={routes.about} className="text-link">
-              <span>O nás</span>
-              <ArrowRight />
-            </Link>
-          </Reveal>
-        </div>
+    <section id="o-nas" className="section partner" aria-labelledby="partner-title">
+      <div className="container">
+        <RevealText as="h2" id="partner-title" className="display-2 process__title" text={partner.title} />
+        <SphereDiagram
+          mirrored
+          resultLast
+          seed={17}
+          notes={[
+            { label: partner.labels.lead, text: partner.lead },
+            { label: partner.labels.approach, text: partner.approach },
+          ]}
+          result={{
+            title: partner.labels.outcome,
+            text: partner.outcome,
+            extra: (
+              <Link to={routes.about} className="process-orb__link">
+                <span>O nás</span>
+                <ArrowRight />
+              </Link>
+            ),
+          }}
+        />
       </div>
       <Partners />
     </section>
@@ -133,101 +137,19 @@ function Services() {
   )
 }
 
-// Geometry of the diagram, in the stage's viewBox units (1200 x 720).
-const STAGE = { w: 1200, h: 720, cx: 880, cy: 360, r: 300, arc: 350 }
-const NODES = [
-  { y: 196, label: 'Výzva' },
-  { y: 528, label: 'Cieľ' },
-]
-const arcX = (y: number) => STAGE.cx - Math.sqrt(STAGE.arc ** 2 - (y - STAGE.cy) ** 2)
-
 function Process() {
-  const reduce = useReducedMotion()
   const [challenge, solution, goal] = home.process.paragraphs
-  const notes = [challenge, goal]
-  const draw = (delay: number, duration = 1.4) => ({
-    initial: { pathLength: reduce ? 1 : 0, opacity: reduce ? 1 : 0 },
-    whileInView: { pathLength: 1, opacity: 1 },
-    viewport: { once: true, margin: '0px 0px -20% 0px' },
-    transition: { duration, delay, ease: [0.65, 0, 0.35, 1] as const },
-  })
-  const arcTop = STAGE.cy - STAGE.arc
-  const arcBottom = STAGE.cy + STAGE.arc
-
   return (
     <section className="section process" aria-labelledby="process-title">
       <div className="container">
         <RevealText as="h2" id="process-title" className="display-2 process__title" text={home.process.title} />
-
-        <div className="process-stage">
-          <svg className="process-stage__lines" viewBox={`0 0 ${STAGE.w} ${STAGE.h}`} aria-hidden="true">
-            <defs>
-              <linearGradient id="arc-fade" x1="0" y1={arcTop} x2="0" y2={arcBottom} gradientUnits="userSpaceOnUse">
-                <stop offset="0" stopColor="#1818ec" stopOpacity="0" />
-                <stop offset="0.22" stopColor="#1818ec" stopOpacity="0.7" />
-                <stop offset="0.78" stopColor="#1818ec" stopOpacity="0.7" />
-                <stop offset="1" stopColor="#1818ec" stopOpacity="0" />
-              </linearGradient>
-            </defs>
-            <motion.path
-              d={`M ${STAGE.cx} ${arcTop} A ${STAGE.arc} ${STAGE.arc} 0 0 0 ${STAGE.cx} ${arcBottom}`}
-              fill="none"
-              stroke="url(#arc-fade)"
-              strokeWidth="1.2"
-              {...draw(0.1, 1.8)}
-            />
-            {NODES.map((n, i) => (
-              <g key={n.label}>
-                <motion.path
-                  d={`M 250 ${n.y} H ${arcX(n.y)}`}
-                  stroke="#1818ec"
-                  strokeOpacity="0.45"
-                  strokeWidth="1.2"
-                  {...draw(0.7 + i * 0.25, 0.9)}
-                />
-                <motion.circle
-                  cx={arcX(n.y)}
-                  cy={n.y}
-                  r="6"
-                  fill="#1818ec"
-                  initial={{ scale: reduce ? 1 : 0 }}
-                  whileInView={{ scale: 1 }}
-                  viewport={{ once: true, margin: '0px 0px -20% 0px' }}
-                  transition={{ delay: 1.2 + i * 0.25, duration: 0.6, ease: EASE_OUT }}
-                  style={{ transformOrigin: `${arcX(n.y)}px ${n.y}px`, transformBox: 'view-box' }}
-                />
-                <circle className="process-stage__ping" cx={arcX(n.y)} cy={n.y} r="6" fill="none" stroke="#1818ec" style={{ animationDelay: `${i * 1.3}s` }} />
-              </g>
-            ))}
-          </svg>
-
-          {NODES.map((n, i) => (
-            <Reveal
-              key={n.label}
-              className={`process-note process-note--${i + 1}`}
-              delay={0.5 + i * 0.25}
-              style={{ ['--y' as string]: `${(n.y / STAGE.h) * 100}%` }}
-            >
-              <span className="process-note__pill">{n.label}</span>
-              <p className="process-note__text">{notes[i]}</p>
-            </Reveal>
-          ))}
-
-          <div
-            className="process-orb"
-            style={{
-              ['--cx' as string]: `${(STAGE.cx / STAGE.w) * 100}%`,
-              ['--cy' as string]: `${(STAGE.cy / STAGE.h) * 100}%`,
-              ['--d' as string]: `${((STAGE.r * 2) / STAGE.w) * 100}%`,
-            }}
-          >
-            <PixelSphere className="process-orb__sphere" />
-            <Reveal className="process-orb__solution" delay={0.9}>
-              <h3 className="process-orb__title">Riešenie</h3>
-              <p className="process-orb__text">{solution}</p>
-            </Reveal>
-          </div>
-        </div>
+        <SphereDiagram
+          notes={[
+            { label: 'Výzva', text: challenge },
+            { label: 'Cieľ', text: goal },
+          ]}
+          result={{ title: 'Riešenie', text: solution }}
+        />
       </div>
     </section>
   )

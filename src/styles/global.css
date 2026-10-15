@@ -1224,6 +1224,49 @@ p {
   color: rgba(255, 255, 255, 0.94);
 }
 
+/* Mirrored stage: sphere on the left (blurred half outward), notes on the right */
+.process-stage--mirrored .process-note {
+  left: auto;
+  right: 1.5%;
+  width: 32%;
+}
+
+.process-stage--mirrored .process-orb__sphere {
+  transform: scaleX(-1);
+}
+
+.process-stage--mirrored .process-orb__solution {
+  left: auto;
+  right: 53%;
+}
+
+.process-orb__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding-bottom: 3px;
+  font-size: 0.9375rem;
+  font-weight: 520;
+  color: inherit;
+  background: linear-gradient(currentColor, currentColor) left bottom / 100% 1px no-repeat;
+  pointer-events: auto;
+  transition: background-size 0.5s var(--ease);
+}
+
+.process-orb__link svg {
+  transition: transform 0.4s var(--ease);
+}
+
+.process-orb__link:hover {
+  background-size: 0% 1px;
+  background-position: right bottom;
+}
+
+.process-orb__link:hover svg {
+  transform: translateX(4px);
+}
+
 /* ---------- Expertise ---------- */
 
 .expertise {
@@ -2135,6 +2178,19 @@ p {
 
   .process-note--2 {
     order: 3;
+  }
+
+  .process-stage--result-last .process-note--2 {
+    order: 2;
+  }
+
+  .process-stage--result-last .process-orb {
+    order: 3;
+  }
+
+  .process-stage--mirrored .process-note {
+    right: auto;
+    width: auto;
   }
 
   .process-orb__sphere {
