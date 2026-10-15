@@ -19,7 +19,7 @@ export function Footer() {
           </Link>
           <RevealText as="p" className="site-footer__headline" text={footer.claim} />
           <Link to={routes.contact} className="btn btn--pill btn--light">
-            <span>Konzultovať potrebu</span>
+            <span>Kontakt</span>
             <ArrowUpRight />
           </Link>
         </div>

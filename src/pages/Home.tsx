@@ -72,51 +72,7 @@ function Partner() {
           }}
         />
       </div>
-      <Partners />
     </section>
-  )
-}
-
-// Neutral stand-in marks, varied so the row does not read as one tile repeated.
-const PLACEHOLDER_MARKS = [
-  <circle key="c" cx="12" cy="12" r="9" />,
-  <rect key="r" x="3" y="3" width="18" height="18" rx="5" />,
-  <path key="t" d="M12 3 21 20H3Z" />,
-  <path key="h" d="M12 2.5 20.5 7.5v9L12 21.5 3.5 16.5v-9Z" />,
-  <path key="d" d="M3 3h9a9 9 0 0 1 0 18H3Z" />,
-  <path key="s" d="M12 2.5 14.6 9.4 21.5 12 14.6 14.6 12 21.5 9.4 14.6 2.5 12 9.4 9.4Z" />,
-]
-
-function Partners() {
-  const { title, items } = home.partners
-  return (
-    <div className="container partners">
-      <Reveal y={16}>
-        <h3 className="partners__title">{title}</h3>
-      </Reveal>
-      <ul className="partners__grid">
-        {items.map((p, i) => {
-          const mark = p.logo ? (
-            <img src={p.logo} alt={p.name} loading="lazy" />
-          ) : (
-            <span className="partners__placeholder">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                {PLACEHOLDER_MARKS[i % PLACEHOLDER_MARKS.length]}
-              </svg>
-              <span aria-hidden="true">Logo</span>
-              <span className="sr-only">{p.name} – logo bude doplnené</span>
-            </span>
-          )
-          return (
-            <Reveal as="li" key={p.name} delay={i * 0.06} y={16} className="partners__item">
-              <PartnerTile href={p.href}>
-                {mark}
-              </PartnerTile>
-            </Reveal>
-          )
-        })}
-      </ul>
-    </div>
   )
 }
 
@@ -322,16 +278,6 @@ export default function Home() {
       <Expertise />
       <Clients />
     </>
-  )
-}
-
-function PartnerTile({ href, children }: { href?: string; children: ReactNode }) {
-  return href ? (
-    <a href={href} target="_blank" rel="noreferrer" className="partners__tile">
-      {children}
-    </a>
-  ) : (
-    <div className="partners__tile">{children}</div>
   )
 }
 

@@ -196,7 +196,7 @@ export function Header() {
           </nav>
 
           <Link to={routes.contact} className="btn btn--pill btn--header">
-            <span>Konzultovať potrebu</span>
+            <span>Kontakt</span>
             <ArrowUpRight />
           </Link>
 
@@ -265,7 +265,7 @@ export function Header() {
                 transition={{ delay: 0.5, duration: 0.5 }}
               >
                 <Link to={routes.contact} className="btn btn--pill btn--light mobile-menu__cta">
-                  <span>Konzultovať potrebu</span>
+                  <span>Kontakt</span>
                   <ArrowUpRight />
                 </Link>
                 <a href={`mailto:${contact.email}`}>{contact.email}</a>

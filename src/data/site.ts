@@ -226,18 +226,11 @@ export const services: Service[] = [
 
 export const serviceBySlug = (slug: string | undefined) => services.find((s) => s.slug === slug?.toLowerCase())
 
-export interface PartnerLogo {
-  name: string
-  /** Path to the logo file in public/, e.g. '/partneri/firma.svg'. Leave empty to show a placeholder. */
-  logo?: string
-  href?: string
-}
-
 export const home = {
   hero: {
     title: 'Riadenie IT projektov, kybernetická bezpečnosť, GDPR a odborná podpora',
     text: 'Pomáhame organizáciám pripraviť, riadiť a doručiť zmeny v oblastiach IT, bezpečnosti, ochrany osobných údajov, dát a procesov. Spájame projektové riadenie, kybernetickú bezpečnosť, GDPR, analytiku a realizáciu riešení do jedného funkčného celku.',
-    primary: 'Konzultovať potrebu',
+    primary: 'Kontakt',
     secondary: 'Naše služby',
   },
   partner: {
@@ -247,18 +240,6 @@ export const home = {
     approach: 'Naše služby sú postavené na prepájaní odborného obsahu, metodiky, riadenia a praktickej realizácie. Nepomáhame iba pripraviť dokument.',
     outcome: 'Pomáhame klientovi pripraviť rozhodnutie, nastaviť projekt, doplniť dokumentáciu, stabilizovať riadenie a dodať výsledok, ktorý obstojí vecne, procesne aj prevádzkovo.',
     labels: { lead: 'Pre koho', approach: 'Prístup', outcome: 'Výsledok' },
-  },
-  partners: {
-    title: 'Naši partneri',
-    // Placeholders until the real partner logos are supplied: add `logo` (and optionally `href`) per item.
-    items: [
-      { name: 'Partner 1' },
-      { name: 'Partner 2' },
-      { name: 'Partner 3' },
-      { name: 'Partner 4' },
-      { name: 'Partner 5' },
-      { name: 'Partner 6' },
-    ] as PartnerLogo[],
   },
   services: {
     title: 'Komplexné riešenia pre vaše IT a bezpečnostné výzvy',
