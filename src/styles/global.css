@@ -1141,6 +1141,41 @@ p {
   overflow: hidden;
 }
 
+/* Pixel canvases sit in a card's corner. A GPU-composited canvas can escape the card's
+   overflow + border-radius clipping, leaving square pixels past the rounded corner, so each
+   canvas is rounded to its card's radius itself. */
+.tile-pixels,
+.service-card__pixels,
+.link-card__pixels,
+.checklist__pixels,
+.info-card__pixels,
+.company-card__pixels,
+.process-note__pixels,
+.split__pixels,
+.nav-dropdown__pixels {
+  border-radius: var(--card-radius, var(--radius-lg));
+}
+
+.form-card,
+.split--panel {
+  --card-radius: var(--radius-xl);
+}
+
+.process-note__card {
+  --card-radius: var(--radius);
+}
+
+/* the form's corner stays above the first row of fields */
+.form-card .tile-pixels {
+  width: 38%;
+  height: min(85%, 150px);
+}
+
+/* square cells in the expertise grid */
+.domains__cell {
+  --card-radius: 0;
+}
+
 /* ---------- Service cards ---------- */
 
 .service-grid {
@@ -3187,6 +3222,12 @@ p {
     height: 50%;
   }
 
+  /* the short contact cards keep a proper corner rather than a thin strip */
+  .info-card .tile-pixels {
+    width: 38%;
+    height: 100%;
+  }
+
   .domains__area {
     padding-right: 44px;
   }
@@ -3440,6 +3481,17 @@ p {
 
   .process-orb__text {
     color: rgba(255, 255, 255, 0.86);
+  }
+}
+
+/* Contact on tablets: the address card spans the row, e-mail and phone sit side by side. */
+@media (min-width: 561px) and (max-width: 960px) {
+  .contact__info {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .contact__info > :first-child {
+    grid-column: 1 / -1;
   }
 }
 
