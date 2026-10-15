@@ -107,7 +107,7 @@ function Partners() {
           )
           return (
             <Reveal as="li" key={p.name} delay={i * 0.06} y={16} className="partners__item">
-              <PartnerTile href={p.href} seed={i * 4}>
+              <PartnerTile href={p.href}>
                 {mark}
               </PartnerTile>
             </Reveal>
@@ -323,19 +323,13 @@ export default function Home() {
   )
 }
 
-function PartnerTile({ href, seed, children }: { href?: string; seed: number; children: ReactNode }) {
-  const [active, hover] = useHover()
-  const pixels = <PixelCluster className="tile-pixels" active={active} seed={seed} radius={56} cell={8} activeRamp="rest" />
+function PartnerTile({ href, children }: { href?: string; children: ReactNode }) {
   return href ? (
-    <a href={href} target="_blank" rel="noreferrer" className="partners__tile" {...hover}>
-      {pixels}
+    <a href={href} target="_blank" rel="noreferrer" className="partners__tile">
       {children}
     </a>
   ) : (
-    <div className="partners__tile" {...hover}>
-      {pixels}
-      {children}
-    </div>
+    <div className="partners__tile">{children}</div>
   )
 }
 

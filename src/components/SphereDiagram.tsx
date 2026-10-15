@@ -1,7 +1,7 @@
-import { motion, useReducedMotion } from 'motion/react'
-import { useId, type ReactNode } from 'react'
+import { motion, useInView, useReducedMotion } from 'motion/react'
+import { useEffect, useId, useRef, useState, useSyncExternalStore, type CSSProperties, type ReactNode } from 'react'
 import { PixelSphere } from './PixelSphere'
-import { EASE_OUT, Reveal } from './Reveal'
+import { EASE_OUT } from './Reveal'
 
 // Geometry in the stage's viewBox units (1200 x 720). Mirrored stages flip it horizontally.
 const W = 1200
@@ -14,6 +14,31 @@ const NODE_Y = [196, 528]
 /** Where the connector lines stop short of the notes (notes sit at the left, or at the right when mirrored). */
 const LINE_END = 250
 const LINE_END_MIRRORED = 770
+
+/** Matches the CSS breakpoint above which the stage is drawn as a diagram instead of a stacked list. */
+const WIDE = '(min-width: 1201px)'
+const subscribeWide = (cb: () => void) => {
+  const mq = window.matchMedia(WIDE)
+  mq.addEventListener('change', cb)
+  return () => mq.removeEventListener('change', cb)
+}
+const getWide = () => window.matchMedia(WIDE).matches
+
+/**
+ * The diagram builds itself in one sequence once it is in view (seconds from that moment):
+ * the sphere assembles from its core, the arc grows out from its middle, each note rises,
+ * its line runs to the arc and the node lands where it arrives. The nodes pulse only after that.
+ */
+const T = {
+  arc: 0.35,
+  note: (i: number) => 0.45 + i * 0.22,
+  line: (i: number) => 0.75 + i * 0.22,
+  node: (i: number) => 1.5 + i * 0.22,
+  result: 0.95,
+  live: 2.4,
+}
+const LINE_DURATION = 0.8
+const EASE_IO = [0.65, 0, 0.35, 1] as const
 
 interface Note {
   label: string
@@ -32,11 +57,23 @@ interface Props {
 
 /**
  * Two notes joined by an arc to a half-pixel, half-blur sphere that holds the conclusion.
- * Collapses to a stacked list below 1200px.
+ * Collapses to a stacked list below 1200px, where each part enters on its own as it is scrolled to.
  */
 export function SphereDiagram({ notes, result, mirrored = false, resultLast = false, seed = 0 }: Props) {
-  const reduce = useReducedMotion()
+  const reduce = !!useReducedMotion()
   const gradientId = useId()
+  const stageRef = useRef<HTMLDivElement>(null)
+  const wide = useSyncExternalStore(subscribeWide, getWide, () => true)
+  const inView = useInView(stageRef, { once: true, amount: 0.3 })
+  const play = reduce || inView
+  const [live, setLive] = useState(false)
+
+  useEffect(() => {
+    if (!play) return
+    const id = window.setTimeout(() => setLive(true), reduce ? 0 : T.live * 1000)
+    return () => window.clearTimeout(id)
+  }, [play, reduce])
+
   const cx = mirrored ? W - CX : CX
   const arcTop = CY - ARC
   const arcBottom = CY + ARC
@@ -44,17 +81,22 @@ export function SphereDiagram({ notes, result, mirrored = false, resultLast = fa
     const dx = Math.sqrt(ARC ** 2 - (y - CY) ** 2)
     return mirrored ? cx + dx : cx - dx
   }
+  const midX = mirrored ? cx + ARC : cx - ARC
   const lineEnd = mirrored ? LINE_END_MIRRORED : LINE_END
-  const draw = (delay: number, duration = 1.4) => ({
-    initial: { pathLength: reduce ? 1 : 0, opacity: reduce ? 1 : 0 },
-    whileInView: { pathLength: 1, opacity: 1 },
-    viewport: { once: true, margin: '0px 0px -20% 0px' },
-    transition: { duration, delay, ease: [0.65, 0, 0.35, 1] as const },
+
+  const stroke = (delay: number, duration: number) => ({
+    initial: reduce ? false : { pathLength: 0, opacity: 0 },
+    animate: play ? { pathLength: 1, opacity: 1 } : undefined,
+    transition: {
+      pathLength: { duration, delay, ease: EASE_IO },
+      opacity: { duration: 0.2, delay },
+    },
   })
 
   return (
     <div
-      className={`process-stage${mirrored ? ' process-stage--mirrored' : ''}${resultLast ? ' process-stage--result-last' : ''}`}
+      ref={stageRef}
+      className={`process-stage${mirrored ? ' process-stage--mirrored' : ''}${resultLast ? ' process-stage--result-last' : ''}${live ? ' is-live' : ''}`}
     >
       <svg className="process-stage__lines" viewBox={`0 0 ${W} ${H}`} aria-hidden="true">
         <defs>
@@ -65,13 +107,20 @@ export function SphereDiagram({ notes, result, mirrored = false, resultLast = fa
             <stop offset="1" stopColor="#1818ec" stopOpacity="0" />
           </linearGradient>
         </defs>
-        <motion.path
-          d={`M ${cx} ${arcTop} A ${ARC} ${ARC} 0 0 ${mirrored ? 1 : 0} ${cx} ${arcBottom}`}
-          fill="none"
-          stroke={`url(#${gradientId})`}
-          strokeWidth="1.2"
-          {...draw(0.1, 1.8)}
-        />
+        {/* the arc grows from its middle towards both ends */}
+        {[
+          [arcTop, mirrored ? 0 : 1],
+          [arcBottom, mirrored ? 1 : 0],
+        ].map(([endY, sweep]) => (
+          <motion.path
+            key={endY}
+            d={`M ${midX} ${CY} A ${ARC} ${ARC} 0 0 ${sweep} ${cx} ${endY}`}
+            fill="none"
+            stroke={`url(#${gradientId})`}
+            strokeWidth="1.2"
+            {...stroke(T.arc, 1.3)}
+          />
+        ))}
         {NODE_Y.map((y, i) => (
           <g key={y}>
             <motion.path
@@ -79,17 +128,19 @@ export function SphereDiagram({ notes, result, mirrored = false, resultLast = fa
               stroke="#1818ec"
               strokeOpacity="0.45"
               strokeWidth="1.2"
-              {...draw(0.7 + i * 0.25, 0.9)}
+              {...stroke(T.line(i), LINE_DURATION)}
             />
             <motion.circle
               cx={arcX(y)}
               cy={y}
               r="6"
               fill="#1818ec"
-              initial={{ scale: reduce ? 1 : 0 }}
-              whileInView={{ scale: 1 }}
-              viewport={{ once: true, margin: '0px 0px -20% 0px' }}
-              transition={{ delay: 1.2 + i * 0.25, duration: 0.6, ease: EASE_OUT }}
+              initial={reduce ? false : { scale: 0, opacity: 0 }}
+              animate={play ? { scale: 1, opacity: 1 } : undefined}
+              transition={{
+                scale: { type: 'spring', stiffness: 420, damping: 18, delay: T.node(i) },
+                opacity: { duration: 0.15, delay: T.node(i) },
+              }}
               style={{ transformOrigin: `${arcX(y)}px ${y}px`, transformBox: 'view-box' }}
             />
             <circle
@@ -106,15 +157,16 @@ export function SphereDiagram({ notes, result, mirrored = false, resultLast = fa
       </svg>
 
       {notes.map((n, i) => (
-        <Reveal
+        <Step
           key={n.label}
           className={`process-note process-note--${i + 1}`}
-          delay={0.5 + i * 0.25}
+          go={wide ? play : undefined}
+          delay={T.note(i)}
           style={{ ['--y' as string]: `${(NODE_Y[i] / H) * 100}%` }}
         >
           <span className="process-note__pill">{n.label}</span>
           <p className="process-note__text">{n.text}</p>
-        </Reveal>
+        </Step>
       ))}
 
       <div
@@ -125,13 +177,48 @@ export function SphereDiagram({ notes, result, mirrored = false, resultLast = fa
           ['--d' as string]: `${((R * 2) / W) * 100}%`,
         }}
       >
-        <PixelSphere className="process-orb__sphere" mirrored={mirrored} seed={seed} />
-        <Reveal className="process-orb__solution" delay={0.9}>
+        <PixelSphere className="process-orb__sphere" mirrored={mirrored} seed={seed} play={wide ? play : undefined} />
+        <Step className="process-orb__solution" go={wide ? play : undefined} delay={T.result}>
           <h3 className="process-orb__title">{result.title}</h3>
           <p className="process-orb__text">{result.text}</p>
           {result.extra}
-        </Reveal>
+        </Step>
       </div>
     </div>
+  )
+}
+
+/**
+ * A rise-and-fade block. `go` hands its timing to the diagram's sequence; left undefined
+ * (the stacked layout) it enters when it is itself scrolled into view.
+ */
+function Step({
+  go,
+  delay = 0,
+  className,
+  style,
+  children,
+}: {
+  go?: boolean
+  delay?: number
+  className?: string
+  style?: CSSProperties
+  children: ReactNode
+}) {
+  const ref = useRef<HTMLDivElement>(null)
+  const reduce = useReducedMotion()
+  const seen = useInView(ref, { once: true, margin: '0px 0px -10% 0px' })
+  const on = go ?? seen
+  return (
+    <motion.div
+      ref={ref}
+      className={className}
+      style={style}
+      initial={reduce ? { opacity: 0 } : { opacity: 0, y: 24 }}
+      animate={on ? { opacity: 1, y: 0 } : undefined}
+      transition={{ duration: reduce ? 0.4 : 1, delay: go === undefined ? 0 : delay, ease: EASE_OUT }}
+    >
+      {children}
+    </motion.div>
   )
 }

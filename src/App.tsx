@@ -1,11 +1,8 @@
-import { motion } from 'motion/react'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Route, Routes, useLocation, useNavigationType } from 'react-router-dom'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
-import { PixelCurtain, type CurtainHandle } from './components/PixelCurtain'
-import { PixelGlyph } from './components/PixelGlyph'
-import { EASE_OUT } from './components/Reveal'
+import { Wordmark } from './components/Logo'
 import { cookies, pageMeta, privacy } from './data/site'
 import { prefersReducedMotion, scrollToTarget, useLenis } from './hooks/smoothScroll'
 import About from './pages/About'
@@ -59,18 +56,20 @@ function goToSection(lenis: ReturnType<typeof useLenis>, el: HTMLElement) {
 
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
+const OUT = { duration: 320, easing: 'cubic-bezier(0.4, 0, 0.2, 1)' }
+const IN = { duration: 700, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' }
+
 export default function App() {
   const location = useLocation()
   const navigationType = useNavigationType()
   const lenis = useLenis()
   const reduce = useRef(prefersReducedMotion()).current
-  const curtain = useRef<CurtainHandle>(null)
+  const pageRef = useRef<HTMLDivElement>(null)
 
-  // The page on screen. With motion on, it changes only once the pixel curtain has covered
-  // the old page, so the swap and the jump to the new scroll position happen out of sight.
+  // The page on screen. With motion on, it changes only once the old page has faded out,
+  // so the swap and the jump to the new scroll position happen while nothing is visible.
   const [shown, setShown] = useState(location)
-  const [booted, setBooted] = useState(reduce)
-  const [bootMark, setBootMark] = useState(!reduce)
+  const [loading, setLoading] = useState(!reduce)
 
   const positions = useRef(new Map<string, number>())
   // The history entry whose page is on screen; null while pages are swapping.
@@ -82,27 +81,36 @@ export default function App() {
   latest.current = { location, type: navigationType }
   useDocumentMeta(shown.pathname)
 
+  const fadeOut = async () => {
+    const el = pageRef.current
+    if (!el) return
+    await el.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(-12px)' }], OUT).finished
+    el.style.opacity = '0'
+  }
+  const fadeIn = () => {
+    const el = pageRef.current
+    if (!el) return
+    el.style.opacity = ''
+    el.animate([{ opacity: 0, transform: 'translateY(18px)' }, { opacity: 1, transform: 'none' }], IN)
+  }
+
   useEffect(() => {
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
   }, [])
 
-  // First load: the curtain starts closed with the pixel D, then opens once fonts are in.
+  // First load: a short logo screen that fades away once the fonts are in.
   useEffect(() => {
     if (reduce) return
     let cancelled = false
-    Promise.all([document.fonts?.ready ?? Promise.resolve(), wait(900)]).then(() => {
+    Promise.all([document.fonts?.ready ?? Promise.resolve(), wait(650)]).then(() => {
       if (cancelled) return
-      setBooted(true)
-      requestAnimationFrame(() =>
-        requestAnimationFrame(() => {
-          setBootMark(false)
-          curtain.current?.reveal()
-        }),
-      )
+      setLoading(false)
+      fadeIn()
     })
     return () => {
       cancelled = true
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reduce])
 
   // Remember the scroll position of the page on screen, so Back/Forward can return to it.
@@ -123,24 +131,25 @@ export default function App() {
   }, [])
 
   // A navigation starts. Same-page ones (hash links, links to this page) swap at once;
-  // a new page waits for the curtain to cover the old one.
+  // a new page waits for the old one to fade out.
   useLayoutEffect(() => {
     if (location.key === shown.key) return
     if (shownKey.current) positions.current.set(shownKey.current, window.scrollY)
     const seq = ++navSeq.current
-    if (location.pathname === shownPath.current || reduce || !curtain.current) {
+    if (location.pathname === shownPath.current || reduce) {
       setShown(location)
       return
     }
     shownKey.current = null
-    curtain.current.cover().then(() => {
+    fadeOut().then(() => {
       if (seq === navSeq.current) setShown(latest.current.location)
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.key])
 
-  // The shown page changed: place it (top, saved position or hash target), then open the curtain.
-  useEffect(() => {
+  // The shown page changed: place it (top, saved position or hash target), then fade it in.
+  // A layout effect, so the new page is positioned and transparent before its first paint.
+  useLayoutEffect(() => {
     if (shownKey.current === shown.key) return
     const pathChanged = shown.pathname !== shownPath.current
     const type = latest.current.type
@@ -156,7 +165,7 @@ export default function App() {
       window.scrollTo(0, y)
       if (el) goToSection(lenis, el)
       else if (type !== 'POP') document.getElementById('obsah')?.focus({ preventScroll: true })
-      requestAnimationFrame(() => curtain.current?.reveal())
+      if (!reduce) fadeIn()
     } else if (el) {
       goToSection(lenis, el)
     } else if (type !== 'POP') {
@@ -169,41 +178,32 @@ export default function App() {
 
   // Direct load with a hash (e.g. /#sluzby): go there once the page has rendered.
   useEffect(() => {
-    if (!booted) return
     const el = hashTarget(location.hash)
     if (el && !hasNavigated.current) requestAnimationFrame(() => goToSection(lenis, el))
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [booted])
+  }, [])
 
   return (
     <>
       <Header />
-      {booted && (
-        <motion.div
-          id="page"
-          key={shown.pathname}
-          initial={reduce ? { opacity: 0 } : { opacity: 0.001 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: reduce ? 0.4 : 0.01, ease: EASE_OUT }}
-        >
-          <main id="obsah" tabIndex={-1}>
-            <Routes location={shown}>
-              <Route path="/" element={<Home />} />
-              <Route path="/sluzby/:slug" element={<Service />} />
-              <Route path="/o-nas" element={<About />} />
-              <Route path="/kontakt" element={<Contact />} />
-              <Route path="/ochrana-osobnych-udajov" element={<Legal page={privacy} seed={17} />} />
-              <Route path="/cookies" element={<Legal page={cookies} seed={19} />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </main>
-          <Footer />
-        </motion.div>
-      )}
-      {!reduce && <PixelCurtain handle={curtain} startCovered />}
+      <div id="page" ref={pageRef} key={shown.pathname} style={loading ? { opacity: 0 } : undefined}>
+        <main id="obsah" tabIndex={-1}>
+          <Routes location={shown}>
+            <Route path="/" element={<Home />} />
+            <Route path="/sluzby/:slug" element={<Service />} />
+            <Route path="/o-nas" element={<About />} />
+            <Route path="/kontakt" element={<Contact />} />
+            <Route path="/ochrana-osobnych-udajov" element={<Legal page={privacy} seed={17} />} />
+            <Route path="/cookies" element={<Legal page={cookies} seed={19} />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
       {!reduce && (
-        <div className={`boot-mark${bootMark ? '' : ' is-gone'}`} aria-hidden="true">
-          <PixelGlyph name="dsymbol" className="boot-mark__glyph" pace={0.4} />
+        <div className={`loader${loading ? '' : ' is-done'}`} aria-hidden="true">
+          <Wordmark className="loader__logo" />
+          <span className="loader__bar" />
         </div>
       )}
     </>

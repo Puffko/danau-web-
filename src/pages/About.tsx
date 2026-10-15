@@ -1,6 +1,5 @@
 import { motion, useReducedMotion } from 'motion/react'
-import { ServiceIcon } from '../components/Icons'
-import { Wordmark } from '../components/Logo'
+import { ArrowUpRight, Mail, Phone, Pin, ServiceIcon } from '../components/Icons'
 import { PageHero } from '../components/PageHero'
 import { EASE_OUT, Reveal, RevealText } from '../components/Reveal'
 import { PixelGlyph } from '../components/PixelGlyph'
@@ -9,10 +8,9 @@ import { PixelMountains } from '../components/PixelMountains'
 import { useHover } from '../hooks/useHover'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { about, serviceBySlug, type Service } from '../data/site'
+import { about, contact, home, routes, serviceBySlug, type Service } from '../data/site'
 
 export default function About() {
-  const reduce = useReducedMotion()
   // the area under the pointer or focus, shared by the paragraph and the hub
   const [activeArea, setActiveArea] = useState<string | null>(null)
   return (
@@ -21,27 +19,7 @@ export default function About() {
         title={about.title}
         text={about.text}
         seed={9}
-        aside={
-          <motion.div
-            className="about-mark"
-            initial={reduce ? { opacity: 0 } : { opacity: 0, y: 30, filter: 'blur(10px)' }}
-            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-            transition={{ duration: 1.1, delay: 0.4, ease: EASE_OUT }}
-          >
-            <Wordmark className="about-mark__logo" aria-hidden="true" />
-            <svg className="about-mark__underline" viewBox="0 0 255 27" fill="none" aria-hidden="true">
-              <motion.path
-                d="M0.02 3.78s321.27-8.12 241.02 3.41C167.75 17.73-20.68 2.5 51.74 17.92c31.82 6.78 82.94 7.81 82.94 7.81"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                initial={{ pathLength: reduce ? 1 : 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 1.4, delay: 1, ease: [0.65, 0, 0.35, 1] }}
-              />
-            </svg>
-          </motion.div>
-        }
+        aside={<CompanyCard />}
       />
 
       <section className="section about-what" aria-labelledby="what-title">
@@ -174,5 +152,55 @@ function SkillCell({ name, area, seed }: { name: string; area: string; seed: num
       <span className="skills-panel__area">{area}</span>
       <span className="skills-panel__name">{name}</span>
     </li>
+  )
+}
+
+/** The hero aside: who and where the company is, with the way to start a conversation. */
+function CompanyCard() {
+  const reduce = useReducedMotion()
+  const [active, hover] = useHover()
+  return (
+    <motion.div
+      className="company-card"
+      initial={reduce ? { opacity: 0 } : { opacity: 0, y: 28 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1.1, delay: 0.45, ease: EASE_OUT }}
+      {...hover}
+    >
+      <PixelCluster className="company-card__pixels" active={active} seed={21} radius={110} cell={10} />
+      <span className="company-card__label">
+        <Pin width={16} height={16} /> Sídlo spoločnosti
+      </span>
+      <p className="company-card__name">{contact.company}</p>
+      <address className="company-card__address">
+        <a href={contact.mapsHref} target="_blank" rel="noreferrer">
+          {contact.street}
+          <br />
+          {contact.city}, {contact.country}
+        </a>
+      </address>
+      <ul className="company-card__rows">
+        <li>
+          <a href={`mailto:${contact.email}`}>
+            <span className="company-card__icon">
+              <Mail width={16} height={16} />
+            </span>
+            {contact.email}
+          </a>
+        </li>
+        <li>
+          <a href={contact.phoneHref}>
+            <span className="company-card__icon">
+              <Phone width={16} height={16} />
+            </span>
+            {contact.phone}
+          </a>
+        </li>
+      </ul>
+      <Link to={routes.contact} className="btn btn--pill btn--light company-card__cta">
+        <span>{home.hero.primary}</span>
+        <ArrowUpRight />
+      </Link>
+    </motion.div>
   )
 }
