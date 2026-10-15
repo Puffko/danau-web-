@@ -64,7 +64,10 @@ export function SphereDiagram({ notes, result, mirrored = false, resultLast = fa
   const gradientId = useId()
   const stageRef = useRef<HTMLDivElement>(null)
   const wide = useSyncExternalStore(subscribeWide, getWide, () => true)
-  const inView = useInView(stageRef, { once: true, amount: 0.3 })
+  const inView = useInView(stageRef, { once: true, amount: 0.2 })
+  // narrower layouts: the sphere starts assembling as soon as its own box comes into view
+  const orbRef = useRef<HTMLDivElement>(null)
+  const orbSeen = useInView(orbRef, { once: true, margin: '0px 0px -4% 0px' })
   const play = reduce || inView
   const [live, setLive] = useState(false)
 
@@ -162,6 +165,7 @@ export function SphereDiagram({ notes, result, mirrored = false, resultLast = fa
           className={`process-note process-note--${i + 1}`}
           go={wide ? play : undefined}
           delay={T.note(i)}
+          stackDelay={i * 0.12}
           style={{ ['--y' as string]: `${(NODE_Y[i] / H) * 100}%` }}
         >
           <span className="process-note__pill">{n.label}</span>
@@ -170,6 +174,7 @@ export function SphereDiagram({ notes, result, mirrored = false, resultLast = fa
       ))}
 
       <div
+        ref={orbRef}
         className="process-orb"
         style={{
           ['--cx' as string]: `${(cx / W) * 100}%`,
@@ -177,8 +182,8 @@ export function SphereDiagram({ notes, result, mirrored = false, resultLast = fa
           ['--d' as string]: `${((R * 2) / W) * 100}%`,
         }}
       >
-        <PixelSphere className="process-orb__sphere" mirrored={mirrored} seed={seed} play={wide ? play : undefined} />
-        <Step className="process-orb__solution" go={wide ? play : undefined} delay={T.result}>
+        <PixelSphere className="process-orb__sphere" mirrored={mirrored} seed={seed} play={wide ? play : reduce || orbSeen} />
+        <Step className="process-orb__solution" go={wide ? play : undefined} delay={T.result} stackDelay={0.5}>
           <h3 className="process-orb__title">{result.title}</h3>
           <p className="process-orb__text">{result.text}</p>
           {result.extra}
@@ -190,33 +195,35 @@ export function SphereDiagram({ notes, result, mirrored = false, resultLast = fa
 
 /**
  * A rise-and-fade block. `go` hands its timing to the diagram's sequence; left undefined
- * (the stacked layout) it enters when it is itself scrolled into view.
+ * (narrower layouts) it enters as it comes into view, after `stackDelay`.
  */
 function Step({
   go,
   delay = 0,
+  stackDelay = 0,
   className,
   style,
   children,
 }: {
   go?: boolean
   delay?: number
+  stackDelay?: number
   className?: string
   style?: CSSProperties
   children: ReactNode
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const reduce = useReducedMotion()
-  const seen = useInView(ref, { once: true, margin: '0px 0px -10% 0px' })
+  const seen = useInView(ref, { once: true, margin: '0px 0px -4% 0px' })
   const on = go ?? seen
   return (
     <motion.div
       ref={ref}
       className={className}
       style={style}
-      initial={reduce ? { opacity: 0 } : { opacity: 0, y: 24 }}
+      initial={reduce ? { opacity: 0 } : { opacity: 0, y: 20 }}
       animate={on ? { opacity: 1, y: 0 } : undefined}
-      transition={{ duration: reduce ? 0.4 : 1, delay: go === undefined ? 0 : delay, ease: EASE_OUT }}
+      transition={{ duration: reduce ? 0.4 : 1, delay: go === undefined ? stackDelay : delay, ease: EASE_OUT }}
     >
       {children}
     </motion.div>

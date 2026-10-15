@@ -216,7 +216,7 @@ export function PixelSphere({ cells = 34, className, mirrored = false, seed = 0,
         visible = e.isIntersecting
         if (visible) schedule()
       },
-      { rootMargin: '0px 0px -15% 0px' },
+      { rootMargin: '0px' },
     )
     io.observe(wrap)
 

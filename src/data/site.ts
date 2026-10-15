@@ -6,7 +6,8 @@ export type IllustrationName = 'lock' | 'shield' | 'document' | 'chart' | 'datab
 export const contact = {
   company: 'DANAU, s.r.o.',
   email: 'info@danau.sk',
-  phone: '+421 948 222 666',
+  // non-breaking spaces keep the number on one line
+  phone: '+421\u00a0948\u00a0222\u00a0666',
   phoneHref: 'tel:+421948222666',
   street: 'Doležalova 15/C',
   city: '821 04 Bratislava',
@@ -383,7 +384,7 @@ export const privacy: LegalPage = {
     {
       title: 'Prevádzkovateľ a kontakt',
       paragraphs: [
-        'Prevádzkovateľom je DANAU, s.r.o., Doležalova 15/C, 821 04 Bratislava. Pre otázky o ochrane osobných údajov nás môžete kontaktovať na adrese info@danau.sk alebo telefonicky na čísle +421 948 222 666.',
+        'Prevádzkovateľom je DANAU, s.r.o., Doležalova 15/C, 821 04 Bratislava. Pre otázky o ochrane osobných údajov nás môžete kontaktovať na adrese info@danau.sk alebo telefonicky na čísle +421\u00a0948\u00a0222\u00a0666.',
       ],
     },
     {

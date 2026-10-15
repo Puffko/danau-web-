@@ -91,7 +91,9 @@ function Partners() {
   const { title, items } = home.partners
   return (
     <div className="container partners">
-      <h3 className="partners__title">{title}</h3>
+      <Reveal y={16}>
+        <h3 className="partners__title">{title}</h3>
+      </Reveal>
       <ul className="partners__grid">
         {items.map((p, i) => {
           const mark = p.logo ? (

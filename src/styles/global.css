@@ -661,6 +661,12 @@ p {
   border-color: var(--line);
 }
 
+/* over the open mobile menu the bar is part of the menu: opaque night, white marks */
+.site-header.is-menu-open {
+  background: var(--night);
+  color: var(--white);
+}
+
 .mobile-menu {
   position: fixed;
   inset: 0;
@@ -702,6 +708,7 @@ p {
   display: flex;
   align-items: center;
   gap: 8px;
+  min-height: 44px;
   padding-block: 6px;
   font-size: 0.9375rem;
   color: rgba(255, 255, 255, 0.78);
@@ -719,6 +726,12 @@ p {
 
 .mobile-menu__cta {
   margin-bottom: 20px;
+}
+
+.mobile-menu__foot > a:not(.btn) {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
 }
 
 /* ---------- Hero ---------- */
@@ -1282,6 +1295,12 @@ p {
   background: var(--surface);
 }
 
+/* the sphere's blur overhangs its box; keep that from widening the page at the screen edge */
+.process,
+.partner {
+  overflow-x: clip;
+}
+
 .process__title {
   max-width: 14ch;
 }
@@ -1438,6 +1457,7 @@ p {
 }
 
 .process-orb__link {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -1453,6 +1473,13 @@ p {
 
 .process-orb__link svg {
   transition: transform 0.4s var(--ease);
+}
+
+/* a comfortable tap area around the short link, without moving its underline */
+.process-orb__link::after {
+  content: '';
+  position: absolute;
+  inset: -10px -12px;
 }
 
 .process-orb__link:hover {
@@ -1515,6 +1542,8 @@ p {
   display: flex;
   align-items: center;
   gap: 12px;
+  /* keeps long labels clear of the pixel corner */
+  padding-right: 64px;
   font-size: 0.9375rem;
   font-weight: 450;
   color: var(--muted);
@@ -2102,7 +2131,8 @@ p {
   position: absolute;
   inset: auto 0 0;
   width: 100%;
-  height: 42%;
+  /* stays inside the panel's bottom padding when the grid stacks tall */
+  height: min(42%, 260px);
   z-index: -1;
   -webkit-mask-image: linear-gradient(to top, #000 45%, transparent 100%);
   mask-image: linear-gradient(to top, #000 45%, transparent 100%);
@@ -2142,6 +2172,7 @@ p {
   display: flex;
   align-items: center;
   gap: 10px;
+  padding-right: 56px;
   font-size: 0.875rem;
   font-weight: 450;
   color: rgba(255, 255, 255, 0.66);
@@ -2588,6 +2619,10 @@ p {
   gap: 10px;
 }
 
+.site-footer__contact a {
+  white-space: nowrap;
+}
+
 .site-footer__contact svg {
   flex-shrink: 0;
   margin-top: 4px;
@@ -2740,6 +2775,20 @@ p {
   .partners__grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+
+  /* below the full nav the side-by-side intro squeezes the grids into narrow cells */
+  .expertise__grid,
+  .site-footer__top {
+    grid-template-columns: 1fr;
+  }
+
+  .expertise__intro {
+    position: static;
+  }
+
+  .skills-panel__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 1200px) {
@@ -2794,7 +2843,8 @@ p {
 
   .process-orb__sphere {
     position: relative;
-    width: min(100%, 340px);
+    /* never taller than the space under the header, so it can be seen whole on landscape phones */
+    width: min(100%, 340px, calc(100svh - var(--header-h) - 48px));
     aspect-ratio: 1;
     margin-inline: auto;
   }
@@ -2900,18 +2950,6 @@ p {
     border-radius: var(--radius);
   }
 
-  .skills-panel__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .expertise__grid {
-    grid-template-columns: 1fr;
-  }
-
-  .expertise__intro {
-    position: static;
-  }
-
   .hero__inner {
     grid-template-columns: 1fr;
     align-items: start;
@@ -2925,7 +2963,6 @@ p {
   }
 
   .split,
-  .site-footer__top,
   .contact__grid,
   .page-hero__inner.has-aside {
     grid-template-columns: 1fr;
@@ -2998,10 +3035,13 @@ p {
 }
 
 @media (max-width: 560px) {
-  .hub {
+  .hub,
+  .skills-panel__grid {
     grid-template-columns: 1fr;
   }
+}
 
+@media (max-width: 640px) {
   .domains {
     grid-template-columns: 1fr;
   }
@@ -3013,13 +3053,215 @@ p {
   .domains__cell {
     gap: 28px;
   }
+
+  /* smaller pixel corners on narrow cards, and room for the text beside them */
+  .tile-pixels {
+    width: 42%;
+    height: 48%;
+    -webkit-mask-image: radial-gradient(90% 90% at 100% 0%, #000 15%, transparent 60%);
+    mask-image: radial-gradient(90% 90% at 100% 0%, #000 15%, transparent 60%);
+  }
+
+  .checklist__pixels {
+    width: 34%;
+    height: 50%;
+  }
+
+  .skills-panel__area,
+  .domains__area {
+    padding-right: 44px;
+  }
+
+  .form-card > .display-3,
+  .contact-form__hint,
+  .checklist__title {
+    padding-right: 84px;
+  }
 }
 
 @media (max-width: 380px) {
-  .related__grid,
-  .skills-panel__grid {
+  .related__grid {
     grid-template-columns: 1fr;
   }
+}
+
+
+/* Two-column diagram on tablets and small laptops: notes beside the sphere instead of one long list. */
+@media (min-width: 641px) and (max-width: 1200px) {
+  .process-stage {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+    column-gap: clamp(32px, 5vw, 72px);
+    row-gap: 40px;
+    align-items: center;
+  }
+
+  .process-note {
+    grid-column: 1;
+  }
+
+  .process-note--1 {
+    grid-row: 1;
+    align-self: end;
+  }
+
+  .process-note--2 {
+    grid-row: 2;
+    align-self: start;
+  }
+
+  .process-orb {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+
+  .process-stage--mirrored {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+  }
+
+  .process-stage--mirrored .process-note {
+    grid-column: 2;
+  }
+
+  .process-stage--mirrored .process-orb {
+    grid-column: 1;
+  }
+
+  .process-orb__sphere {
+    width: min(100%, 360px, calc(100svh - var(--header-h) - 48px));
+  }
+}
+
+/* Short landscape screens (phones on their side). */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hero {
+    min-height: 100svh;
+  }
+
+  .hero__inner {
+    padding-top: calc(var(--header-h) + 16px);
+    padding-bottom: 72px;
+    gap: 16px;
+  }
+
+  .hero__title {
+    font-size: clamp(1.875rem, 9vh, 2.75rem);
+  }
+
+  .hero__text {
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+
+  .hero__actions {
+    margin-top: 18px;
+  }
+
+  .hero__mountains {
+    height: 38%;
+  }
+
+  .page-hero {
+    padding-top: calc(var(--header-h) + 28px);
+    padding-bottom: 96px;
+  }
+
+  .mobile-menu__nav {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 48px;
+    align-content: start;
+    padding-top: calc(var(--header-h) + 8px);
+  }
+
+  .mobile-menu__nav > div:not(.mobile-menu__foot) {
+    grid-column: 1;
+  }
+
+  .mobile-menu__link {
+    font-size: clamp(1.5rem, 7vh, 2rem);
+    padding-block: 2px;
+  }
+
+  .mobile-menu__services {
+    grid-column: 2;
+    grid-row: 1 / span 4;
+    align-self: start;
+    margin-top: 8px;
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .mobile-menu__foot {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 20px;
+    padding-top: 20px;
+  }
+
+  .mobile-menu__cta {
+    margin-bottom: 0;
+  }
+}
+
+/* Tall portrait tablets: bring the hero copy down towards the mountains. */
+@media (max-width: 960px) and (orientation: portrait) and (min-height: 1000px) {
+  .hero__inner {
+    padding-top: calc(var(--header-h) + 14vh);
+  }
+
+  .hero__mountains {
+    height: 50%;
+  }
+}
+
+/* Service heroes on landscape phones and small tablets: keep the glyph beside the title. */
+@media (min-width: 641px) and (max-width: 960px) {
+  .page-hero__inner.has-aside:has(.hero-art) {
+    grid-template-columns: minmax(0, 1fr) 150px;
+    align-items: end;
+  }
+}
+
+/* Touch screens: small text links get a tap area of about 44px without moving the layout. */
+@media (pointer: coarse) {
+  .site-footer__cols a,
+  .site-footer__legal a {
+    display: inline-block;
+    padding-block: 10px;
+    margin-block: -6px;
+  }
+
+  .site-footer__cols li + li {
+    margin-top: 6px;
+  }
+
+  .back-link,
+  .consent__policy {
+    padding-block: 10px;
+    margin-block: -10px;
+  }
+
+  .info-card__value {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
+
+/* The static client list on short screens: names below the heading's size. */
+.clients.is-static .clients__name {
+  font-size: clamp(1.375rem, 1rem + 1.4vw, 2rem);
+}
+
+.clients.is-static .clients__title {
+  margin-bottom: 48px;
+}
+
+.clients.is-static .clients__text-inline {
+  max-width: 62ch;
 }
 
 @media (prefers-reduced-motion: reduce) {

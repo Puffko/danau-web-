@@ -115,7 +115,7 @@ export function Header() {
       )}
       <motion.header
         ref={headerRef}
-        className={`site-header${scrolled ? ' is-solid' : ''}`}
+        className={`site-header${scrolled && !mobileOpen ? ' is-solid' : ''}${mobileOpen ? ' is-menu-open' : ''}`}
         initial={{ opacity: 0, y: -16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.2, ease: EASE_OUT }}
