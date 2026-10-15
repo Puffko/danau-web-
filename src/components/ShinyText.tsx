@@ -51,13 +51,13 @@ const blend = (from: Rgba, to: Rgba, amount: number) => {
 
 /**
  * The site's sheen: a soft, darker band drifts slowly and steadily across the heading. On night
- * grounds the letters stay pure white and the band is the brand's light blue (still ~7:1 on the
- * night); on white grounds ink passes through a grey that keeps 4.8:1, so text never fades out.
+ * grounds the letters stay pure white and the band is a soft grey (still ~7.5:1 on the night); on
+ * white grounds ink passes through a grey that keeps 4.8:1, so text never fades out.
  */
 export const glint = (tone: 'light' | 'dark') =>
   ({
     color: tone === 'light' ? '#ffffff' : '#111827',
-    shineColor: tone === 'light' ? '#8796ff' : '#6b7280',
+    shineColor: tone === 'light' ? '#9ca3af' : '#6b7280',
     speed: 3.6,
     delay: 0.8,
     shineWidth: 34,
