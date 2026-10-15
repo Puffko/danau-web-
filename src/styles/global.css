@@ -3357,6 +3357,99 @@ p {
   max-width: 62ch;
 }
 
+
+/* Phones: the diagram reads as one connected path. A rail on the left links the notes and the
+   result (the desktop's arc and lines, folded straight), each part plugs into it with a pixel,
+   and the result becomes a blue card the sphere rises out of, like its text on the blurred half. */
+@media (max-width: 640px) {
+  .process-stage {
+    position: relative;
+    gap: 16px;
+    padding-left: 26px;
+  }
+
+  .process-stage::before {
+    content: '';
+    position: absolute;
+    left: 3px;
+    top: 40px;
+    bottom: 48px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--blue-200), var(--blue) 45%, var(--blue-200));
+    opacity: 0.6;
+  }
+
+  .process-note,
+  .process-orb {
+    position: relative;
+  }
+
+  .process-note::before {
+    display: block;
+    content: '';
+    position: absolute;
+    top: 36px;
+    left: -27px;
+    right: auto;
+    z-index: 1;
+    width: 10px;
+    height: 10px;
+    background: var(--blue);
+    box-shadow: 0 0 0 4px var(--white);
+  }
+
+  .process .process-note::before {
+    box-shadow: 0 0 0 4px var(--surface);
+  }
+
+  .process-note__card {
+    padding: 22px 22px 24px;
+  }
+
+  /* the result spans the full width, so the rail runs into it */
+  .process-orb {
+    left: auto;
+    top: auto;
+    margin-left: -26px;
+    overflow: hidden;
+    isolation: isolate;
+    padding: 196px 24px 28px;
+    border-radius: var(--radius-lg);
+    background:
+      radial-gradient(110% 80% at 88% 0%, #4a55ff 0%, #1818ec 34%, #0d0f9e 68%, #0a0c34 100%);
+    color: var(--white);
+  }
+
+  .process-orb__sphere {
+    position: absolute;
+    top: -58px;
+    right: -64px;
+    left: auto;
+    bottom: auto;
+    z-index: -1;
+    width: 250px;
+    margin: 0;
+  }
+
+  /* mirrored, the pixel half is the right one: keep it inside the card */
+  .process-stage--mirrored .process-orb__sphere {
+    right: -10px;
+  }
+
+  .process-orb__solution {
+    margin-top: 0;
+    color: var(--white);
+  }
+
+  .process-orb__title {
+    font-size: 1.375rem;
+  }
+
+  .process-orb__text {
+    color: rgba(255, 255, 255, 0.86);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hero-glow::after,
   .process-stage.is-live .process-stage__ping,
