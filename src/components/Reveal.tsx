@@ -1,6 +1,5 @@
 import { motion, useReducedMotion, type HTMLMotionProps } from 'motion/react'
 import { Fragment, type ElementType, type ReactNode } from 'react'
-import { PixelWord } from './PixelWord'
 
 export const EASE_OUT = [0.16, 1, 0.3, 1] as const
 
@@ -15,8 +14,8 @@ interface RevealTextProps {
   immediate?: boolean
   stagger?: number
   id?: string
-  /** Words (without trailing punctuation) to set in the pixel mosaic. */
-  pixel?: string[]
+  /** Words (without trailing punctuation) to highlight with a marker stroke. */
+  highlight?: string[]
 }
 
 /** Word-by-word masked reveal: each word rises out of its own clipping line. */
@@ -28,20 +27,22 @@ export function RevealText({
   immediate = false,
   stagger = 0.035,
   id,
-  pixel = [],
+  highlight = [],
 }: RevealTextProps) {
   const reduce = useReducedMotion()
   const Tag = as as ElementType
   const words = text.split(' ')
-  // a pixel word assembles once its own line of the reveal has risen into place
+  // a highlighted word gets its marker stroke once its line of the reveal has risen into place
   const renderWord = (word: string, i: number) => {
     const m = /^(.*?)([,.;:!?]*)$/.exec(word)
     const base = m ? m[1] : word
-    if (!pixel.includes(base)) return word
+    if (!highlight.includes(base)) return word
     const at = (delay + i * stagger) * 1000 + 650
     return (
       <>
-        <PixelWord text={base} delay={reduce ? 0 : at} />
+        <span className="hl-word" style={{ ['--hl-delay' as string]: `${reduce ? 0 : at}ms` }}>
+          {base}
+        </span>
         {m?.[2]}
       </>
     )

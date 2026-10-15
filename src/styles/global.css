@@ -257,28 +257,35 @@ p {
   will-change: transform;
 }
 
-/* A word drawn in pixels: the real text keeps the layout and stays readable to assistive tech,
-   the canvas paints over it in the headline's own weight and tracking. */
-.pixel-word {
-  position: relative;
-  display: inline-block;
-
+/* A highlighted headline word: the headline's own type with a slim brand-blue marker stroke along
+   its baseline that draws in from the left once the word has risen into place. */
+.hl-word {
+  padding-inline: 0.04em;
+  margin-inline: -0.04em;
+  background: linear-gradient(
+      transparent 66%,
+      rgba(24, 24, 236, 0.78) 66%,
+      rgba(24, 24, 236, 0.78) 90%,
+      transparent 90%
+    )
+    no-repeat 0 0 / 0% 100%;
+  animation: hl-draw 0.9s var(--ease) forwards;
+  animation-delay: var(--hl-delay, 0ms);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }
 
-.pixel-word__text {
-  color: transparent;
+@keyframes hl-draw {
+  to {
+    background-size: 100% 100%;
+  }
 }
 
-.pixel-word__text::selection {
-  color: var(--white);
-}
-
-.pixel-word__canvas {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  max-width: none;
-  pointer-events: none;
+@media (prefers-reduced-motion: reduce) {
+  .hl-word {
+    animation: none;
+    background-size: 100% 100%;
+  }
 }
 
 /* ---------- Buttons & links ---------- */
