@@ -76,12 +76,12 @@ export function PixelWordmark({ className, columns = 150 }: { className?: string
           for (let a = 0; a < ss; a++)
             for (let b = 0; b < ss; b++) cover += data[((j * ss + b) * off.width + (i * ss + a)) * 4 + 3]
           cover /= ss * ss * 255
-          const stray = cover > 0.05 && cover <= 0.4 && hash(i, j, 21) < 0.25
-          if (cover <= 0.4 && !stray) continue
+          // only cells the letters really fill: no stray or half-covered pixels sticking out
+          if (cover <= 0.5) continue
           next.push({
             x: i * cell,
             y: j * cell,
-            edge: cover < 0.75,
+            edge: cover < 0.8,
             delay: (1 - j / rows) * 650 + (i / cols) * 350 + hash(i, j, 4) * 250,
           })
         }
@@ -111,7 +111,6 @@ export function PixelWordmark({ className, columns = 150 }: { className?: string
         const i = c.x / cell
         const j = c.y / cell
         let v = noise2(i * 0.12 + flow * 0.00004, j * 0.12 - flow * 0.00003, 61) * 0.65 + (1 - c.y / h) * 0.45
-        if (c.edge) v -= 0.3
         if (pointer.on) {
           const d = Math.hypot(c.x + cell / 2 - pointer.x, c.y + cell / 2 - pointer.y) / (cell * 9)
           if (d < 1) v += (1 - d) * 0.5
