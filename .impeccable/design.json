@@ -1,0 +1,621 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-14T23:11:19.001323+00:00",
+  "title": "Design System: Danau",
+  "extensions": {
+    "colorMeta": {
+      "brand-blue": {
+        "role": "primary",
+        "displayName": "Danau Blue",
+        "tonalRamp": [
+          "#0b0d8a",
+          "#0d0f9e",
+          "#1010dc",
+          "#1818ec",
+          "#4a55ff",
+          "#8796ff",
+          "#b3c2ff",
+          "#dae3ff"
+        ]
+      },
+      "brand-blue-deep": {
+        "role": "primary",
+        "displayName": "Pressed Blue",
+        "tonalRamp": [
+          "#0b0d8a",
+          "#0d0f9e",
+          "#1010dc",
+          "#1818ec",
+          "#4a55ff",
+          "#8796ff",
+          "#b3c2ff",
+          "#dae3ff"
+        ]
+      },
+      "blue-300": {
+        "role": "secondary",
+        "displayName": "Periwinkle 300",
+        "tonalRamp": [
+          "#0b0d8a",
+          "#0d0f9e",
+          "#1010dc",
+          "#1818ec",
+          "#4a55ff",
+          "#8796ff",
+          "#b3c2ff",
+          "#dae3ff"
+        ]
+      },
+      "blue-200": {
+        "role": "secondary",
+        "displayName": "Periwinkle 200",
+        "tonalRamp": [
+          "#0b0d8a",
+          "#0d0f9e",
+          "#1010dc",
+          "#1818ec",
+          "#4a55ff",
+          "#8796ff",
+          "#b3c2ff",
+          "#dae3ff"
+        ]
+      },
+      "blue-100": {
+        "role": "secondary",
+        "displayName": "Periwinkle 100",
+        "tonalRamp": [
+          "#0b0d8a",
+          "#0d0f9e",
+          "#1010dc",
+          "#1818ec",
+          "#4a55ff",
+          "#8796ff",
+          "#b3c2ff",
+          "#dae3ff"
+        ]
+      },
+      "tint": {
+        "role": "secondary",
+        "displayName": "Chip Tint",
+        "tonalRamp": [
+          "#0b0d8a",
+          "#0d0f9e",
+          "#1010dc",
+          "#1818ec",
+          "#4a55ff",
+          "#8796ff",
+          "#b3c2ff",
+          "#dae3ff"
+        ]
+      },
+      "sky": {
+        "role": "secondary",
+        "displayName": "Sky",
+        "tonalRamp": [
+          "#1e3a8a",
+          "#1e40af",
+          "#1d4ed8",
+          "#2563eb",
+          "#3b82f6",
+          "#60a5fa",
+          "#93c5fd",
+          "#bfdbfe"
+        ]
+      },
+      "sky-2": {
+        "role": "secondary",
+        "displayName": "Sky Deep",
+        "tonalRamp": [
+          "#1e3a8a",
+          "#1e40af",
+          "#1d4ed8",
+          "#2563eb",
+          "#3b82f6",
+          "#60a5fa",
+          "#93c5fd",
+          "#bfdbfe"
+        ]
+      },
+      "night": {
+        "role": "neutral",
+        "displayName": "Night",
+        "tonalRamp": [
+          "#05061a",
+          "#06071f",
+          "#0a0c34",
+          "#0d0f9e",
+          "#1818ec",
+          "#5d68ff",
+          "#b3c2ff",
+          "#eef1ff"
+        ]
+      },
+      "night-2": {
+        "role": "neutral",
+        "displayName": "Night Low",
+        "tonalRamp": [
+          "#05061a",
+          "#06071f",
+          "#0a0c34",
+          "#0d0f9e",
+          "#1818ec",
+          "#5d68ff",
+          "#b3c2ff",
+          "#eef1ff"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "tonalRamp": [
+          "#111827",
+          "#374151",
+          "#4b5563",
+          "#6b7280",
+          "#9ca3af",
+          "#d1d5db",
+          "#e5e7eb",
+          "#f9fafb"
+        ]
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Ink Soft",
+        "tonalRamp": [
+          "#111827",
+          "#374151",
+          "#4b5563",
+          "#6b7280",
+          "#9ca3af",
+          "#d1d5db",
+          "#e5e7eb",
+          "#f9fafb"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Gray Copy",
+        "tonalRamp": [
+          "#111827",
+          "#374151",
+          "#4b5563",
+          "#6b7280",
+          "#9ca3af",
+          "#d1d5db",
+          "#e5e7eb",
+          "#f9fafb"
+        ]
+      },
+      "subtle": {
+        "role": "neutral",
+        "displayName": "Subtle",
+        "tonalRamp": [
+          "#111827",
+          "#374151",
+          "#4b5563",
+          "#6b7280",
+          "#9ca3af",
+          "#d1d5db",
+          "#e5e7eb",
+          "#f9fafb"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "tonalRamp": [
+          "#111827",
+          "#374151",
+          "#4b5563",
+          "#6b7280",
+          "#9ca3af",
+          "#d1d5db",
+          "#e5e7eb",
+          "#f9fafb"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Surface",
+        "tonalRamp": [
+          "#171717",
+          "#262626",
+          "#404040",
+          "#737373",
+          "#a3a3a3",
+          "#d4d4d4",
+          "#e5e5e5",
+          "#f4f4f4"
+        ]
+      },
+      "surface-2": {
+        "role": "neutral",
+        "displayName": "Surface Light",
+        "tonalRamp": [
+          "#111827",
+          "#374151",
+          "#4b5563",
+          "#6b7280",
+          "#9ca3af",
+          "#d1d5db",
+          "#e5e7eb",
+          "#f9fafb"
+        ]
+      },
+      "white": {
+        "role": "neutral",
+        "displayName": "White",
+        "tonalRamp": [
+          "#111827",
+          "#374151",
+          "#4b5563",
+          "#6b7280",
+          "#9ca3af",
+          "#d1d5db",
+          "#e5e7eb",
+          "#f9fafb"
+        ]
+      },
+      "ok-bg": {
+        "role": "status",
+        "displayName": "Success Ground"
+      },
+      "ok-line": {
+        "role": "status",
+        "displayName": "Success Line"
+      },
+      "ok-ink": {
+        "role": "status",
+        "displayName": "Success Ink"
+      },
+      "err-bg": {
+        "role": "status",
+        "displayName": "Error Ground"
+      },
+      "err-line": {
+        "role": "status",
+        "displayName": "Error Line"
+      },
+      "err-ink": {
+        "role": "status",
+        "displayName": "Error Ink"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Home hero H1 only."
+      },
+      "display-page": {
+        "displayName": "Display Page",
+        "purpose": "Sub-page hero H1."
+      },
+      "display-list": {
+        "displayName": "Display List",
+        "purpose": "Sticky clients list names; marquee uses the same voice at 280."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section H2s, CTA band title, footer claim."
+      },
+      "headline-sm": {
+        "displayName": "Headline Small",
+        "purpose": "Service-detail block titles."
+      },
+      "statement": {
+        "displayName": "Statement",
+        "purpose": "Large scroll-inked paragraph."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Card, link-card and info values."
+      },
+      "lead": {
+        "displayName": "Lead",
+        "purpose": "Opening paragraph of a split section."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Running text in gray copy, max 68ch."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Buttons, nav, card rows, column titles."
+      },
+      "small": {
+        "displayName": "Small",
+        "purpose": "Hints, info labels, legal row."
+      }
+    },
+    "shadows": [
+      {
+        "name": "card-lift",
+        "value": "0 40px 70px -40px rgba(24,24,236,0.4)",
+        "purpose": "Service card hover/focus with translateY(-6px)."
+      },
+      {
+        "name": "tile-lift",
+        "value": "0 32px 60px -36px rgba(24,24,236,0.45)",
+        "purpose": "Skill tile hover."
+      },
+      {
+        "name": "button-light",
+        "value": "0 10px 30px -12px rgba(5,6,26,0.55)",
+        "purpose": "White pill on night at rest."
+      },
+      {
+        "name": "button-light-hover",
+        "value": "0 16px 40px -14px rgba(135,150,255,0.8)",
+        "purpose": "White pill hover glow."
+      },
+      {
+        "name": "button-primary",
+        "value": "0 14px 30px -14px rgba(24,24,236,0.75)",
+        "purpose": "Blue submit pill."
+      },
+      {
+        "name": "panel",
+        "value": "0 2px 6px rgba(17,24,39,0.04), 0 32px 64px -24px rgba(5,6,26,0.35)",
+        "purpose": "Services dropdown."
+      },
+      {
+        "name": "form-card",
+        "value": "0 48px 90px -50px rgba(17,24,39,0.28)",
+        "purpose": "Contact form panel; the one resting shadow on light."
+      },
+      {
+        "name": "note-pill",
+        "value": "0 1px 2px rgba(17,24,39,0.06), 0 10px 24px -14px rgba(17,24,39,0.28)",
+        "purpose": "Process diagram labels."
+      },
+      {
+        "name": "header-solid",
+        "value": "0 1px 0 rgba(17,24,39,0.06), 0 12px 32px -20px rgba(17,24,39,0.25)",
+        "purpose": "Scrolled header, with backdrop-filter saturate(1.5) blur(18px)."
+      },
+      {
+        "name": "focus-ring-input",
+        "value": "0 0 0 4px rgba(24,24,236,0.12)",
+        "purpose": "Focused input."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Default ease-out for all transitions and reveals."
+      },
+      {
+        "name": "ease-io",
+        "value": "cubic-bezier(0.65, 0, 0.35, 1)",
+        "purpose": "Ambient drift (hero glow)."
+      },
+      {
+        "name": "reveal-word",
+        "value": "y 108% -> 0, 0.9s, stagger 0.035s",
+        "purpose": "Masked word reveal for headings."
+      },
+      {
+        "name": "reveal-block",
+        "value": "opacity 0, y 28px, blur 8px -> rest, 0.9s",
+        "purpose": "Rise-and-unblur for blocks."
+      },
+      {
+        "name": "state-fast",
+        "value": "0.3s-0.35s",
+        "purpose": "Colour/background state changes."
+      },
+      {
+        "name": "state-lift",
+        "value": "0.45s-0.6s",
+        "purpose": "Transforms and shadows on hover."
+      },
+      {
+        "name": "glow-drift",
+        "value": "16s alternate infinite",
+        "purpose": "Hero glow ambient drift."
+      },
+      {
+        "name": "marquee",
+        "value": "42s linear infinite, pausable",
+        "purpose": "Certification marquee."
+      },
+      {
+        "name": "matrix-ignite",
+        "value": "bottom-up scan sweep, then twinkle + scan band; pointer lens 150px (90px narrow)",
+        "purpose": "Pixel mountains, glyphs and sphere."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "nav-collapse",
+        "value": "1100px"
+      },
+      {
+        "name": "single-column",
+        "value": "960px"
+      },
+      {
+        "name": "mobile",
+        "value": "640px"
+      },
+      {
+        "name": "short-viewport",
+        "value": "max-height 640px"
+      }
+    ],
+    "matrix": {
+      "cellPitch": "8px (6px under 700px, 9px over 1600px)",
+      "ramp": [
+        "#4A55FF",
+        "#5D68FF",
+        "#7884FF",
+        "#9AA8FF",
+        "#BCC8FF",
+        "#D4DCFF"
+      ],
+      "alpha": [
+        0.28,
+        0.62,
+        0.82,
+        0.94,
+        1,
+        1
+      ],
+      "sizeFraction": [
+        0.13,
+        0.22,
+        0.32,
+        0.44,
+        0.58,
+        0.8
+      ],
+      "sphereRamp": [
+        "#0b0d8a",
+        "#0d0f9e",
+        "#1010dc",
+        "#1818ec",
+        "#2a35ff",
+        "#4a55ff",
+        "#5d68ff",
+        "#8796ff",
+        "#b3c2ff",
+        "#dae3ff"
+      ],
+      "cellShape": "square"
+    }
+  },
+  "components": [
+    {
+      "name": "Light Pill Button",
+      "kind": "button",
+      "refersTo": "button-light",
+      "description": "Primary action on night grounds: hero, CTA band, footer, mobile menu.",
+      "html": "<div class=\"ds-night\"><a class=\"ds-btn-light\" href=\"#\"><span>Konzultovať potrebu</span><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M7 17 17 7M8 7h9v9\"/></svg></a></div>",
+      "css": ".ds-night{background:#05061a;padding:32px;}.ds-btn-light{font-family:'Geist Variable','Geist',ui-sans-serif,system-ui,sans-serif;display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 22px 0 26px;border-radius:999px;background:#fff;color:#111827;font-size:.9375rem;font-weight:520;letter-spacing:-.005em;text-decoration:none;box-shadow:0 10px 30px -12px rgba(5,6,26,.55);transition:background-color .35s cubic-bezier(.16,1,.3,1),box-shadow .45s cubic-bezier(.16,1,.3,1),transform .45s cubic-bezier(.16,1,.3,1);}.ds-btn-light svg{transition:transform .45s cubic-bezier(.16,1,.3,1);}.ds-btn-light:hover{background:#eeeeff;box-shadow:0 16px 40px -14px rgba(135,150,255,.8);}.ds-btn-light:hover svg{transform:translate(3px,-3px);}.ds-btn-light:active{transform:scale(.97);}.ds-btn-light:focus-visible{outline:2px solid #fff;outline-offset:3px;}"
+    },
+    {
+      "name": "Ghost Pill Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Secondary action beside the light pill on night.",
+      "html": "<div class=\"ds-night\"><a class=\"ds-btn-ghost\" href=\"#\">Naše služby</a></div>",
+      "css": ".ds-night{background:#05061a;padding:32px;}.ds-btn-ghost{font-family:'Geist Variable','Geist',ui-sans-serif,system-ui,sans-serif;display:inline-flex;align-items:center;height:52px;padding:0 26px;border:1px solid rgba(255,255,255,.38);border-radius:999px;color:#fff;font-size:.9375rem;font-weight:520;text-decoration:none;transition:background-color .35s cubic-bezier(.16,1,.3,1),border-color .35s cubic-bezier(.16,1,.3,1);}.ds-btn-ghost:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.7);}.ds-btn-ghost:focus-visible{outline:2px solid #fff;outline-offset:3px;}"
+    },
+    {
+      "name": "Primary Blue Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Primary action on light grounds (contact form submit).",
+      "html": "<button class=\"ds-btn-primary\" type=\"button\">Odoslať správu</button>",
+      "css": ".ds-btn-primary{font-family:'Geist Variable','Geist',ui-sans-serif,system-ui,sans-serif;display:inline-flex;align-items:center;height:52px;padding:0 26px;border:0;border-radius:999px;background:#1818ec;color:#fff;font-size:.9375rem;font-weight:520;cursor:pointer;box-shadow:0 14px 30px -14px rgba(24,24,236,.75);transition:background-color .35s cubic-bezier(.16,1,.3,1),box-shadow .45s cubic-bezier(.16,1,.3,1),transform .45s cubic-bezier(.16,1,.3,1);}.ds-btn-primary:hover{background:#1010dc;box-shadow:0 18px 40px -14px rgba(24,24,236,.85);}.ds-btn-primary:active{transform:scale(.97);}.ds-btn-primary:focus-visible{outline:2px solid #1818ec;outline-offset:3px;}"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Contact form field with label above.",
+      "html": "<label class=\"ds-field\"><span>E-mail *</span><input type=\"email\" placeholder=\"vas@email.sk\"></label>",
+      "css": ".ds-field{font-family:'Geist Variable','Geist',ui-sans-serif,system-ui,sans-serif;display:grid;gap:8px;max-width:360px;}.ds-field span{font-size:.875rem;font-weight:520;color:#374151;}.ds-field input{font:inherit;width:100%;padding:14px 16px;border:1px solid #e5e7eb;border-radius:14px;background:#f9fafb;font-size:1rem;line-height:1.4;color:#111827;transition:border-color .25s,background-color .25s,box-shadow .25s;}.ds-field input::placeholder{color:#6b7280;}.ds-field input:hover{border-color:#d1d5db;}.ds-field input:focus{outline:none;border-color:#1818ec;background:#fff;box-shadow:0 0 0 4px rgba(24,24,236,.12);}"
+    },
+    {
+      "name": "Service Card",
+      "kind": "card",
+      "refersTo": "service-card",
+      "description": "One of the six services; surface at rest, white with blue lift and corner dot field on hover.",
+      "html": "<a class=\"ds-card\" href=\"#\"><span class=\"ds-card-dots\"></span><span class=\"ds-chip\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z\"/></svg></span><h3>Kybernetická bezpečnosť</h3><p>Pomáhame organizáciám pripraviť sa na audit a zaviesť opatrenia.</p><span class=\"ds-card-more\"><span>Zistiť viac</span><span class=\"ds-card-arrow\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\"><path d=\"M5 12h14M13 6l6 6-6 6\"/></svg></span></span></a>",
+      "css": ".ds-card{font-family:'Geist Variable','Geist',ui-sans-serif,system-ui,sans-serif;position:relative;isolation:isolate;display:flex;flex-direction:column;width:320px;min-height:400px;padding:28px;border:1px solid transparent;border-radius:24px;background:#f4f4f4;color:#111827;text-decoration:none;overflow:hidden;transition:background-color .5s cubic-bezier(.16,1,.3,1),border-color .5s,box-shadow .6s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1);}.ds-card-dots{position:absolute;top:0;right:0;z-index:-1;width:220px;height:220px;background-image:radial-gradient(circle,#1818ec 1.1px,transparent 1.5px);background-size:10px 10px;-webkit-mask-image:radial-gradient(circle at 100% 0%,#000 0%,transparent 70%);mask-image:radial-gradient(circle at 100% 0%,#000 0%,transparent 70%);opacity:0;transition:opacity .6s;}.ds-chip{display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:#eeeeff;color:#1818ec;transition:background-color .45s,color .45s,transform .6s cubic-bezier(.16,1,.3,1);}.ds-card h3{margin:24px 0 0;max-width:15ch;font-size:1.5rem;font-weight:380;line-height:1.15;letter-spacing:-.025em;}.ds-card p{margin:auto 0 0;padding-top:40px;font-size:.9375rem;line-height:1.62;color:#4b5563;}.ds-card-more{display:flex;align-items:center;justify-content:space-between;margin-top:22px;padding-top:18px;border-top:1px solid #e5e7eb;font-size:.9375rem;font-weight:520;}.ds-card-arrow{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:#fff;transition:background-color .45s,color .45s,transform .6s cubic-bezier(.16,1,.3,1);}.ds-card:hover,.ds-card:focus-visible{background:#fff;border-color:#e5e7eb;box-shadow:0 40px 70px -40px rgba(24,24,236,.4);transform:translateY(-6px);outline:none;}.ds-card:hover .ds-card-dots,.ds-card:focus-visible .ds-card-dots{opacity:.32;}.ds-card:hover .ds-chip,.ds-card:focus-visible .ds-chip{background:#1818ec;color:#fff;transform:rotate(-10deg) scale(1.06);}.ds-card:hover .ds-card-arrow,.ds-card:focus-visible .ds-card-arrow{background:#1818ec;color:#fff;transform:rotate(-45deg);}"
+    },
+    {
+      "name": "Navigation Bar",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Solid (scrolled) header state: blurred white, centered pill links, square active dot, ink CTA.",
+      "html": "<header class=\"ds-nav\"><strong>danau</strong><nav><a href=\"#\">Domov</a><a href=\"#\" class=\"is-active\">Služby</a><a href=\"#\">O nás</a><a href=\"#\">Kontakt</a></nav><a class=\"ds-nav-cta\" href=\"#\">Konzultovať potrebu</a></header>",
+      "css": ".ds-nav{font-family:'Geist Variable','Geist',ui-sans-serif,system-ui,sans-serif;display:flex;align-items:center;gap:24px;height:76px;padding:0 24px;background:rgba(255,255,255,.84);backdrop-filter:saturate(1.5) blur(18px);box-shadow:0 1px 0 rgba(17,24,39,.06),0 12px 32px -20px rgba(17,24,39,.25);color:#111827;}.ds-nav strong{margin-right:auto;font-size:1.25rem;font-weight:600;letter-spacing:-.03em;}.ds-nav nav{display:flex;gap:2px;}.ds-nav nav a{position:relative;display:inline-flex;align-items:center;height:40px;padding:0 14px;border-radius:999px;font-size:.9375rem;font-weight:450;color:inherit;text-decoration:none;transition:background-color .3s;}.ds-nav nav a:hover{background:rgba(17,24,39,.05);}.ds-nav nav a.is-active::after{content:'';position:absolute;left:50%;bottom:3px;width:4px;height:4px;margin-left:-2px;background:currentColor;}.ds-nav nav a:focus-visible,.ds-nav-cta:focus-visible{outline:2px solid #1818ec;outline-offset:3px;}.ds-nav-cta{display:inline-flex;align-items:center;height:44px;padding:0 20px;border-radius:999px;background:#111827;color:#fff;font-size:.9375rem;font-weight:520;text-decoration:none;transition:background-color .35s;}.ds-nav-cta:hover{background:#1818ec;}"
+    },
+    {
+      "name": "CTA Band",
+      "kind": "custom",
+      "refersTo": "cta-band",
+      "description": "Brand-blue closing panel with masked dot field glowing from below; ends every page.",
+      "html": "<section class=\"ds-cta\"><div class=\"ds-cta-dots\"></div><h2>Potrebujete partnera pre váš projekt?</h2><a href=\"#\">Ozvite sa nám</a></section>",
+      "css": ".ds-cta{font-family:'Geist Variable','Geist',ui-sans-serif,system-ui,sans-serif;position:relative;isolation:isolate;overflow:hidden;padding:96px 48px;border-radius:32px;background:radial-gradient(80% 90% at 50% 120%,rgba(179,194,255,.45),transparent 60%),#1818ec;color:#fff;text-align:center;}.ds-cta-dots{position:absolute;inset:0;z-index:-1;background-image:radial-gradient(circle,rgba(255,255,255,.28) 1px,transparent 1.5px);background-size:12px 12px;-webkit-mask-image:radial-gradient(70% 80% at 50% 105%,#000,transparent 75%);mask-image:radial-gradient(70% 80% at 50% 105%,#000,transparent 75%);}.ds-cta h2{max-width:26ch;margin:0 auto;font-size:2.5rem;font-weight:300;line-height:1.14;letter-spacing:-.035em;}.ds-cta a{display:inline-flex;align-items:center;height:52px;margin-top:40px;padding:0 26px;border-radius:999px;background:#fff;color:#111827;font-size:.9375rem;font-weight:520;text-decoration:none;transition:background-color .35s;}.ds-cta a:hover{background:#eeeeff;}.ds-cta a:focus-visible{outline:2px solid #fff;outline-offset:3px;}"
+    },
+    {
+      "name": "Night Hero Ground",
+      "kind": "custom",
+      "refersTo": "display",
+      "description": "Night ground lit from below with the brand-blue glow, light display H1 and a static square-cell matrix strip standing in for the canvas mountains.",
+      "html": "<section class=\"ds-hero\"><h1>Riadenie IT projektov, kybernetická bezpečnosť, GDPR a odborná podpora</h1><div class=\"ds-hero-matrix\"></div></section>",
+      "css": ".ds-hero{font-family:'Geist Variable','Geist',ui-sans-serif,system-ui,sans-serif;position:relative;overflow:hidden;min-height:420px;padding:72px 40px 200px;background:radial-gradient(110% 62% at 50% 112%,#b3c2ff 0%,#5d68ff 16%,#1818ec 34%,#0d0f9e 52%,rgba(10,12,52,0) 76%),linear-gradient(180deg,#05061a 0%,#06071f 40%,#0a0c34 100%);color:#fff;}.ds-hero h1{position:relative;z-index:1;max-width:16ch;margin:0;font-size:3.5rem;font-weight:300;line-height:1.02;letter-spacing:-.042em;}.ds-hero-matrix{position:absolute;inset:auto 0 0;height:55%;background:conic-gradient(at 5px 5px,transparent 75%,rgba(154,168,255,.9) 0) 0 0/8px 8px;-webkit-mask-image:linear-gradient(to top,#000 40%,transparent 100%);mask-image:linear-gradient(to top,#000 40%,transparent 100%);opacity:.55;}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Assembling Field",
+    "overview": "Danau is the calm grid under complex IT change. The world is built from one material: a matrix of square blue cells that, on night ink, assembles into mountains, service glyphs, a sphere and the footer wordmark. Many separate disciplines resolve into one landscape. Everything else is quiet: white and pale-gray reading grounds, ink text, light Geist set large with tight tracking, generous whitespace, soft 24px surfaces and pill buttons.\n\nPages alternate between two climates. Night bands (hero, sub-page hero, the \"Pre koho pracujeme?\" list, the footer, the CTA band in brand blue) carry the glow and the matrix; light bands (white, #F4F4F4, #F9FAFB) carry the reading. The glow always rises from below: a radial wash of brand blue warming into pale periwinkle at the bottom edge of every dark ground, never a top-lit gradient.\n\nDensity is low and deliberate. Copy is the live danau.sk text verbatim; the system never adds invented proof, kickers or decorative labels to fill space. Motion is articulate but calm: words rise out of masks, blocks rise and unblur, the matrix ignites and then idles.",
+    "keyCharacteristics": [
+      "One shared dot/pixel matrix is the single signature material, on canvas and in SVG.",
+      "Night grounds lit from below by a brand-blue glow; light grounds for reading.",
+      "Geist Variable at light weights (280–340) for all display sizes, negative tracking.",
+      "Pill buttons, circular icon chips, 24px cards, 32px feature panels.",
+      "Shadows are soft, long, blue-tinted, and appear mostly on hover.",
+      "Every motion has a reduced-motion path that keeps content static and visible."
+    ],
+    "rules": [
+      {
+        "name": "The Glow From Below Rule",
+        "body": "Every night ground is lit by a radial brand-blue glow anchored past its bottom edge (roughly 50% 108–120%), fading to night by ~75%. Never light a dark band from the top or the side.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Blue Rule",
+        "body": "Danau Blue is the only saturated hue. Light-ground screens use it for actions, marks and focus only; large blue fields are reserved for the CTA band and the glows.",
+        "section": "colors"
+      },
+      {
+        "name": "The White-On-Night Opacity Rule",
+        "body": "Secondary text on night uses white at 0.7–0.8 alpha (rgba(255,255,255,0.78) for paragraphs); hairlines on night use white at 0.12–0.14.",
+        "section": "colors"
+      },
+      {
+        "name": "The Light Display Rule",
+        "body": "Anything set above ~1.6rem is weight 380 or lighter, with negative tracking of at least -0.025em. Never bold a headline.",
+        "section": "typography"
+      },
+      {
+        "name": "The Mask Rule",
+        "body": "Headings enter word by word, each word rising from its own clipping mask (y 108% to 0, 0.9s, ease-out, ~0.035s stagger). The mask carries padding for diacritics and descenders; keep it when adding headings.",
+        "section": "typography"
+      },
+      {
+        "name": "The Lift-On-Hover Rule",
+        "body": "Cards are flat at rest and lift (translateY -4 to -6px plus a blue-tinted long shadow) only on hover or keyboard focus.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Soft Shadow Rule",
+        "body": "Every shadow has a large blur and a negative spread. No hard offset shadows.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do build every new illustration from the shared matrix: square cells, the #4A55FF to #D4DCFF magnitude ramp, ignite-then-idle motion, pointer lens.",
+      "Do light every night band from below with the brand-blue radial glow.",
+      "Do set headings at weight 280–340 with -0.025em to -0.045em tracking and introduce them with the masked word reveal.",
+      "Do use the white pill (button-light) as the one primary action on night, and Danau Blue (button-primary) on light grounds.",
+      "Do end every page on a contact path: the CTA band, then the footer claim and button.",
+      "Do keep a reduced-motion branch for every new animation that leaves content fully visible.",
+      "Do keep white-on-night secondary text at 0.7–0.8 alpha and body copy in gray copy at max 68ch."
+    ],
+    "donts": [
+      "Don't introduce a second saturated hue; status green and red are for form feedback only.",
+      "Don't fill the matrix with random noise; size and colour follow the ramp.",
+      "Don't use bold display weights or positive tracking on headlines.",
+      "Don't use hard offset shadows or resting shadows on cards; lift on hover only (the contact form panel is the one resting-shadow exception).",
+      "Don't add kickers, eyebrow labels or uppercase tracked captions above headings.",
+      "Don't add invented statistics, testimonials, ratings or client logos; partner tiles show real logos or the neutral placeholder.",
+      "Don't use a stock photo hero or a free-floating gradient blob; the hero is the matrix rising out of the glow."
+    ]
+  }
+}
