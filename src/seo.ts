@@ -7,14 +7,14 @@ import { CONTENT, PATHS, alternatePath, langOf, serviceBySlug, servicePath, type
  * llms.txt. Used by the build's prerender (scripts/prerender.mjs) and by the client on navigation.
  */
 
-export const SITE = 'https://danau.sk'
+const SITE = 'https://danau.sk'
 const LANGS: Lang[] = ['sk', 'en']
 const ORG_ID = `${SITE}/#organization`
 const SITE_ID = `${SITE}/#website`
 
 type PageKind = 'home' | 'about' | 'contact' | 'privacy' | 'cookies' | 'service' | 'notFound'
 
-export interface Head {
+interface Head {
   lang: Lang
   title: string
   description: string
@@ -31,7 +31,7 @@ export interface Head {
 }
 
 const norm = (pathname: string) => pathname.replace(/\/+$/, '').toLowerCase() || '/'
-export const absolute = (path: string) => (path === '/' ? `${SITE}/` : `${SITE}${path}`)
+const absolute = (path: string) => (path === '/' ? `${SITE}/` : `${SITE}${path}`)
 
 /** Which page a path shows, in its language. */
 function pageAt(pathname: string): { kind: PageKind; lang: Lang; service?: Service } {

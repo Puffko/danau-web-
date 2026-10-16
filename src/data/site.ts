@@ -48,14 +48,29 @@ export interface Service {
   ctaTitle: string
 }
 
-export interface LegalSection {
+/** One stored item in the cookie overview. */
+interface CookieItem {
+  name: string
+  provider: string
+  purpose: string
+  expiry: string
+}
+
+/** The cookie overview: items grouped by whether they need consent. */
+interface CookieRegister {
+  /** Labels of the provider and expiry values. */
+  labels: { provider: string; expiry: string }
+  groups: { title: string; note: string; consent: boolean; items: CookieItem[] }[]
+}
+
+interface LegalSection {
   title: string
   paragraphs: string[]
   /** A bulleted list after the paragraphs. */
   list?: string[]
-  /** A table after the list (the cookie overview). */
-  table?: { head: string[]; rows: string[][] }
-  /** Paragraphs after the list or table. */
+  /** The cookie overview after the list. */
+  cookies?: CookieRegister
+  /** Paragraphs after the list or overview. */
   after?: string[]
   /** Ends the section with the button that reopens the cookie bar. */
   consentButton?: boolean

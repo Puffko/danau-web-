@@ -27,36 +27,38 @@ export default function Legal({ page, seed }: { page: LegalPage; seed: number })
                     ))}
                   </ul>
                 )}
-                {section.table && (
-                  <div className="legal__table-wrap">
-                    <table className="legal__table">
-                      <thead>
-                        <tr>
-                          {section.table.head.map((h) => (
-                            <th key={h} scope="col">
-                              {h}
-                            </th>
+                {section.cookies && (
+                  <div className="cookie-register">
+                    {section.cookies.groups.map((group) => (
+                      <section className="cookie-register__group" key={group.title}>
+                        <header className="cookie-register__head">
+                          {/* filled pixel: always on; hollow pixel: only with consent */}
+                          <span className={`cookie-register__mark${group.consent ? ' is-consent' : ''}`} aria-hidden />
+                          <h3 className="cookie-register__title">{group.title}</h3>
+                          <p className="cookie-register__note">{group.note}</p>
+                        </header>
+                        <ul className="cookie-register__items">
+                          {group.items.map((item) => (
+                            <li className="cookie-item" key={item.name}>
+                              <code className="cookie-item__name">{item.name}</code>
+                              <div>
+                                <p className="cookie-item__purpose">{item.purpose}</p>
+                                <dl className="cookie-item__meta">
+                                  <div>
+                                    <dt>{section.cookies!.labels.provider}</dt>
+                                    <dd>{item.provider}</dd>
+                                  </div>
+                                  <div>
+                                    <dt>{section.cookies!.labels.expiry}</dt>
+                                    <dd>{item.expiry}</dd>
+                                  </div>
+                                </dl>
+                              </div>
+                            </li>
                           ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {section.table.rows.map((row) => (
-                          <tr key={row[0]}>
-                            {row.map((cell, i) =>
-                              i === 0 ? (
-                                <th key={i} scope="row">
-                                  <code>{cell}</code>
-                                </th>
-                              ) : (
-                                <td key={i} data-label={section.table!.head[i]}>
-                                  {cell}
-                                </td>
-                              ),
-                            )}
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                        </ul>
+                      </section>
+                    ))}
                   </div>
                 )}
                 {section.after?.map((p) => (

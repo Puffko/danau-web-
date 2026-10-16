@@ -418,12 +418,41 @@ const cookies: LegalPage = {
     {
       title: 'Aké cookies používame',
       paragraphs: ['Web danau.sk používa iba tieto položky:'],
-      table: {
-        head: ['Názov', 'Poskytovateľ', 'Účel', 'Platnosť', 'Kategória'],
-        rows: [
-          ['danau-consent-v1', 'danau.sk', 'Uloží vašu voľbu v lište cookies (lokálne úložisko).', 'Kým voľbu nezmeníte alebo nevymažete údaje prehliadača', 'Nevyhnutné'],
-          ['_ga', 'Google', 'Rozlišuje návštevníkov pre súhrnnú štatistiku návštevnosti.', '2 roky', 'Analytické, len so súhlasom'],
-          ['_ga_0RPSMNFFCV', 'Google', 'Uchováva stav návštevy pre štatistiku návštevnosti.', '2 roky', 'Analytické, len so súhlasom'],
+      cookies: {
+        labels: { provider: 'Poskytovateľ', expiry: 'Platnosť' },
+        groups: [
+          {
+            title: 'Nevyhnutné',
+            note: 'Vždy aktívne',
+            consent: false,
+            items: [
+              {
+                name: 'danau-consent-v1',
+                provider: 'danau.sk',
+                purpose: 'Uloží vašu voľbu v lište cookies (lokálne úložisko).',
+                expiry: 'Kým voľbu nezmeníte alebo nevymažete údaje prehliadača',
+              },
+            ],
+          },
+          {
+            title: 'Analytické',
+            note: 'Len s vaším súhlasom',
+            consent: true,
+            items: [
+              {
+                name: '_ga',
+                provider: 'Google',
+                purpose: 'Rozlišuje návštevníkov pre súhrnnú štatistiku návštevnosti.',
+                expiry: '2 roky',
+              },
+              {
+                name: '_ga_0RPSMNFFCV',
+                provider: 'Google',
+                purpose: 'Uchováva stav návštevy pre štatistiku návštevnosti.',
+                expiry: '2 roky',
+              },
+            ],
+          },
         ],
       },
       after: [

@@ -103,15 +103,6 @@ export const Pin = (props: P) => (
   </svg>
 )
 
-export const Star = (props: P) => (
-  <svg viewBox="0 0 23 23" width="23" height="23" aria-hidden focusable={false} {...props}>
-    <path
-      fill="currentColor"
-      d="M11.49 0l.65 3.95a8.5 8.5 0 0 0 6.89 6.89l3.95.65-3.95.65a8.5 8.5 0 0 0-6.89 6.89l-.65 3.95-.65-3.95a8.5 8.5 0 0 0-6.89-6.89L0 11.49l3.95-.65a8.5 8.5 0 0 0 6.89-6.89Z"
-    />
-  </svg>
-)
-
 export const Menu = (props: P) => (
   <svg {...base(props)}>
     <path d="M4 8h16" />

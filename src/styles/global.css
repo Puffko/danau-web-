@@ -338,33 +338,6 @@ p {
   opacity: 0.75;
 }
 
-.text-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 520;
-  color: var(--ink);
-  padding-bottom: 4px;
-  background: linear-gradient(currentColor, currentColor) left bottom / 100% 1px no-repeat;
-  transition:
-    color 0.3s var(--ease),
-    background-size 0.5s var(--ease);
-}
-
-.text-link svg {
-  transition: transform 0.4s var(--ease);
-}
-
-.text-link:hover {
-  color: var(--blue);
-  background-size: 0% 1px;
-  background-position: right bottom;
-}
-
-.text-link:hover svg {
-  transform: translateX(4px);
-}
-
 .chip {
   display: grid;
   place-items: center;
@@ -1297,10 +1270,6 @@ a.lang-switch__item:hover {
 
 .section--tight {
   padding-block: clamp(48px, 6vw, 80px);
-}
-
-.section--surface {
-  background: var(--surface-2);
 }
 
 /* ---------- Pixel corner shared by cards ---------- */
@@ -3199,49 +3168,99 @@ a.lang-switch__item:hover {
   background: var(--blue);
 }
 
-.legal__table-wrap {
-  margin-top: 20px;
-  overflow-x: auto;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
+/* the cookie overview: a register grouped by consent, each group under an ink rule */
+.cookie-register {
+  display: grid;
+  gap: 40px;
+  margin-top: 32px;
 }
 
-.legal__table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.9375rem;
-  line-height: 1.5;
-  color: var(--muted);
-  text-align: left;
+.cookie-register__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--ink);
 }
 
-.legal__table th,
-.legal__table td {
-  padding: 14px 16px;
-  vertical-align: top;
+.cookie-register__mark {
+  width: 10px;
+  height: 10px;
+  background: var(--blue);
+}
+
+.cookie-register__mark.is-consent {
+  background: transparent;
+  box-shadow: inset 0 0 0 2px var(--blue);
+}
+
+.cookie-register__title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 520;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
+}
+
+.cookie-register__note {
+  margin: 0 0 0 auto;
+  font-size: 0.875rem;
+  color: var(--subtle);
+}
+
+.cookie-register__items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cookie-item {
+  display: grid;
+  grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+  gap: 10px 32px;
+  padding: 22px 0;
   border-bottom: 1px solid var(--line);
 }
 
-.legal__table thead th {
-  background: var(--surface-2);
+.cookie-item__name {
+  font-family: var(--font);
+  font-size: 1.0625rem;
+  font-weight: 480;
+  letter-spacing: -0.01em;
+  line-height: 1.5;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.cookie-item__purpose {
+  margin: 0;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.cookie-item__meta {
+  display: grid;
+  grid-template-columns: minmax(0, 10rem) minmax(0, 1fr);
+  gap: 16px 24px;
+  margin: 16px 0 0;
+}
+
+.cookie-item__meta dt {
   font-size: 0.8125rem;
-  font-weight: 520;
+  color: var(--subtle);
+}
+
+.cookie-item__meta dd {
+  margin: 2px 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
   color: var(--ink-2);
 }
 
-.legal__table tbody tr:last-child > * {
-  border-bottom: 0;
-}
-
-.legal__table tbody th {
-  font-weight: 400;
-}
-
-.legal__table code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.8125rem;
-  color: var(--ink);
-  white-space: nowrap;
+.cookie-register + .body-copy {
+  margin-top: 32px;
 }
 
 .legal__consent {
@@ -3253,47 +3272,15 @@ a.lang-switch__item:hover {
   color: var(--subtle);
 }
 
-/* phones: each cookie becomes a small card of label / value rows */
 @media (max-width: 640px) {
-  .legal__table thead {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
+  .cookie-item {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 20px 0;
   }
 
-  .legal__table,
-  .legal__table tbody,
-  .legal__table tr,
-  .legal__table th,
-  .legal__table td {
-    display: block;
-  }
-
-  .legal__table tr {
-    padding: 14px 16px;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .legal__table tbody tr:last-child {
-    border-bottom: 0;
-  }
-
-  .legal__table th,
-  .legal__table td {
-    padding: 2px 0;
-    border: 0;
-  }
-
-  .legal__table tbody th {
-    margin-bottom: 6px;
-  }
-
-  .legal__table td::before {
-    content: attr(data-label) ': ';
-    color: var(--ink-2);
-    font-weight: 520;
+  .cookie-item__meta {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    margin-top: 14px;
   }
 }
 
@@ -4169,7 +4156,6 @@ a.lang-switch__item:hover {
     display: none;
   }
 
-
   .service-card,
   .link-card,
   .btn {
@@ -4177,10 +4163,3 @@ a.lang-switch__item:hover {
   }
 }
 
-.statement {
-  font-size: clamp(1.5rem, 1.1rem + 1vw, 2rem);
-  font-weight: 340;
-  line-height: 1.28;
-  letter-spacing: -0.025em;
-  color: var(--ink);
-}

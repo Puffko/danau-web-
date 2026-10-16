@@ -56,7 +56,7 @@ export const servicePath = (lang: Lang, service: Service) => `${PATHS[lang].serv
 export const serviceBySlug = (lang: Lang, slug: string | undefined) =>
   CONTENT[lang].services.find((s) => s.slug === slug?.toLowerCase())
 
-export const serviceById = (lang: Lang, id: ServiceId) => CONTENT[lang].services.find((s) => s.id === id)
+const serviceById = (lang: Lang, id: ServiceId) => CONTENT[lang].services.find((s) => s.id === id)
 
 /** The service a path shows, if any. */
 function serviceAt(pathname: string) {

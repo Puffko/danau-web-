@@ -18,7 +18,7 @@ interface Cell {
 }
 
 /** Space above the drawn mark in the wordmark's viewBox; `crop` removes it so the mark centres. */
-export const CROP_TOP = 12.1
+const CROP_TOP = 12.1
 /** The cropped mark's height in viewBox units (its width is VIEW_W). */
 export const MARK_H = 30.04
 export const VIEW_W = 134

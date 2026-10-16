@@ -6,7 +6,7 @@ import { isPreview } from './env'
  * down later stops GA and removes its cookies.
  */
 
-export const GA_ID = 'G-0RPSMNFFCV'
+const GA_ID = 'G-0RPSMNFFCV'
 const KEY = 'danau-consent-v1'
 /** Fired on window to open the cookie bar again (footer "Cookie settings"). */
 export const OPEN_EVENT = 'danau:consent-open'

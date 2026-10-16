@@ -413,12 +413,41 @@ const cookies: LegalPage = {
     {
       title: 'Which cookies we use',
       paragraphs: ['The danau.sk website uses only these items:'],
-      table: {
-        head: ['Name', 'Provider', 'Purpose', 'Expiry', 'Category'],
-        rows: [
-          ['danau-consent-v1', 'danau.sk', 'Stores your choice in the cookie bar (local storage).', 'Until you change your choice or clear your browser data', 'Essential'],
-          ['_ga', 'Google', 'Distinguishes visitors for aggregate traffic statistics.', '2 years', 'Analytics, only with consent'],
-          ['_ga_0RPSMNFFCV', 'Google', 'Keeps the state of the visit for traffic statistics.', '2 years', 'Analytics, only with consent'],
+      cookies: {
+        labels: { provider: 'Provider', expiry: 'Expiry' },
+        groups: [
+          {
+            title: 'Essential',
+            note: 'Always active',
+            consent: false,
+            items: [
+              {
+                name: 'danau-consent-v1',
+                provider: 'danau.sk',
+                purpose: 'Stores your choice in the cookie bar (local storage).',
+                expiry: 'Until you change your choice or clear your browser data',
+              },
+            ],
+          },
+          {
+            title: 'Analytics',
+            note: 'Only with your consent',
+            consent: true,
+            items: [
+              {
+                name: '_ga',
+                provider: 'Google',
+                purpose: 'Distinguishes visitors for aggregate traffic statistics.',
+                expiry: '2 years',
+              },
+              {
+                name: '_ga_0RPSMNFFCV',
+                provider: 'Google',
+                purpose: 'Keeps the state of the visit for traffic statistics.',
+                expiry: '2 years',
+              },
+            ],
+          },
         ],
       },
       after: [
