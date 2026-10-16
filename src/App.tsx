@@ -3,6 +3,7 @@ import { Route, Routes, useLocation, useNavigationType } from 'react-router-dom'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import { PixelLoader } from './components/PixelLoader'
+import { CookieBar } from './components/CookieBar'
 import { RevealReady } from './components/Reveal'
 import { CONTENT, LangProvider, PATHS, langOf, type Lang } from './i18n'
 import { applyHead, headFor } from './seo'
@@ -198,6 +199,7 @@ export default function App() {
         </RevealReady.Provider>
         <Footer />
       </div>
+      <CookieBar ready={!loaderOn} />
       {loaderOn && (
         <PixelLoader ready={fontsReady} onReveal={() => setLoading(false)} onDone={() => setLoaderOn(false)} />
       )}

@@ -50,6 +50,16 @@ public/
 Po nasadení odporúčame: pridať web do Google Search Console a Bing Webmaster Tools, odoslať
 `https://danau.sk/sitemap.xml` a skontrolovať štruktúrované dáta v Rich Results Test.
 
+## Cookies a Google Analytics
+
+- Google Analytics 4 (`G-0RPSMNFFCV`, nastavené v `src/lib/consent.ts`) sa načíta **až po súhlase** v lište cookies.
+  Bez súhlasu sa nenačíta nič a neukladajú sa žiadne cookies. Reklamné signály sú vypnuté (Consent Mode v2).
+- Voľba sa ukladá v prehliadači (`danau-consent-v1`). Odkaz „Nastavenia cookies“ v pätičke a tlačidlo na stránke
+  Cookies lištu znova otvoria. Po odvolaní súhlasu sa cookies `_ga` vymažú.
+- Texty lišty a stránok Cookies a Ochrana osobných údajov sú v `src/data/sk.ts` a `src/data/en.ts`.
+- V Google Analytics odporúčame nastaviť uchovávanie údajov (Admin → Data retention) a prijať podmienky
+  spracúvania údajov (Admin → Account details → Data processing terms).
+
 ## Nasadenie
 
 1. `npm run build`

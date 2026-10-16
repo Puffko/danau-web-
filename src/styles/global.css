@@ -310,6 +310,7 @@ p {
 }
 
 .btn--ghost {
+  background: transparent;
   border-color: rgba(255, 255, 255, 0.38);
   color: var(--white);
   padding-inline: 26px;
@@ -3171,6 +3172,194 @@ a.lang-switch__item:hover {
   margin-top: 1em;
 }
 
+.legal__list {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+  padding: 0;
+  list-style: none;
+}
+
+.legal__list li {
+  position: relative;
+  padding-left: 22px;
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+/* the system's square pixel as the bullet */
+.legal__list li::before {
+  content: '';
+  position: absolute;
+  top: 0.72em;
+  left: 2px;
+  width: 6px;
+  height: 6px;
+  background: var(--blue);
+}
+
+.legal__table-wrap {
+  margin-top: 20px;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+.legal__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--muted);
+  text-align: left;
+}
+
+.legal__table th,
+.legal__table td {
+  padding: 14px 16px;
+  vertical-align: top;
+  border-bottom: 1px solid var(--line);
+}
+
+.legal__table thead th {
+  background: var(--surface-2);
+  font-size: 0.8125rem;
+  font-weight: 520;
+  color: var(--ink-2);
+}
+
+.legal__table tbody tr:last-child > * {
+  border-bottom: 0;
+}
+
+.legal__table tbody th {
+  font-weight: 400;
+}
+
+.legal__table code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.8125rem;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.legal__consent {
+  margin-top: 24px;
+}
+
+.legal__updated {
+  font-size: 0.875rem;
+  color: var(--subtle);
+}
+
+/* phones: each cookie becomes a small card of label / value rows */
+@media (max-width: 640px) {
+  .legal__table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .legal__table,
+  .legal__table tbody,
+  .legal__table tr,
+  .legal__table th,
+  .legal__table td {
+    display: block;
+  }
+
+  .legal__table tr {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .legal__table tbody tr:last-child {
+    border-bottom: 0;
+  }
+
+  .legal__table th,
+  .legal__table td {
+    padding: 2px 0;
+    border: 0;
+  }
+
+  .legal__table tbody th {
+    margin-bottom: 6px;
+  }
+
+  .legal__table td::before {
+    content: attr(data-label) ': ';
+    color: var(--ink-2);
+    font-weight: 520;
+  }
+}
+
+/* ---------- Cookie bar ---------- */
+
+/* A small night card at the foot of the screen, above the page but below the first-load screen. */
+.cookie-bar {
+  position: fixed;
+  z-index: 60;
+  left: 0;
+  right: 0;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  align-items: center;
+  gap: 14px 28px;
+  width: min(calc(100% - var(--gutter) * 2), 860px);
+  margin-inline: auto;
+  padding: 14px 14px 14px 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
+  background:
+    radial-gradient(70% 140% at 12% 130%, rgba(24, 24, 236, 0.45), transparent 70%),
+    var(--night);
+  color: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 28px 60px -28px rgba(5, 6, 26, 0.75);
+}
+
+.cookie-bar__text {
+  flex: 1;
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
+.cookie-bar__text a {
+  color: var(--white);
+  text-decoration: underline;
+  text-decoration-color: var(--blue-300);
+  text-underline-offset: 3px;
+}
+
+.cookie-bar__actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 8px;
+}
+
+.cookie-bar__btn {
+  --btn-h: 44px;
+  padding: 0 22px;
+  font-size: 0.875rem;
+}
+
+@media (max-width: 640px) {
+  .cookie-bar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 16px;
+    bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .cookie-bar__actions > * {
+    flex: 1;
+  }
+}
+
 /* ---------- Footer ---------- */
 
 .site-footer {
@@ -3271,11 +3460,30 @@ a.lang-switch__item:hover {
 
 .site-footer__legal {
   display: flex;
-  gap: 24px;
+  flex-wrap: wrap;
+  gap: 8px 24px;
 }
 
-.site-footer__legal a:hover {
+.site-footer__legal a:hover,
+.site-footer__legal button:hover {
   color: var(--white);
+}
+
+.site-footer__legal button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+/* company identification: a quiet full-width line under the copyright row */
+.site-footer__company {
+  flex-basis: 100%;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .site-footer__mark {
@@ -3842,7 +4050,8 @@ a.lang-switch__item:hover {
 /* Touch screens: small text links get a tap area of about 44px without moving the layout. */
 @media (pointer: coarse) {
   .site-footer__cols a,
-  .site-footer__legal a {
+  .site-footer__legal a,
+  .site-footer__legal button {
     display: inline-block;
     padding-block: 10px;
     margin-block: -6px;

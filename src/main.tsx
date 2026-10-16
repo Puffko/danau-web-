@@ -9,6 +9,7 @@ import { MotionConfig } from 'motion/react'
 import App from './App'
 import { SmoothScroll } from './hooks/smoothScroll'
 import { isPreview } from './lib/env'
+import { initConsent } from './lib/consent'
 
 // A load or reload always opens at the top of the page, on its hero: no restored scroll position
 // and no jump to a #section left in the address. Done before the router reads the URL.
@@ -19,6 +20,9 @@ window.scrollTo(0, 0)
 // The single-file preview has no server behind it (and may run inside a sandboxed frame),
 // so it keeps the route in memory instead of the address bar.
 const Router = isPreview ? MemoryRouter : BrowserRouter
+
+// Google Analytics only for visitors who accepted it before (see src/lib/consent.ts)
+initConsent()
 
 // The prerendered HTML (scripts/prerender.mjs) stays readable without JS; the app renders afresh.
 document.getElementById('ssr-visible')?.remove()

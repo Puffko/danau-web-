@@ -20,6 +20,10 @@ export const contact = {
   phoneHref: 'tel:+421948222666',
   street: 'Doležalova 15/C',
   city: '821 04 Bratislava',
+  // Obchodný register Mestského súdu Bratislava III, Register účtovných závierok and EU VIES (checked 16 Oct 2026)
+  ico: '54 908 159',
+  dic: '2121824309',
+  icDph: 'SK2121824309',
   mapsHref: 'https://www.google.com/maps/search/?api=1&query=Dolezalova+15%2FC%2C+821+04+Bratislava',
 }
 
@@ -44,10 +48,25 @@ export interface Service {
   ctaTitle: string
 }
 
+export interface LegalSection {
+  title: string
+  paragraphs: string[]
+  /** A bulleted list after the paragraphs. */
+  list?: string[]
+  /** A table after the list (the cookie overview). */
+  table?: { head: string[]; rows: string[][] }
+  /** Paragraphs after the list or table. */
+  after?: string[]
+  /** Ends the section with the button that reopens the cookie bar. */
+  consentButton?: boolean
+}
+
 export interface LegalPage {
   title: string
   intro: string
-  sections: { title: string; paragraphs: string[] }[]
+  /** "Last updated" line under the sections. */
+  updated: string
+  sections: LegalSection[]
 }
 
 /** One part of the About paragraph: plain text, or an area that links to its service. */

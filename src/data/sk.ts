@@ -337,26 +337,67 @@ const footer = {
 const privacy: LegalPage = {
   title: 'Ochrana osobných údajov',
   intro:
-    'Na tejto stránke nájdete základné informácie o tom, aké údaje spracúvame pri obchodnej komunikácii, projektovej spolupráci a prevádzke webu spoločnosti DANAU, s.r.o.',
+    'Na tejto stránke nájdete informácie o tom, aké osobné údaje spracúvame pri obchodnej komunikácii, projektovej spolupráci a prevádzke webu spoločnosti DANAU, s.r.o., na aký účel, ako dlho a aké máte práva.',
+  updated: 'Posledná aktualizácia: 16. 10. 2026',
   sections: [
     {
       title: 'Prevádzkovateľ a kontakt',
       paragraphs: [
-        'Prevádzkovateľom je DANAU, s.r.o., Doležalova 15/C, 821 04 Bratislava. Pre otázky o ochrane osobných údajov nás môžete kontaktovať na adrese info@danau.sk alebo telefonicky na čísle +421 948 222 666.',
+        'Prevádzkovateľom je DANAU, s.r.o., so sídlom Doležalova 15/C, 821 04 Bratislava, IČO 54 908 159, zapísaná v Obchodnom registri Mestského súdu Bratislava III, oddiel Sro, vložka č. 164139/B.',
+        'Pre otázky o ochrane osobných údajov a na uplatnenie vašich práv nás môžete kontaktovať na adrese info@danau.sk alebo telefonicky na čísle +421 948 222 666.',
       ],
     },
     {
-      title: 'Aké údaje spracúvame',
+      title: 'Aké údaje spracúvame a na aký účel',
       paragraphs: [
-        'Spracúvame najmä identifikačné a kontaktné údaje, ktoré nám poskytnete pri dopyte, pri príprave projektu, pri zmluvnej komunikácii alebo pri priebežnej spolupráci.',
-        'Rozsah údajov vždy viažeme na konkrétny účel, aby sme vedeli pripraviť ponuku, zabezpečiť odborné plnenie alebo splniť zákonné a zmluvné povinnosti.',
+        'Spracúvame najmä identifikačné a kontaktné údaje, ktoré nám poskytnete pri dopyte, pri príprave projektu, pri zmluvnej komunikácii alebo pri priebežnej spolupráci. Rozsah údajov vždy viažeme na konkrétny účel:',
+      ],
+      list: [
+        'Kontaktný formulár, e-mail a telefón – meno a priezvisko, organizáciu, e-mailovú adresu, telefónne číslo a obsah správy spracúvame, aby sme vám odpovedali a dohodli si úvodnú konzultáciu. Právnym základom je váš súhlas (čl. 6 ods. 1 písm. a) GDPR), a ak dopyt smeruje k uzavretiu zmluvy, aj opatrenia pred jej uzavretím (čl. 6 ods. 1 písm. b) GDPR).',
+        'Príprava ponuky a zmluvná spolupráca – identifikačné a kontaktné údaje kontaktných osôb spracúvame na prípravu ponuky, plnenie zmluvy a súvisiacu komunikáciu (čl. 6 ods. 1 písm. b) GDPR) a na plnenie zákonných povinností, napríklad v účtovníctve (čl. 6 ods. 1 písm. c) GDPR).',
+        'Meranie návštevnosti webu – iba s vaším súhlasom používame Google Analytics 4 (čl. 6 ods. 1 písm. a) GDPR). Podrobnosti nájdete na stránke Cookies.',
+        'Prevádzka a bezpečnosť webu – pri návšteve webu môže server zaznamenať technické údaje, ako je IP adresa, čas prístupu a navštívená adresa, aby bol web dostupný a chránený pred zneužitím (oprávnený záujem, čl. 6 ods. 1 písm. f) GDPR).',
+      ],
+    },
+    {
+      title: 'Komu údaje sprístupňujeme',
+      paragraphs: [
+        'Osobné údaje sprístupňujeme len v nevyhnutnom rozsahu: poskytovateľom, ktorí pre nás ako sprostredkovatelia zabezpečujú hosting webu a e-mailu, a pri meraní návštevnosti spoločnosti Google Ireland Limited. Údaje poskytneme aj orgánom verejnej moci, ak nám to ukladá zákon.',
+      ],
+    },
+    {
+      title: 'Prenos mimo Európskej únie',
+      paragraphs: [
+        'Údaje z Google Analytics môže spoločnosť Google spracúvať aj v USA. Spoločnosť Google LLC je certifikovaná v rámci EÚ – USA rámca na ochranu osobných údajov (Data Privacy Framework), na ktorý sa vzťahuje rozhodnutie Európskej komisie o primeranosti ochrany.',
+      ],
+    },
+    {
+      title: 'Ako dlho údaje uchovávame',
+      paragraphs: [
+        'Údaje z dopytov uchovávame počas ich vybavenia a následnej komunikácie. Ak z dopytu nevznikne spolupráca, vymažeme ich, keď už nie sú potrebné na účel, na ktorý sme ich získali, alebo keď odvoláte svoj súhlas.',
+        'Údaje zo zmluvnej spolupráce uchovávame počas trvania zmluvy a po jej skončení po dobu, ktorú vyžadujú právne predpisy, napríklad účtovné doklady 10 rokov podľa zákona č. 431/2002 Z. z. o účtovníctve.',
+        'Údaje v Google Analytics sa uchovávajú najviac 14 mesiacov a analytické cookies majú platnosť najviac 2 roky.',
       ],
     },
     {
       title: 'Vaše práva',
+      paragraphs: ['V súvislosti so spracúvaním osobných údajov máte právo:'],
+      list: [
+        'požiadať o prístup k svojim osobným údajom (čl. 15 GDPR),',
+        'požiadať o ich opravu (čl. 16 GDPR) alebo výmaz (čl. 17 GDPR),',
+        'požiadať o obmedzenie spracúvania (čl. 18 GDPR),',
+        'na prenosnosť údajov (čl. 20 GDPR),',
+        'namietať proti spracúvaniu na základe oprávneného záujmu (čl. 21 GDPR),',
+        'kedykoľvek odvolať súhlas bez vplyvu na zákonnosť spracúvania pred jeho odvolaním (čl. 7 ods. 3 GDPR).',
+      ],
+      after: [
+        'Ak sa domnievate, že s údajmi nakladáme nesprávne, môžete sa obrátiť priamo na nás a zároveň máte právo podať návrh na začatie konania na Úrade na ochranu osobných údajov Slovenskej republiky, Hraničná 12, 820 07 Bratislava 27, www.dataprotection.gov.sk.',
+      ],
+    },
+    {
+      title: 'Povinnosť poskytnúť údaje',
       paragraphs: [
-        'Máte právo požiadať o prístup k údajom, ich opravu, obmedzenie spracúvania, výmaz alebo prenosnosť, ak to umožňuje právny základ spracúvania.',
-        'Ak sa domnievate, že s údajmi nakladáme nesprávne, môžete sa obrátiť priamo na nás a zároveň máte právo podať podnet aj dozornému orgánu.',
+        'Poskytnutie údajov v kontaktnom formulári je dobrovoľné. Bez mena a e-mailovej adresy vám však nevieme odpovedať. Nevykonávame automatizované individuálne rozhodovanie ani profilovanie.',
       ],
     },
   ],
@@ -365,25 +406,44 @@ const privacy: LegalPage = {
 const cookies: LegalPage = {
   title: 'Cookies',
   intro:
-    'Používanie cookies slúži na základnú prevádzku stránky, meranie návštevnosti a zlepšovanie používateľského zážitku pri ďalších návštevách.',
+    'Na tejto stránke nájdete, aké cookies a podobné technológie web danau.sk používa, na aký účel a ako môžete svoj súhlas kedykoľvek zmeniť.',
+  updated: 'Posledná aktualizácia: 16. 10. 2026',
   sections: [
     {
       title: 'Čo sú cookies',
       paragraphs: [
-        'Cookies sú malé súbory uložené v prehliadači, ktoré si web zapamätá medzi jednotlivými návštevami. Pomáhajú udržať stabilné fungovanie stránky a lepšie porozumieť tomu, ako je obsah používaný.',
+        'Cookies sú malé súbory uložené v prehliadači, ktoré si web zapamätá medzi jednotlivými návštevami. Podobne funguje aj lokálne úložisko prehliadača (localStorage).',
       ],
     },
     {
-      title: 'Na čo ich používame',
-      paragraphs: [
-        'Používame nevyhnutné cookies pre základnú funkčnosť a podľa nastavení návštevníka môžeme pracovať aj s analytickými údajmi, ktoré nám pomáhajú vyhodnocovať výkonnosť stránky a upravovať obsah.',
+      title: 'Aké cookies používame',
+      paragraphs: ['Web danau.sk používa iba tieto položky:'],
+      table: {
+        head: ['Názov', 'Poskytovateľ', 'Účel', 'Platnosť', 'Kategória'],
+        rows: [
+          ['danau-consent-v1', 'danau.sk', 'Uloží vašu voľbu v lište cookies (lokálne úložisko).', 'Kým voľbu nezmeníte alebo nevymažete údaje prehliadača', 'Nevyhnutné'],
+          ['_ga', 'Google', 'Rozlišuje návštevníkov pre súhrnnú štatistiku návštevnosti.', '2 roky', 'Analytické, len so súhlasom'],
+          ['_ga_0RPSMNFFCV', 'Google', 'Uchováva stav návštevy pre štatistiku návštevnosti.', '2 roky', 'Analytické, len so súhlasom'],
+        ],
+      },
+      after: [
+        'Nevyhnutná položka nepotrebuje súhlas, lebo bez nej by web nevedel rešpektovať vašu voľbu. Reklamné cookies ani cookies sociálnych sietí nepoužívame. Písma a ostatné súbory webu sa načítavajú z nášho servera.',
       ],
     },
     {
-      title: 'Ako ich môžete spravovať',
+      title: 'Analytické cookies (Google Analytics)',
       paragraphs: [
-        'Cookies môžete obmedziť alebo vymazať vo svojom prehliadači. Po zmene nastavení sa môže niektoré správanie webu upraviť alebo obmedziť podľa dostupných funkcií.',
+        'Návštevnosť meriame službou Google Analytics 4 od spoločnosti Google Ireland Limited, a to iba s vaším súhlasom. Bez súhlasu sa Google Analytics nenačíta a žiadne analytické cookies sa neukladajú.',
+        'Po udelení súhlasu sa ukladajú cookies _ga a _ga_* s platnosťou do 2 rokov. Údaje vyhodnocujeme v súhrnnej podobe; reklamné funkcie, Google signály a prispôsobenie reklám sú vypnuté. Google Analytics 4 neukladá IP adresy. Viac o spracúvaní údajov nájdete na stránke Ochrana osobných údajov.',
       ],
+    },
+    {
+      title: 'Ako môžete svoj súhlas zmeniť',
+      paragraphs: [
+        'Svoj súhlas môžete kedykoľvek zmeniť alebo odvolať tlačidlom nižšie alebo odkazom „Nastavenia cookies“ v pätičke webu. Po odvolaní súhlasu analytické cookies vymažeme.',
+        'Cookies môžete obmedziť alebo vymazať aj vo svojom prehliadači. Po zmene nastavení sa môže niektoré správanie webu upraviť alebo obmedziť podľa dostupných funkcií.',
+      ],
+      consentButton: true,
     },
   ],
 }
@@ -391,6 +451,20 @@ const cookies: LegalPage = {
 /** Interface text that is not page copy: navigation, labels, accessible names. */
 const ui = {
   country: 'Slovensko',
+  company: {
+    ico: 'IČO',
+    dic: 'DIČ',
+    icDph: 'IČ DPH',
+    register: 'Zapísaná v Obchodnom registri Mestského súdu Bratislava III, oddiel Sro, vložka č. 164139/B',
+  },
+  cookieBar: {
+    label: 'Súhlas s cookies',
+    text: 'S vaším súhlasom používame analytické cookies (Google Analytics), aby sme vedeli, ako sa web používa. Bez súhlasu sa nenačítajú.',
+    more: 'Viac o cookies',
+    accept: 'Prijať',
+    reject: 'Odmietnuť',
+    settings: 'Nastavenia cookies',
+  },
   skip: 'Preskočiť na obsah',
   brandLabel: 'Danau – domov',
   mainNav: 'Hlavná navigácia',

@@ -2,6 +2,7 @@ import { motion, useReducedMotion } from 'motion/react'
 import { Link } from 'react-router-dom'
 import { contact } from '../data/site'
 import { useI18n } from '../i18n'
+import { OPEN_EVENT } from '../lib/consent'
 import { ArrowUpRight, Mail, Phone, Pin } from './Icons'
 import { PixelWordmark } from './PixelWordmark'
 import { EASE_OUT, RevealText } from './Reveal'
@@ -79,7 +80,15 @@ export function Footer() {
         <div className="site-footer__legal">
           <Link to={paths.privacy}>{t.privacy.title}</Link>
           <Link to={paths.cookies}>{t.cookies.title}</Link>
+          <button type="button" onClick={() => window.dispatchEvent(new Event(OPEN_EVENT))}>
+            {t.ui.cookieBar.settings}
+          </button>
         </div>
+        {/* the identification the e-commerce act (22/2004 Z. z.) asks for on every page */}
+        <p className="site-footer__company">
+          {contact.company}, {contact.street}, {contact.city} · {t.ui.company.ico} {contact.ico} · {t.ui.company.dic}{' '}
+          {contact.dic} · {t.ui.company.icDph} {contact.icDph} · {t.ui.company.register}
+        </p>
       </div>
 
       <div className="site-footer__mark" aria-hidden="true">

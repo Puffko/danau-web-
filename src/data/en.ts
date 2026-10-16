@@ -332,26 +332,67 @@ const footer: Content['footer'] = {
 const privacy: LegalPage = {
   title: 'Personal data protection',
   intro:
-    'On this page you will find basic information about the data we process in business communication, project cooperation and the operation of the website of DANAU, s.r.o.',
+    'On this page you will find what personal data DANAU, s.r.o. processes in business communication, project cooperation and the operation of its website, for what purpose, for how long, and what rights you have.',
+  updated: 'Last updated: 16 October 2026. This is a translation; if the versions differ, the Slovak version prevails.',
   sections: [
     {
       title: 'Controller and contact',
       paragraphs: [
-        'The controller is DANAU, s.r.o., Doležalova 15/C, 821 04 Bratislava. For questions about personal data protection, you can contact us at info@danau.sk or by phone at +421 948 222 666.',
+        'The controller is DANAU, s.r.o., registered office Doležalova 15/C, 821 04 Bratislava, Slovakia, Company ID (IČO) 54 908 159, registered in the Commercial Register of the Bratislava III Municipal Court, Section Sro, File No. 164139/B.',
+        'For questions about personal data protection and to exercise your rights, you can contact us at info@danau.sk or by phone at +421 948 222 666.',
       ],
     },
     {
-      title: 'What data we process',
+      title: 'What data we process and why',
       paragraphs: [
-        'We mainly process identification and contact details that you provide to us in an enquiry, during project preparation, in contractual communication or in ongoing cooperation.',
-        'We always tie the scope of the data to a specific purpose, so that we can prepare an offer, provide our expert services or meet our legal and contractual obligations.',
+        'We mainly process identification and contact details that you provide to us in an enquiry, during project preparation, in contractual communication or in ongoing cooperation. We always tie the scope of the data to a specific purpose:',
+      ],
+      list: [
+        'Contact form, email and phone – we process your full name, organisation, email address, phone number and the content of your message to reply to you and arrange an initial consultation. The legal basis is your consent (Art. 6(1)(a) GDPR) and, where the enquiry leads towards a contract, steps taken before entering into it (Art. 6(1)(b) GDPR).',
+        'Offers and contractual cooperation – we process the identification and contact details of contact persons to prepare an offer, perform a contract and communicate about it (Art. 6(1)(b) GDPR) and to meet our legal obligations, for example in accounting (Art. 6(1)(c) GDPR).',
+        'Website analytics – only with your consent, we use Google Analytics 4 (Art. 6(1)(a) GDPR). See the Cookie policy for details.',
+        'Website operation and security – when you visit the website, the server may record technical data such as your IP address, the time of access and the address visited, to keep the website available and protected against misuse (legitimate interest, Art. 6(1)(f) GDPR).',
+      ],
+    },
+    {
+      title: 'Who receives the data',
+      paragraphs: [
+        'We make personal data available only to the extent necessary: to providers who host our website and email for us as processors and, for website analytics, to Google Ireland Limited. We also disclose data to public authorities where the law requires us to.',
+      ],
+    },
+    {
+      title: 'Transfers outside the European Union',
+      paragraphs: [
+        'Google may also process Google Analytics data in the USA. Google LLC is certified under the EU–US Data Privacy Framework, which is covered by the European Commission’s adequacy decision.',
+      ],
+    },
+    {
+      title: 'How long we keep the data',
+      paragraphs: [
+        'We keep data from enquiries while we deal with them and the communication that follows. If no cooperation results, we delete the data once it is no longer needed for the purpose for which it was collected, or when you withdraw your consent.',
+        'We keep data from contractual cooperation for the duration of the contract and afterwards for as long as the law requires, for example accounting records for 10 years under Act No. 431/2002 Coll. on Accounting.',
+        'Data in Google Analytics is kept for at most 14 months, and analytics cookies expire after at most 2 years.',
       ],
     },
     {
       title: 'Your rights',
+      paragraphs: ['In connection with the processing of your personal data, you have the right:'],
+      list: [
+        'to request access to your personal data (Art. 15 GDPR),',
+        'to request its rectification (Art. 16 GDPR) or erasure (Art. 17 GDPR),',
+        'to request restriction of processing (Art. 18 GDPR),',
+        'to data portability (Art. 20 GDPR),',
+        'to object to processing based on legitimate interest (Art. 21 GDPR),',
+        'to withdraw your consent at any time, without affecting the lawfulness of processing before its withdrawal (Art. 7(3) GDPR).',
+      ],
+      after: [
+        'If you believe that we are handling your data incorrectly, you can contact us directly, and you also have the right to lodge a complaint with the Office for Personal Data Protection of the Slovak Republic, Hraničná 12, 820 07 Bratislava 27, www.dataprotection.gov.sk.',
+      ],
+    },
+    {
+      title: 'Whether you must provide data',
       paragraphs: [
-        'You have the right to request access to your data, its rectification, the restriction of processing, its erasure or portability, where the legal basis for the processing allows it.',
-        'If you believe that we are handling your data incorrectly, you can contact us directly, and you also have the right to lodge a complaint with the supervisory authority.',
+        'Providing data in the contact form is voluntary. Without your name and email address, however, we cannot reply to you. We do not carry out automated individual decision-making or profiling.',
       ],
     },
   ],
@@ -360,31 +401,64 @@ const privacy: LegalPage = {
 const cookies: LegalPage = {
   title: 'Cookies',
   intro:
-    'Cookies are used for the basic operation of the website, measuring traffic and improving the user experience on future visits.',
+    'On this page you will find which cookies and similar technologies the danau.sk website uses, what for, and how you can change your consent at any time.',
+  updated: 'Last updated: 16 October 2026. This is a translation; if the versions differ, the Slovak version prevails.',
   sections: [
     {
       title: 'What cookies are',
       paragraphs: [
-        'Cookies are small files stored in the browser that the website remembers between visits. They help keep the website working reliably and give a better understanding of how its content is used.',
+        'Cookies are small files stored in the browser that the website remembers between visits. The browser’s local storage (localStorage) works in a similar way.',
       ],
     },
     {
-      title: 'What we use them for',
-      paragraphs: [
-        'We use essential cookies for basic functionality and, depending on the visitor’s settings, we may also work with analytical data that helps us evaluate the website’s performance and adjust its content.',
+      title: 'Which cookies we use',
+      paragraphs: ['The danau.sk website uses only these items:'],
+      table: {
+        head: ['Name', 'Provider', 'Purpose', 'Expiry', 'Category'],
+        rows: [
+          ['danau-consent-v1', 'danau.sk', 'Stores your choice in the cookie bar (local storage).', 'Until you change your choice or clear your browser data', 'Essential'],
+          ['_ga', 'Google', 'Distinguishes visitors for aggregate traffic statistics.', '2 years', 'Analytics, only with consent'],
+          ['_ga_0RPSMNFFCV', 'Google', 'Keeps the state of the visit for traffic statistics.', '2 years', 'Analytics, only with consent'],
+        ],
+      },
+      after: [
+        'The essential item needs no consent, because without it the website could not respect your choice. We do not use advertising or social media cookies. Fonts and other website files are loaded from our own server.',
       ],
     },
     {
-      title: 'How you can manage them',
+      title: 'Analytics cookies (Google Analytics)',
       paragraphs: [
-        'You can restrict or delete cookies in your browser. After you change the settings, some of the website’s behaviour may change or be limited depending on the features available.',
+        'We measure traffic with Google Analytics 4 by Google Ireland Limited, and only with your consent. Without consent, Google Analytics is not loaded and no analytics cookies are stored.',
+        'Once you consent, the cookies _ga and _ga_* are stored for up to 2 years. We evaluate the data in aggregate; advertising features, Google signals and ad personalisation are switched off. Google Analytics 4 does not store IP addresses. More about data processing is on the Personal data protection page.',
       ],
+    },
+    {
+      title: 'How you can change your consent',
+      paragraphs: [
+        'You can change or withdraw your consent at any time with the button below or the “Cookie settings” link in the website footer. When you withdraw it, we delete the analytics cookies.',
+        'You can also restrict or delete cookies in your browser. After you change the settings, some of the website’s behaviour may change or be limited depending on the features available.',
+      ],
+      consentButton: true,
     },
   ],
 }
 
 const ui: Content['ui'] = {
   country: 'Slovakia',
+  company: {
+    ico: 'Company ID (IČO)',
+    dic: 'Tax ID (DIČ)',
+    icDph: 'VAT ID',
+    register: 'Registered in the Commercial Register of the Bratislava III Municipal Court, Section Sro, File No. 164139/B',
+  },
+  cookieBar: {
+    label: 'Cookie consent',
+    text: 'With your consent, we use analytics cookies (Google Analytics) to understand how the website is used. Without it, they are not loaded.',
+    more: 'More about cookies',
+    accept: 'Accept',
+    reject: 'Reject',
+    settings: 'Cookie settings',
+  },
   skip: 'Skip to content',
   brandLabel: 'Danau – home',
   mainNav: 'Main navigation',
