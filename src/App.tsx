@@ -1,10 +1,11 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect as useClientLayoutEffect, useRef, useState } from 'react'
 import { Route, Routes, useLocation, useNavigationType } from 'react-router-dom'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import { PixelLoader } from './components/PixelLoader'
 import { RevealReady } from './components/Reveal'
-import { CONTENT, LangProvider, PATHS, langOf, pageMeta, type Lang } from './i18n'
+import { CONTENT, LangProvider, PATHS, langOf, type Lang } from './i18n'
+import { applyHead, headFor } from './seo'
 import { prefersReducedMotion, scrollToTarget, useLenis } from './hooks/smoothScroll'
 import About from './pages/About'
 import Contact from './pages/Contact'
@@ -13,12 +14,13 @@ import Legal from './pages/Legal'
 import NotFound from './pages/NotFound'
 import Service from './pages/Service'
 
+// layout effects only exist in the browser; the build's prerender renders without them
+const useLayoutEffect = typeof window === 'undefined' ? useEffect : useClientLayoutEffect
+
+/** Title, description, canonical, hreflang, sharing tags and JSON-LD of the page on screen. */
 function useDocumentMeta(pathname: string) {
   useEffect(() => {
-    const meta = pageMeta(pathname)
-    document.title = meta.title
-    document.documentElement.lang = langOf(pathname)
-    document.querySelector('meta[name="description"]')?.setAttribute('content', meta.description)
+    applyHead(headFor(pathname))
   }, [pathname])
 }
 

@@ -1,6 +1,6 @@
 // Slovak copy, taken verbatim from the live danau.sk. Edit content here, not in components;
 // en.ts mirrors this file key for key.
-import type { AreaPart, LegalPage, Service } from './site'
+import type { AreaPart, LegalPage, Service, ServiceId } from './site'
 
 const services: Service[] = [
   {
@@ -412,9 +412,50 @@ const ui = {
   },
 }
 
+/**
+ * Search and sharing metadata: titles (under ~60 characters, keyword first, brand last) and
+ * descriptions (~150-160 characters) built from the page copy above, nothing beyond it.
+ */
 const meta = {
-  homeTitle: 'Danau — Riadenie IT projektov, kybernetická bezpečnosť a GDPR',
-  notFound: { title: 'Stránka neexistuje — Danau', description: 'Stránka, ktorú hľadáte, na webe danau.sk neexistuje.' },
+  locale: 'sk_SK',
+  home: {
+    title: 'Riadenie IT projektov, kybernetická bezpečnosť a GDPR | Danau',
+    description:
+      'Pomáhame organizáciám pripraviť, riadiť a doručiť zmeny v oblastiach IT, bezpečnosti, ochrany osobných údajov, dát a procesov. DANAU, s.r.o., Bratislava.',
+  },
+  about: {
+    title: 'O nás – odborný partner pre IT, bezpečnosť a GDPR | Danau',
+    description:
+      'Sme odborný partner pre organizácie, ktoré potrebujú kvalitne pripraviť, riadiť a realizovať projekty alebo posilniť interné odborné kapacity.',
+  },
+  contact: {
+    title: 'Kontakt – Danau, Doležalova 15/C, Bratislava',
+    description:
+      'Napíšte nám na info@danau.sk alebo zavolajte na +421 948 222 666. Ozveme sa vám a dohodneme si úvodnú konzultáciu. DANAU, s.r.o., Bratislava.',
+  },
+  privacy: { title: 'Ochrana osobných údajov | Danau' },
+  cookies: { title: 'Používanie cookies | Danau' },
+  /** Per service, by id; the description falls back to the service's hero text. */
+  services: {
+    'projektove-riadenie': { title: 'Projektové a programové riadenie IT projektov | Danau' },
+    'kyberneticka-bezpecnost': { title: 'Kybernetická bezpečnosť a príprava na audit | Danau' },
+    'gdpr-a-dpo': {
+      title: 'GDPR a outsourcing zodpovednej osoby (DPO) | Danau',
+      description:
+        'Pomáhame nastaviť ochranu osobných údajov, GDPR dokumentáciu, procesy a zodpovednosti. Poskytujeme aj externú zodpovednú osobu alebo seniornú podporu interného DPO.',
+    },
+    'analyza-a-data': { title: 'Analýza procesov a analytické činnosti | Danau' },
+    'data-governance': {
+      title: 'Data governance a manažment dát | Danau',
+      // the hero text is shared with "Analytika a dáta"; the card text is this page's own
+      description:
+        'Pomáhame zavádzať dátový manažment, pravidlá práce s dátami, zodpovednosti a dátové princípy, ktoré podporujú riadenie organizácie aj ďalší rozvoj IT.',
+    },
+    'realizacia-it': { title: 'Realizácia IT projektov a riešení | Danau' },
+  } as Record<ServiceId, { title: string; description?: string }>,
+  breadcrumbHome: 'Domov',
+  imageAlt: 'Danau – riadenie IT projektov, kybernetická bezpečnosť, GDPR a odborná podpora',
+  notFound: { title: 'Stránka neexistuje | Danau', description: 'Stránka, ktorú hľadáte, na webe danau.sk neexistuje.' },
 }
 
 export const sk = { services, home, about, contactPage, footer, privacy, cookies, ui, meta }

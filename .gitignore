@@ -6,3 +6,4 @@ dist
 .impeccable/config.local.json
 *.tsbuildinfo
 dist-preview
+dist-ssr

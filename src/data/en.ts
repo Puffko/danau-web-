@@ -407,8 +407,43 @@ const ui: Content['ui'] = {
 }
 
 const meta: Content['meta'] = {
-  homeTitle: 'Danau — IT project management, cybersecurity and GDPR',
-  notFound: { title: 'Page not found — Danau', description: 'The page you are looking for does not exist on danau.sk.' },
+  locale: 'en_GB',
+  home: {
+    title: 'IT project management, cybersecurity and GDPR | Danau',
+    description:
+      'We help organisations prepare, manage and deliver change in IT, security, personal data protection, data and processes. DANAU, s.r.o., Bratislava.',
+  },
+  about: {
+    title: 'About us – expert partner for IT, security and GDPR | Danau',
+    description:
+      'We are an expert partner for organisations that need to properly prepare, manage and deliver projects or strengthen their internal expert capacity.',
+  },
+  contact: {
+    title: 'Contact – Danau, Doležalova 15/C, Bratislava',
+    description:
+      'Write to us at info@danau.sk or call +421 948 222 666. We will get back to you and arrange an initial consultation. DANAU, s.r.o., Bratislava.',
+  },
+  privacy: { title: 'Personal data protection | Danau' },
+  cookies: { title: 'Cookie policy | Danau' },
+  services: {
+    'projektove-riadenie': { title: 'IT project and programme management | Danau' },
+    'kyberneticka-bezpecnost': { title: 'Cybersecurity and audit preparation | Danau' },
+    'gdpr-a-dpo': {
+      title: 'GDPR and outsourced data protection officer | Danau',
+      description:
+        'We help set up personal data protection, GDPR documentation, processes and responsibilities, and provide an external data protection officer or support for an internal DPO.',
+    },
+    'analyza-a-data': { title: 'Process analysis and analytical services | Danau' },
+    'data-governance': {
+      title: 'Data governance and data management | Danau',
+      description:
+        'We help introduce data management, rules for working with data, responsibilities and data principles that support running the organisation and the further development of its IT.',
+    },
+    'realizacia-it': { title: 'Delivery of IT projects and solutions | Danau' },
+  },
+  breadcrumbHome: 'Home',
+  imageAlt: 'Danau – IT project management, cybersecurity, GDPR and expert support',
+  notFound: { title: 'Page not found | Danau', description: 'The page you are looking for does not exist on danau.sk.' },
 }
 
 export const en: Content = { services, home, about, contactPage, footer, privacy, cookies, ui, meta }

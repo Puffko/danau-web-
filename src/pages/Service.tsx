@@ -165,7 +165,8 @@ function InkWord({
   last: boolean
   children: string
 }) {
-  const opacity = useTransform(progress, [from, to], [0.22, 1])
+  // starts at half ink: still a visible change as it is read, and 3.5:1 against white before it
+  const opacity = useTransform(progress, [from, to], [0.5, 1])
   return (
     <>
       <motion.span style={still ? undefined : { opacity }}>{children}</motion.span>
@@ -258,7 +259,7 @@ function Approach({ title, body }: { title: string; body: string }) {
                 variants={
                   reduce
                     ? { rest: { opacity: 1 }, lit: { opacity: 1 } }
-                    : { rest: { opacity: 0.35, y: 12 }, lit: { opacity: 1, y: 0 } }
+                    : { rest: { opacity: 0.75, y: 12 }, lit: { opacity: 1, y: 0 } }
                 }
                 transition={{ duration: 0.9, delay: 0.08, ease: EASE_OUT }}
               >

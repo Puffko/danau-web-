@@ -77,22 +77,6 @@ export function alternatePath(pathname: string, to: Lang) {
   return other ? servicePath(to, other) : PATHS[to].home
 }
 
-/** Document title and description for a path. */
-export function pageMeta(pathname: string) {
-  const lang = langOf(pathname)
-  const t = CONTENT[lang]
-  const paths = PATHS[lang]
-  const p = norm(pathname)
-  if (p === norm(paths.home)) return { title: t.meta.homeTitle, description: t.home.hero.text }
-  if (p === paths.about) return { title: `${t.about.title} — Danau`, description: t.about.text }
-  if (p === paths.contact) return { title: `${t.contactPage.title} — Danau`, description: t.contactPage.text }
-  if (p === paths.privacy) return { title: `${t.privacy.title} — Danau`, description: t.privacy.intro }
-  if (p === paths.cookies) return { title: `${t.cookies.title} — Danau`, description: t.cookies.intro }
-  const service = serviceAt(pathname)
-  if (service) return { title: `${service.navLabel} — Danau`, description: service.heroText }
-  return t.meta.notFound
-}
-
 const LangContext = createContext<Lang>('sk')
 export const LangProvider = LangContext.Provider
 

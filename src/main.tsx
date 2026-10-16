@@ -20,17 +20,15 @@ window.scrollTo(0, 0)
 // so it keeps the route in memory instead of the address bar.
 const Router = isPreview ? MemoryRouter : BrowserRouter
 
+// The prerendered HTML (scripts/prerender.mjs) stays readable without JS; the app renders afresh.
+document.getElementById('ssr-visible')?.remove()
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <MotionConfig reducedMotion="user">
       <Router>
         <SmoothScroll>
           <App />
-          {isPreview && (
-            <p className="preview-badge" role="note">
-              Náhľad návrhu webu
-            </p>
-          )}
         </SmoothScroll>
       </Router>
     </MotionConfig>

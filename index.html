@@ -2,25 +2,32 @@
 <html lang="sk">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#05061a" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <!-- per-page title and tags; the build (scripts/prerender.mjs) replaces this block -->
+    <!--seo:start-->
+    <title>Riadenie IT projektov, kybernetická bezpečnosť a GDPR | Danau</title>
     <meta
       name="description"
-      content="Pomáhame organizáciám pripraviť, riadiť a doručiť zmeny v oblastiach IT, bezpečnosti, ochrany osobných údajov, dát a procesov."
+      content="Pomáhame organizáciám pripraviť, riadiť a doručiť zmeny v oblastiach IT, bezpečnosti, ochrany osobných údajov, dát a procesov. DANAU, s.r.o., Bratislava."
     />
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Danau" />
-    <meta property="og:title" content="Danau — Riadenie IT projektov, kybernetická bezpečnosť a GDPR" />
-    <meta
-      property="og:description"
-      content="Spájame projektové riadenie, kybernetickú bezpečnosť, GDPR, analytiku a realizáciu riešení do jedného funkčného celku."
-    />
-    <title>Danau — Riadenie IT projektov, kybernetická bezpečnosť a GDPR</title>
+    <!--seo:end-->
+    <!-- The prerendered page holds the first render, whose entrances start hidden: keep its text
+         visible until the app takes over (src/main.tsx removes this rule). -->
+    <style id="ssr-visible">
+      #root [style*='opacity'] { opacity: 1 !important; }
+      #root [style*='transform'] { transform: none !important; }
+      #root [style*='filter'] { filter: none !important; }
+    </style>
+    <noscript><style>.loader { display: none; }</style></noscript>
   </head>
   <body>
     <div id="root"></div>
-    <noscript>Pre zobrazenie stránky danau.sk zapnite JavaScript, alebo nás kontaktujte na info@danau.sk.</noscript>
+    <noscript>Pre plnú verziu stránky danau.sk zapnite JavaScript, alebo nás kontaktujte na info@danau.sk.</noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
