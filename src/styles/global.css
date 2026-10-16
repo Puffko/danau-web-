@@ -1145,49 +1145,6 @@ a.lang-switch__item:hover {
   gap: 20px 32px;
 }
 
-.about-hero__seat {
-  font-style: normal;
-  font-size: 0.9375rem;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.72);
-}
-
-.about-hero__seat-name {
-  display: block;
-  font-weight: 450;
-  color: var(--white);
-}
-
-.about-hero__seat-line {
-  display: block;
-}
-
-.about-hero__seat-reach {
-  display: flex;
-  flex-wrap: wrap;
-  column-gap: 20px;
-}
-
-/* the same pixel-dash underline as the area links in "Čo robíme?", in night tones */
-.about-hero__seat-link {
-  padding-bottom: 2px;
-  background:
-    linear-gradient(var(--blue-200), var(--blue-200)) left bottom / 0% 1px no-repeat,
-    linear-gradient(90deg, rgba(135, 150, 255, 0.65) 50%, transparent 0) left bottom / 8px 1px repeat-x;
-  font-variant-numeric: tabular-nums;
-  transition:
-    color 0.3s var(--ease),
-    background-size 0.5s var(--ease);
-}
-
-.about-hero__seat-link:hover,
-.about-hero__seat-link:focus-visible {
-  color: var(--white);
-  background-size:
-    100% 1px,
-    8px 1px;
-}
-
 .about-hero__mark {
   --mark-snap: 1;
   position: relative;
@@ -1328,40 +1285,6 @@ a.lang-switch__item:hover {
   .page-hero.about-hero {
     padding-top: calc(var(--header-h) + 20px);
     padding-bottom: 96px;
-  }
-}
-
-/* Touch: e-mail and phone never wrap, so they get full 44px boxes; the address can wrap, so it
-   stays inline and repeats its underline under every line. */
-@media (pointer: coarse) {
-  .about-hero__seat-link {
-    padding-block: 6px 4px;
-    background-position: left calc(100% - 4px);
-    -webkit-box-decoration-break: clone;
-    box-decoration-break: clone;
-  }
-
-  .about-hero__seat-reach .about-hero__seat-link {
-    display: inline-block;
-    padding-block: 11px 9px;
-    background-position: left calc(100% - 9px);
-  }
-}
-
-/* Two columns on a narrow, short desktop: the statement and the seat wrap to more lines, so the
-   hero gets more height to keep the seat above the range, where it reads on night. */
-@media (min-width: 961px) and (max-width: 1100px) {
-  .page-hero.about-hero {
-    min-height: clamp(800px, 100vh, 1040px);
-    min-height: clamp(800px, 100svh, 1040px);
-  }
-}
-
-/* narrowest two-column widths: the EN statement takes a sixth line */
-@media (min-width: 961px) and (max-width: 1039px) {
-  .page-hero.about-hero {
-    min-height: clamp(880px, 100vh, 1040px);
-    min-height: clamp(880px, 100svh, 1040px);
   }
 }
 

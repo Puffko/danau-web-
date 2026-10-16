@@ -1,7 +1,6 @@
 import { motion, useReducedMotion } from 'motion/react'
 import { useContext } from 'react'
 import { Link } from 'react-router-dom'
-import { contact } from '../data/site'
 import { useI18n } from '../i18n'
 import { ArrowUpRight } from './Icons'
 import { PixelMark } from './PixelMark'
@@ -11,8 +10,7 @@ import { EASE_OUT, Reveal, RevealReady, RevealText } from './Reveal'
 /**
  * The About hero: DANAU's own mark, built from the site's matrix, stands beside the sentence that
  * says who the company is (its top level with the title, its foot with the copy's last line), with
- * one action and the company's signature under a hairline. Under 960px the mark and the title lock
- * up like the wordmark.
+ * one action under a hairline. Under 960px the mark and the title lock up like the wordmark.
  */
 export function AboutHero() {
   const { t, paths } = useI18n()
@@ -62,24 +60,6 @@ export function AboutHero() {
                 <span>{t.home.hero.primary}</span>
                 <ArrowUpRight />
               </Link>
-              <address className="about-hero__seat">
-                <span className="sr-only">{t.ui.seat}: </span>
-                <span className="about-hero__seat-name">{contact.company}</span>
-                <span className="about-hero__seat-line">
-                  <a className="about-hero__seat-link" href={contact.mapsHref} target="_blank" rel="noreferrer">
-                    {contact.street}, {contact.city}, {t.ui.country}
-                    <span className="sr-only">{t.contactPage.newWindow}</span>
-                  </a>
-                </span>
-                <span className="about-hero__seat-line about-hero__seat-reach">
-                  <a className="about-hero__seat-link" href={`mailto:${contact.email}`}>
-                    {contact.email}
-                  </a>
-                  <a className="about-hero__seat-link" href={contact.phoneHref}>
-                    {contact.phone}
-                  </a>
-                </span>
-              </address>
             </Reveal>
           </div>
         </div>
