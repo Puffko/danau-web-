@@ -8,6 +8,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { type Service, type ServiceId } from '../data/site'
 import { useI18n } from '../i18n'
+import { EASE_IO } from '../lib/motion'
 
 export default function About() {
   // the area under the pointer or focus, shared by the paragraph and the hub
@@ -55,7 +56,7 @@ export default function About() {
         <div className="container">
           <div className="skills-panel" data-theme="dark" data-pixel-host>
             <PixelMountains className="skills-panel__mountains" variant="low" seed={23} />
-            <SectionTitle id="skills-title" className="display-2 skills-panel__title" text={about.skillsTitle} tone="light" />
+            <SectionTitle id="skills-title" className="display-2 section-title--center" text={about.skillsTitle} tone="light" />
             <ul className="skills-panel__grid">
               {about.skills.map((skill) => (
                 <SkillCell key={skill.name} name={skill.name} area={skill.area} />
@@ -101,7 +102,7 @@ function AreasHub({ active, onActive }: { active: ServiceId | null; onActive: (i
                   initial={{ pathLength: reduce ? 1 : 0 }}
                   whileInView={{ pathLength: 1 }}
                   viewport={{ once: true, margin: '0px 0px -15% 0px' }}
-                  transition={{ duration: 1.2, delay: 0.2 + i * 0.12 + side * 0.06, ease: [0.65, 0, 0.35, 1] }}
+                  transition={{ duration: 1.2, delay: 0.2 + i * 0.12 + side * 0.06, ease: EASE_IO }}
                 />
                 <path d={d} className="hub__flow" style={{ animationDelay: `${-(i * 0.7 + side * 0.35)}s` }} />
               </g>

@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { hash, noise2 } from '../lib/noise'
+import { fitCanvas } from '../lib/canvas'
+import { prefersReducedMotion } from '../lib/motion'
 
 /**
  * A corner fragment of the pixel sphere from "Ako pracujeme?": a ragged quarter disc of
@@ -46,7 +48,7 @@ export function PixelCluster({
     const canvas = ref.current
     const ctx = canvas?.getContext('2d')
     if (!canvas || !ctx) return
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const reduce = prefersReducedMotion()
     let w = 0
     let h = 0
     let raf = 0
@@ -58,10 +60,7 @@ export function PixelCluster({
       const r = canvas.getBoundingClientRect()
       w = r.width
       h = r.height
-      const dpr = Math.min(window.devicePixelRatio || 1, 2)
-      canvas.width = Math.round(w * dpr)
-      canvas.height = Math.round(h * dpr)
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      fitCanvas(canvas, ctx, w, h)
     }
 
     const draw = (now: number) => {

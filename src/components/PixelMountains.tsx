@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { hash, noise1, noise2, smooth } from '../lib/noise'
+import { fitCanvas } from '../lib/canvas'
+import { prefersReducedMotion } from '../lib/motion'
 
 /**
  * Dot-matrix mountain range drawn on a canvas.
@@ -70,7 +72,7 @@ export function PixelMountains({ variant = 'hero', seed = 3, className }: Props)
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const reduce = prefersReducedMotion()
     let dots: Dot[] = []
     let twinkles: number[] = []
     let lit = new Uint8Array(0)
@@ -83,7 +85,6 @@ export function PixelMountains({ variant = 'hero', seed = 3, className }: Props)
     let cell = 8
     let width = 0
     let height = 0
-    let dpr = 1
     let raf = 0
     let visible = true
     let startedAt = -1
@@ -96,10 +97,7 @@ export function PixelMountains({ variant = 'hero', seed = 3, className }: Props)
       height = rect.height
       if (!width || !height) return
       // dots are crisp squares; 1.5x is indistinguishable from 2x and paints ~45% fewer pixels
-      dpr = Math.min(window.devicePixelRatio || 1, 1.5)
-      canvas.width = Math.round(width * dpr)
-      canvas.height = Math.round(height * dpr)
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      fitCanvas(canvas, ctx, width, height, 1.5)
 
       const narrow = width < 700
       cell = matrixCell(width)

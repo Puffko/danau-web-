@@ -15,14 +15,12 @@ const template = fs.readFileSync(path.join(dist, 'index.html'), 'utf8')
 if (!template.includes('<!--seo:start-->') || !template.includes('<div id="root"></div>')) {
   throw new Error('index.html is missing the <!--seo:start--> / <!--seo:end--> markers or the empty #root')
 }
-const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-
 function page(route) {
   const head = headFor(route)
   const app = render(route)
   return template
     .replace(/<html lang="[^"]*"/, `<html lang="${head.lang}"`)
-    .replace(/<!--seo:start-->[\s\S]*?<!--seo:end-->/, `<title>${esc(head.title)}</title>\n    ${headHtml(head)}`)
+    .replace(/<!--seo:start-->[\s\S]*?<!--seo:end-->/, headHtml(head))
     .replace('<div id="root"></div>', `<div id="root">${app}</div>`)
 }
 

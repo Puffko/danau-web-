@@ -1,5 +1,7 @@
 import { useContext, useEffect, useRef } from 'react'
 import { hash, noise2 } from '../lib/noise'
+import { fitCanvas } from '../lib/canvas'
+import { prefersReducedMotion } from '../lib/motion'
 import { SYMBOL } from './Logo'
 import { matrixCell } from './PixelMountains'
 import { RAMP } from './PixelWordmark'
@@ -51,7 +53,7 @@ export function PixelMark({ className, delay = 250 }: { className?: string; dela
     const canvas = ref.current
     const ctx = canvas?.getContext('2d')
     if (!canvas || !ctx) return
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const reduce = prefersReducedMotion()
     const host = (canvas.closest('[data-pixel-host]') as HTMLElement | null) ?? canvas.parentElement!
     let cells: Cell[] = []
     let n = 0 // D cells across
@@ -78,10 +80,7 @@ export function PixelMark({ className, delay = 250 }: { className?: string; dela
       w = cr.width
       h = cr.height
       if (!w || !box.width) return
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5)
-      canvas.width = Math.round(w * dpr)
-      canvas.height = Math.round(h * dpr)
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      fitCanvas(canvas, ctx, w, h, 1.5)
 
       const hr = host.getBoundingClientRect()
       const snap = getComputedStyle(canvas).getPropertyValue('--mark-snap').trim() === '1'

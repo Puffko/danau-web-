@@ -37,7 +37,7 @@ export default function Legal({ page, seed }: { page: LegalPage; seed: number })
                           <h3 className="cookie-register__title">{group.title}</h3>
                           <p className="cookie-register__note">{group.note}</p>
                         </header>
-                        <ul className="cookie-register__items">
+                        <ul>
                           {group.items.map((item) => (
                             <li className="cookie-item" key={item.name}>
                               <code className="cookie-item__name">{item.name}</code>
@@ -69,7 +69,7 @@ export default function Legal({ page, seed }: { page: LegalPage; seed: number })
                 {section.consentButton && (
                   <button
                     type="button"
-                    className="btn btn--pill btn--primary legal__consent"
+                    className="btn btn--primary legal__consent"
                     onClick={() => window.dispatchEvent(new Event(OPEN_EVENT))}
                   >
                     <span>{t.ui.cookieBar.settings}</span>

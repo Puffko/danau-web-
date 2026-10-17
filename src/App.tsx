@@ -7,7 +7,8 @@ import { CookieBar } from './components/CookieBar'
 import { RevealReady } from './components/Reveal'
 import { CONTENT, LangProvider, PATHS, langOf, type Lang } from './i18n'
 import { applyHead, headFor } from './seo'
-import { prefersReducedMotion, scrollToTarget, useLenis } from './hooks/smoothScroll'
+import { scrollToTarget, useLenis } from './hooks/smoothScroll'
+import { EASE_OUT, prefersReducedMotion } from './lib/motion'
 import About from './pages/About'
 import Contact from './pages/Contact'
 import Home from './pages/Home'
@@ -66,7 +67,7 @@ function goToSection(lenis: ReturnType<typeof useLenis>, el: HTMLElement) {
 }
 
 const OUT = { duration: 300, easing: 'cubic-bezier(0.4, 0, 1, 1)' }
-const IN = { duration: 950, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' }
+const IN = { duration: 950, easing: `cubic-bezier(${EASE_OUT.join(', ')})` }
 
 export default function App() {
   const location = useLocation()

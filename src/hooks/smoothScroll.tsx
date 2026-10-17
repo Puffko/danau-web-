@@ -1,10 +1,8 @@
 import Lenis from 'lenis'
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react'
+import { prefersReducedMotion } from '../lib/motion'
 
 const LenisContext = createContext<Lenis | null>(null)
-
-export const prefersReducedMotion = () =>
-  typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 export function SmoothScroll({ children }: { children: ReactNode }) {
   const [lenis, setLenis] = useState<Lenis | null>(null)

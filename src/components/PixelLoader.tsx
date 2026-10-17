@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { hash, noise2 } from '../lib/noise'
+import { fitCanvas } from '../lib/canvas'
 import { MARK_H, RAMP, VIEW_W, sampleWordmark } from './PixelWordmark'
 
 /**
@@ -65,10 +66,7 @@ export function PixelLoader({ ready, onReveal, onDone }: Props) {
     const build = () => {
       w = window.innerWidth
       h = window.innerHeight
-      const dpr = Math.min(window.devicePixelRatio || 1, 2)
-      canvas.width = Math.round(w * dpr)
-      canvas.height = Math.round(h * dpr)
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      fitCanvas(canvas, ctx, w, h)
       rows = Math.ceil(COLS * (MARK_H / VIEW_W)) + 1
       cells = sampleWordmark(COLS, rows, true)
       logo = new Set(cells.map((c) => key(c.i, c.j)))

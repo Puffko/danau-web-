@@ -1,8 +1,7 @@
 import { motion, useReducedMotion, type HTMLMotionProps } from 'motion/react'
 import { createContext, Fragment, useContext, useState, type ElementType, type ReactNode } from 'react'
+import { EASE_FADE, EASE_OUT } from '../lib/motion'
 import { ShinyText, glint } from './ShinyText'
-
-export const EASE_OUT = [0.16, 1, 0.3, 1] as const
 
 /**
  * False while the first-load screen still covers the page: `immediate` entrances wait for it, so
@@ -64,7 +63,7 @@ export function RevealText({
               // a short rise with a slower fade, so each word eases in rather than pops up
               transition={{
                 y: { duration: reduce ? 0 : 1.15, ease: EASE_OUT },
-                opacity: { duration: reduce ? 0.4 : 0.95, ease: [0.33, 1, 0.68, 1] },
+                opacity: { duration: reduce ? 0.4 : 0.95, ease: EASE_FADE },
               }}
               onAnimationComplete={(def) => {
                 if (def === 'shown' && i === words.length - 1) setLanded(true)
@@ -119,7 +118,7 @@ export function Reveal({ children, delay = 0, y = 16, immediate = false, as = 'd
       {...trigger}
       transition={{
         y: { duration: 1.3, delay, ease: EASE_OUT },
-        opacity: { duration: 1, delay, ease: [0.33, 1, 0.68, 1] },
+        opacity: { duration: 1, delay, ease: EASE_FADE },
       }}
       {...rest}
     >

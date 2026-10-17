@@ -7,7 +7,7 @@ import { useLenis } from '../hooks/smoothScroll'
 import { ArrowRight, ArrowUpRight, Caret, Close, Menu, Phone, ServiceIcon } from './Icons'
 import { Wordmark } from './Logo'
 import { PixelCluster } from './PixelCluster'
-import { EASE_OUT } from './Reveal'
+import { EASE_OUT } from '../lib/motion'
 import { useHover } from '../hooks/useHover'
 
 const DESKTOP_NAV = '(min-width: 1101px)'
@@ -175,7 +175,7 @@ export function Header() {
       )}
       <motion.header
         ref={headerRef}
-        className={`site-header${scrolled && !mobileOpen ? ' is-solid' : ''}${mobileOpen ? ' is-menu-open' : ''}`}
+        className={`site-header${scrolled && !mobileOpen ? ' is-solid' : ''}`}
         initial={{ opacity: 0, y: -16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.2, ease: EASE_OUT }}
@@ -324,7 +324,7 @@ export function Header() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5, duration: 0.5 }}
               >
-                <Link to={paths.contact} className="btn btn--pill btn--light mobile-menu__cta">
+                <Link to={paths.contact} className="btn btn--light mobile-menu__cta">
                   <span>{nav.contact}</span>
                   <ArrowUpRight />
                 </Link>

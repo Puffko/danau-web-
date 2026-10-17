@@ -8,7 +8,8 @@ import { PageHero } from '../components/PageHero'
 import { PixelCluster } from '../components/PixelCluster'
 import { PixelMountains } from '../components/PixelMountains'
 import { useHover } from '../hooks/useHover'
-import { EASE_OUT, Reveal } from '../components/Reveal'
+import { Reveal } from '../components/Reveal'
+import { EASE_IO, EASE_OUT } from '../lib/motion'
 import { SectionTitle } from '../components/SectionTitle'
 import { ServiceCard } from '../components/ServiceCard'
 import type { Service as ServiceData, ServiceDetailBlock } from '../data/site'
@@ -253,7 +254,7 @@ function Approach({ title, body }: { title: string; body: string }) {
                   className="svc-path__line"
                   aria-hidden="true"
                   variants={{ rest: { scaleY: reduce ? 1 : 0 }, lit: { scaleY: 1 } }}
-                  transition={{ duration: 1.1, delay: 0.25, ease: [0.65, 0, 0.35, 1] }}
+                  transition={{ duration: 1.1, delay: 0.25, ease: EASE_IO }}
                 />
               )}
               <motion.p

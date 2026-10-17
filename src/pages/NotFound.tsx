@@ -10,11 +10,11 @@ export default function NotFound() {
   return (
     <PageHero title={copy.title} text={copy.text} seed={21}>
       <Reveal immediate delay={0.6} className="hero__actions">
-        <Link to={paths.home} className="btn btn--pill btn--light">
+        <Link to={paths.home} className="btn btn--light">
           <span>{copy.home}</span>
           <ArrowRight />
         </Link>
-        <Link to={servicesSection} className="btn btn--pill btn--ghost">
+        <Link to={servicesSection} className="btn btn--ghost">
           <span>{copy.services}</span>
         </Link>
       </Reveal>

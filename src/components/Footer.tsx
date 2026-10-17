@@ -5,7 +5,8 @@ import { useI18n } from '../i18n'
 import { OPEN_EVENT } from '../lib/consent'
 import { ArrowUpRight, Mail, Phone, Pin } from './Icons'
 import { PixelWordmark } from './PixelWordmark'
-import { EASE_OUT, RevealText } from './Reveal'
+import { EASE_OUT } from '../lib/motion'
+import { RevealText } from './Reveal'
 
 export function Footer() {
   const reduce = useReducedMotion()
@@ -18,7 +19,7 @@ export function Footer() {
       <div className="container site-footer__top">
         <div className="site-footer__claim">
           <RevealText as="p" className="site-footer__headline" text={footer.claim} />
-          <Link to={paths.contact} className="btn btn--pill btn--light">
+          <Link to={paths.contact} className="btn btn--light">
             <span>{t.ui.nav.contact}</span>
             <ArrowUpRight />
           </Link>

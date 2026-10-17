@@ -1,5 +1,5 @@
 import { contact, type Service } from './data/site'
-import { CONTENT, PATHS, alternatePath, langOf, serviceBySlug, servicePath, type Lang } from './i18n'
+import { CONTENT, PAGES, PATHS, alternatePath, routeOf, servicePath, type Lang, type PageName } from './i18n'
 
 /**
  * Everything search engines and link previews read: per-page title, description, canonical URL,
@@ -12,7 +12,7 @@ const LANGS: Lang[] = ['sk', 'en']
 const ORG_ID = `${SITE}/#organization`
 const SITE_ID = `${SITE}/#website`
 
-type PageKind = 'home' | 'about' | 'contact' | 'privacy' | 'cookies' | 'service' | 'notFound'
+type PageKind = PageName | 'service' | 'notFound'
 
 interface Head {
   lang: Lang
@@ -30,31 +30,20 @@ interface Head {
   jsonLd: Record<string, unknown>
 }
 
-const norm = (pathname: string) => pathname.replace(/\/+$/, '').toLowerCase() || '/'
 const absolute = (path: string) => (path === '/' ? `${SITE}/` : `${SITE}${path}`)
 
 /** Which page a path shows, in its language. */
 function pageAt(pathname: string): { kind: PageKind; lang: Lang; service?: Service } {
-  const lang = langOf(pathname)
-  const paths = PATHS[lang]
-  const p = norm(pathname)
-  for (const kind of ['home', 'about', 'contact', 'privacy', 'cookies'] as const) {
-    if (norm(paths[kind]) === p) return { kind, lang }
-  }
-  const prefix = `${paths.services}/`
-  if (p.startsWith(prefix)) {
-    const service = serviceBySlug(lang, p.slice(prefix.length))
-    if (service) return { kind: 'service', lang, service }
-  }
+  const { lang, page, service } = routeOf(pathname)
+  if (page) return { kind: page, lang }
+  if (service) return { kind: 'service', lang, service }
   return { kind: 'notFound', lang }
 }
 
 /** Every indexable page, once per language, as [sk path, en path] pairs. */
 export function pagePairs(): { sk: string; en: string }[] {
   const pairs: { sk: string; en: string }[] = []
-  for (const kind of ['home', 'about', 'contact', 'privacy', 'cookies'] as const) {
-    pairs.push({ sk: PATHS.sk[kind], en: PATHS.en[kind] })
-  }
+  for (const page of PAGES) pairs.push({ sk: PATHS.sk[page], en: PATHS.en[page] })
   for (const service of CONTENT.sk.services) pairs.push({ sk: servicePath('sk', service), en: alternatePath(servicePath('sk', service), 'en') })
   return pairs
 }
@@ -122,11 +111,10 @@ export function headFor(pathname: string): Head {
     return { ...base, alternates: [], robots: 'noindex, follow', jsonLd: { '@context': 'https://schema.org', '@graph': [organization()] } }
   }
 
-  const path = norm(pathname) === '/' ? '/' : norm(pathname)
   // the canonical spelling of this page (paths match case-insensitively and with a slash)
-  const canonicalPath = kind === 'service' && service ? servicePath(lang, service) : PATHS[lang][kind as Exclude<PageKind, 'service' | 'notFound'>]
+  const canonicalPath = kind === 'service' && service ? servicePath(lang, service) : PATHS[lang][kind as PageName]
   const canonical = absolute(canonicalPath)
-  const own = { [lang]: canonical, [other]: absolute(alternatePath(path, other)) } as Record<Lang, string>
+  const own = { [lang]: canonical, [other]: absolute(alternatePath(pathname, other)) } as Record<Lang, string>
   const alternates = [
     ...LANGS.map((l) => ({ hreflang: l, href: own[l] })),
     { hreflang: 'x-default', href: own.sk },
@@ -200,6 +188,7 @@ const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').repl
 /** The head tags for a page; every tag carries data-seo so the client can swap them on navigation. */
 export function headHtml(head: Head) {
   const tags = [
+    `<title data-seo>${esc(head.title)}</title>`,
     `<meta data-seo name="description" content="${esc(head.description)}" />`,
     head.robots ? `<meta data-seo name="robots" content="${head.robots}" />` : '',
     head.canonical ? `<link data-seo rel="canonical" href="${head.canonical}" />` : '',
@@ -227,9 +216,8 @@ export function headHtml(head: Head) {
 
 /** Brings the live document's head in line with a page (client-side navigation). */
 export function applyHead(head: Head) {
-  document.title = head.title
   document.documentElement.lang = head.lang
-  document.head.querySelectorAll('[data-seo], meta[name="description"]').forEach((el) => el.remove())
+  document.head.querySelectorAll('[data-seo], title, meta[name="description"]').forEach((el) => el.remove())
   const tpl = document.createElement('template')
   tpl.innerHTML = headHtml(head)
   document.head.append(tpl.content)

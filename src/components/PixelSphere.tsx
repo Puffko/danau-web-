@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { hash, noise2 } from '../lib/noise'
+import { fitCanvas } from '../lib/canvas'
+import { prefersReducedMotion } from '../lib/motion'
 
 /**
  * A sphere of blue pixels, split down the middle: the left half is a crisp
@@ -50,7 +52,7 @@ export function PixelSphere({ cells = 34, className, mirrored = false, seed = 0,
     const c2 = soft.getContext('2d')
     if (!c1 || !c2) return
 
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const reduce = prefersReducedMotion()
     let size = 0
     let raf = 0
     let visible = false
@@ -76,12 +78,9 @@ export function PixelSphere({ cells = 34, className, mirrored = false, seed = 0,
 
     const resize = () => {
       size = wrap.getBoundingClientRect().width
-      dpr = Math.min(window.devicePixelRatio || 1, 2)
+      dpr = fitCanvas(crisp, c1, size, size)
       shown = new Int8Array(cells * cells).fill(-1)
       fullPaint = true
-      crisp.width = Math.round(size * dpr)
-      crisp.height = Math.round(size * dpr)
-      c1.setTransform(dpr, 0, 0, dpr, 0, 0)
       res = Math.round(cells * 3 * (1 + 2 * PAD))
       soft.width = soft.height = off.width = off.height = res
       const k = size ? res / (size * (1 + 2 * PAD)) : 1

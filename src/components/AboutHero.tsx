@@ -5,7 +5,8 @@ import { useI18n } from '../i18n'
 import { ArrowUpRight } from './Icons'
 import { PixelMark } from './PixelMark'
 import { PixelMountains } from './PixelMountains'
-import { EASE_OUT, Reveal, RevealReady, RevealText } from './Reveal'
+import { EASE_IO, EASE_OUT } from '../lib/motion'
+import { Reveal, RevealReady, RevealText } from './Reveal'
 
 /**
  * The About hero: DANAU's own mark, built from the site's matrix, stands beside the sentence that
@@ -46,7 +47,7 @@ export function AboutHero() {
               aria-hidden="true"
               initial={reduce ? false : { scaleX: 0 }}
               animate={ready ? { scaleX: 1 } : undefined}
-              transition={{ duration: 1.1, delay: 1.0, ease: [0.65, 0, 0.35, 1] }}
+              transition={{ duration: 1.1, delay: 1.0, ease: EASE_IO }}
             />
             <motion.span
               className="about-hero__pixel"
@@ -56,7 +57,7 @@ export function AboutHero() {
               transition={{ duration: 0.5, delay: 0.95, ease: EASE_OUT }}
             />
             <Reveal immediate delay={1.15} y={12} className="about-hero__sign-body">
-              <Link to={paths.contact} className="btn btn--pill btn--light">
+              <Link to={paths.contact} className="btn btn--light">
                 <span>{t.home.hero.primary}</span>
                 <ArrowUpRight />
               </Link>

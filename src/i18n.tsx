@@ -44,7 +44,9 @@ export const PATHS: Record<Lang, Paths> = {
   },
 }
 
-const PAGES = ['home', 'about', 'contact', 'privacy', 'cookies'] as const
+/** The pages every language has, besides the service pages. */
+export const PAGES = ['home', 'about', 'contact', 'privacy', 'cookies'] as const
+export type PageName = (typeof PAGES)[number]
 
 /** Paths match case-insensitively and with a trailing slash. */
 const norm = (pathname: string) => pathname.replace(/\/+$/, '').toLowerCase() || '/'
@@ -58,21 +60,20 @@ export const serviceBySlug = (lang: Lang, slug: string | undefined) =>
 
 const serviceById = (lang: Lang, id: ServiceId) => CONTENT[lang].services.find((s) => s.id === id)
 
-/** The service a path shows, if any. */
-function serviceAt(pathname: string) {
+/** What a path shows: one of the pages, a service, or neither (a 404). */
+export function routeOf(pathname: string): { lang: Lang; page?: PageName; service?: Service } {
   const lang = langOf(pathname)
-  const prefix = `${PATHS[lang].services}/`
   const p = norm(pathname)
-  return p.startsWith(prefix) ? serviceBySlug(lang, p.slice(prefix.length)) : undefined
+  const page = PAGES.find((k) => norm(PATHS[lang][k]) === p)
+  if (page) return { lang, page }
+  const prefix = `${PATHS[lang].services}/`
+  return { lang, service: p.startsWith(prefix) ? serviceBySlug(lang, p.slice(prefix.length)) : undefined }
 }
 
 /** The same page in another language; its home page when the page has no counterpart. */
 export function alternatePath(pathname: string, to: Lang) {
-  const from = langOf(pathname)
-  const p = norm(pathname)
-  const page = PAGES.find((k) => norm(PATHS[from][k]) === p)
+  const { page, service } = routeOf(pathname)
   if (page) return PATHS[to][page]
-  const service = serviceAt(pathname)
   const other = service && serviceById(to, service.id)
   return other ? servicePath(to, other) : PATHS[to].home
 }

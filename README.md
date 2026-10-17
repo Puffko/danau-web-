@@ -27,6 +27,7 @@ src/
   entry-server.tsx    vykreslenie stránky pri builde (predgenerovanie)
   pages/              jedna stránka = jedna route
   components/         hlavička, pätička, karty, animácie (PixelLoader, PixelMountains, PixelMark, …)
+  lib/                súhlas s cookies (consent.ts), krivky animácií (motion.ts), pomôcky pre canvas a šum
   styles/global.css   farby, typografia a všetky štýly
 scripts/prerender.mjs po builde zapíše HTML každej stránky, 404.html, sitemap.xml a llms.txt
 public/

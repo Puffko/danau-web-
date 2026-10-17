@@ -1,10 +1,11 @@
 import { AnimatePresence, motion } from 'motion/react'
-import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from 'react'
 import { ArrowUpRight, Check, Mail, Phone, Pin } from '../components/Icons'
 import { PageHero } from '../components/PageHero'
 import { PixelCluster } from '../components/PixelCluster'
 import { useHover } from '../hooks/useHover'
-import { EASE_OUT, Reveal, RevealText } from '../components/Reveal'
+import { Reveal, RevealText } from '../components/Reveal'
+import { EASE_OUT } from '../lib/motion'
 import { contact } from '../data/site'
 import { useI18n } from '../i18n'
 import type { Content } from '../data/sk'
@@ -23,6 +24,14 @@ interface FormState {
 const EMPTY: FormState = { fullName: '', organization: '', email: '', phone: '', message: '', consent: false }
 
 type Errors = Partial<Record<keyof FormState, string>>
+
+/** How the two status notices under the form come and go. */
+const NOTICE = {
+  initial: { opacity: 0, y: 8 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0 },
+  transition: { duration: 0.4, ease: EASE_OUT },
+}
 
 function validate(f: FormState, msg: Content['contactPage']['errors']): Errors {
   const e: Errors = {}
@@ -98,31 +107,33 @@ export default function Contact() {
     }
   }
 
-  const field = (key: 'fullName' | 'organization' | 'email' | 'phone', type: string, required = false, autoComplete?: string) => (
-    <div className={`field${errors[key] ? ' has-error' : ''}`}>
-      <label htmlFor={`contact-${key}`}>
-        {contactPage.fields[key].label}
-        {required && <span aria-hidden="true"> *</span>}
-      </label>
-      <input
-        id={`contact-${key}`}
-        name={key}
-        type={type}
-        placeholder={contactPage.fields[key].placeholder}
-        autoComplete={autoComplete}
-        value={form[key]}
-        required={required}
-        aria-invalid={errors[key] ? true : undefined}
-        aria-describedby={errors[key] ? `contact-${key}-error` : undefined}
-        onChange={(e) => set(key, e.target.value)}
-      />
-      {errors[key] && (
-        <p className="field__error" id={`contact-${key}-error`}>
-          {errors[key]}
-        </p>
-      )}
-    </div>
-  )
+  /** A labelled text field with its error; type 'textarea' gives the message box. */
+  const field = (key: Exclude<keyof FormState, 'consent'>, type: string, required = false, autoComplete?: string) => {
+    const props = {
+      id: `contact-${key}`,
+      name: key,
+      placeholder: contactPage.fields[key].placeholder,
+      value: form[key],
+      required,
+      'aria-invalid': errors[key] ? true : undefined,
+      'aria-describedby': errors[key] ? `contact-${key}-error` : undefined,
+      onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => set(key, e.target.value),
+    }
+    return (
+      <div className={`field${errors[key] ? ' has-error' : ''}`}>
+        <label htmlFor={props.id}>
+          {contactPage.fields[key].label}
+          {required && <span aria-hidden="true"> *</span>}
+        </label>
+        {type === 'textarea' ? <textarea rows={6} {...props} /> : <input type={type} autoComplete={autoComplete} {...props} />}
+        {errors[key] && (
+          <p className="field__error" id={`contact-${key}-error`}>
+            {errors[key]}
+          </p>
+        )}
+      </div>
+    )
+  }
 
   return (
     <>
@@ -152,28 +163,22 @@ export default function Contact() {
                 </span>
               </a>
             </Reveal>
-            <Reveal delay={0.08}>
-              <div className="info-card">
-                <PixelCluster className="tile-pixels" seed={6} radius={70} cell={9} />
-                <span className="info-card__label">
-                  <Mail width={16} height={16} /> {contactPage.fields.email.label}
-                </span>
-                <a className="info-card__value" href={`mailto:${contact.email}`}>
-                  {contact.email}
-                </a>
-              </div>
-            </Reveal>
-            <Reveal delay={0.16}>
-              <div className="info-card">
-                <PixelCluster className="tile-pixels" seed={8} radius={70} cell={9} />
-                <span className="info-card__label">
-                  <Phone width={16} height={16} /> {contactPage.fields.phone.label}
-                </span>
-                <a className="info-card__value" href={contact.phoneHref}>
-                  {contact.phone}
-                </a>
-              </div>
-            </Reveal>
+            {[
+              { Icon: Mail, label: contactPage.fields.email.label, href: `mailto:${contact.email}`, value: contact.email },
+              { Icon: Phone, label: contactPage.fields.phone.label, href: contact.phoneHref, value: contact.phone },
+            ].map(({ Icon, label, href, value }, i) => (
+              <Reveal key={href} delay={0.08 * (i + 1)}>
+                <div className="info-card">
+                  <PixelCluster className="tile-pixels" seed={6 + i * 2} radius={70} cell={9} />
+                  <span className="info-card__label">
+                    <Icon width={16} height={16} /> {label}
+                  </span>
+                  <a className="info-card__value" href={href}>
+                    {value}
+                  </a>
+                </div>
+              </Reveal>
+            ))}
           </div>
 
           <Reveal delay={0.1} className="form-card">
@@ -189,28 +194,7 @@ export default function Contact() {
                 {field('email', 'email', true, 'email')}
                 {field('phone', 'tel', false, 'tel')}
               </div>
-              <div className={`field${errors.message ? ' has-error' : ''}`}>
-                <label htmlFor="contact-message">
-                  {contactPage.fields.message.label}
-                  <span aria-hidden="true"> *</span>
-                </label>
-                <textarea
-                  id="contact-message"
-                  name="message"
-                  rows={6}
-                  placeholder={contactPage.fields.message.placeholder}
-                  value={form.message}
-                  required
-                  aria-invalid={errors.message ? true : undefined}
-                  aria-describedby={errors.message ? 'contact-message-error' : undefined}
-                  onChange={(e) => set('message', e.target.value)}
-                />
-                {errors.message && (
-                  <p className="field__error" id="contact-message-error">
-                    {errors.message}
-                  </p>
-                )}
-              </div>
+              {field('message', 'textarea', true)}
               <div className={`consent${errors.consent ? ' has-error' : ''}`}>
                 <input
                   id="contact-consent"
@@ -242,34 +226,19 @@ export default function Contact() {
                 )}
               </div>
               <div className="contact-form__foot">
-                <button type="submit" className="btn btn--pill btn--primary" aria-disabled={sending} aria-busy={sending}>
+                <button type="submit" className="btn btn--primary" aria-disabled={sending} aria-busy={sending}>
                   <span>{sending ? contactPage.sending : contactPage.submit}</span>
                   {sending ? <span className="spinner" aria-hidden="true" /> : <ArrowUpRight />}
                 </button>
                 <div aria-live="polite" className="contact-form__status" ref={statusRef} tabIndex={-1}>
                   <AnimatePresence mode="wait">
                     {success && (
-                      <motion.p
-                        key="ok"
-                        className="notice notice--ok"
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.4, ease: EASE_OUT }}
-                      >
+                      <motion.p key="ok" className="notice notice--ok" {...NOTICE}>
                         {success}
                       </motion.p>
                     )}
                     {failure && (
-                      <motion.p
-                        key="err"
-                        className="notice notice--err"
-                        role="alert"
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.4, ease: EASE_OUT }}
-                      >
+                      <motion.p key="err" className="notice notice--err" role="alert" {...NOTICE}>
                         {failure} {contactPage.writeUs} <a href={`mailto:${contact.email}`}>{contact.email}</a>.
                       </motion.p>
                     )}

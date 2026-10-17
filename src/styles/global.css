@@ -16,6 +16,8 @@
   --sky-2: #93c5fd;
   --night: #05061a;
   --night-2: #0a0c34;
+  /* night grounds deepen toward the blue at their foot */
+  --night-fade: linear-gradient(180deg, #05061a 0%, #06071f 40%, #0a0c34 100%);
 
   --ink: #111827;
   --ink-2: #374151;
@@ -520,22 +522,16 @@ p {
 
 .btn--header {
   --btn-h: 46px;
-  gap: 9px;
-  padding: 0 22px 0 18px;
-  border-radius: 12px;
-  background: var(--blue);
-  color: var(--white);
-  font-size: 0.9375rem;
-  font-weight: 520;
-  box-shadow: none;
-}
-
-.btn--header {
   --card-radius: 12px;
   isolation: isolate;
   overflow: hidden;
-  /* room in the corner for the hover mosaic, clear of the label */
-  padding-right: 30px;
+  gap: 9px;
+  /* room on the right for the hover mosaic, clear of the label */
+  padding: 0 30px 0 18px;
+  border-radius: 12px;
+  background: var(--blue);
+  color: var(--white);
+  box-shadow: none;
 }
 
 .btn--header > svg,
@@ -557,14 +553,9 @@ p {
 }
 
 .btn__pixels {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: -1;
   width: 34px;
   height: 100%;
   opacity: 0;
-  pointer-events: none;
   transition: opacity 0.4s var(--ease);
   -webkit-mask-image: radial-gradient(130% 130% at 100% 0%, #000 30%, transparent 75%);
   mask-image: radial-gradient(130% 130% at 100% 0%, #000 30%, transparent 75%);
@@ -680,13 +671,8 @@ a.lang-switch__item:hover {
 }
 
 .nav-dropdown__pixels {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: -1;
   width: 100%;
   height: 80%;
-  pointer-events: none;
   -webkit-mask-image: radial-gradient(110% 110% at 100% 0%, #000 30%, transparent 75%);
   mask-image: radial-gradient(110% 110% at 100% 0%, #000 30%, transparent 75%);
 }
@@ -873,8 +859,10 @@ a.lang-switch__item:hover {
 
 /* ---------- Hero ---------- */
 
+/* the night grounds: heroes and the service list */
 .hero,
-.page-hero {
+.page-hero,
+.svc-list {
   position: relative;
   overflow: hidden;
   isolation: isolate;
@@ -888,7 +876,7 @@ a.lang-switch__item:hover {
   z-index: -2;
   background:
     radial-gradient(110% 62% at 50% 112%, #b3c2ff 0%, #5d68ff 16%, #1818ec 34%, #0d0f9e 52%, rgba(10, 12, 52, 0) 76%),
-    linear-gradient(180deg, #05061a 0%, #06071f 40%, #0a0c34 100%);
+    var(--night-fade);
 }
 
 .hero-glow::after {
@@ -915,12 +903,21 @@ a.lang-switch__item:hover {
   min-height: max(720px, 100svh);
 }
 
-.hero__mountains {
+/* Pixel mountain ranges run along the foot of a night section, behind its content; each rule
+   below sets the height and where the fade starts. */
+.hero__mountains,
+.page-hero__mountains,
+.svc-list__mountains,
+.cta-band__mountains,
+.skills-panel__mountains {
   position: absolute;
   inset: auto 0 0;
-  width: 100%;
-  height: 56%;
   z-index: -1;
+  width: 100%;
+}
+
+.hero__mountains {
+  height: 56%;
   -webkit-mask-image: linear-gradient(to top, #000 58%, transparent 100%);
   mask-image: linear-gradient(to top, #000 58%, transparent 100%);
 }
@@ -967,11 +964,7 @@ a.lang-switch__item:hover {
 }
 
 .page-hero__mountains {
-  position: absolute;
-  inset: auto 0 0;
-  width: 100%;
   height: 62%;
-  z-index: -1;
   -webkit-mask-image: linear-gradient(to top, #000 55%, transparent 100%);
   mask-image: linear-gradient(to top, #000 55%, transparent 100%);
 }
@@ -979,7 +972,7 @@ a.lang-switch__item:hover {
 .page-hero .hero-glow {
   background:
     radial-gradient(100% 60% at 50% 118%, #8796ff 0%, #1818ec 30%, #0d0f9e 50%, rgba(10, 12, 52, 0) 74%),
-    linear-gradient(180deg, #05061a 0%, #06071f 40%, #0a0c34 100%);
+    var(--night-fade);
 }
 
 .page-hero__inner.has-aside {
@@ -1179,7 +1172,7 @@ a.lang-switch__item:hover {
     background:
       radial-gradient(38% 34% at 22% 112%, rgba(93, 104, 255, 0.5) 0%, rgba(24, 24, 236, 0.2) 50%, rgba(10, 12, 52, 0) 76%),
       radial-gradient(100% 60% at 50% 118%, #8796ff 0%, #1818ec 30%, #0d0f9e 50%, rgba(10, 12, 52, 0) 74%),
-      linear-gradient(180deg, #05061a 0%, #06071f 40%, #0a0c34 100%);
+      var(--night-fade);
   }
 }
 
@@ -1276,13 +1269,8 @@ a.lang-switch__item:hover {
 /* ---------- Pixel corner shared by cards ---------- */
 
 .tile-pixels {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: -1;
   width: 60%;
   height: 85%;
-  pointer-events: none;
   -webkit-mask-image: radial-gradient(120% 120% at 100% 0%, #000 22%, transparent 68%);
   mask-image: radial-gradient(120% 120% at 100% 0%, #000 22%, transparent 68%);
 }
@@ -1295,9 +1283,10 @@ a.lang-switch__item:hover {
   overflow: hidden;
 }
 
-/* Pixel canvases sit in a card's corner. A GPU-composited canvas can escape the card's
-   overflow + border-radius clipping, leaving square pixels past the rounded corner, so each
-   canvas is rounded to its card's radius itself. */
+/* Pixel canvases sit in a card's top-right corner, behind its content; each rule above sets the
+   size and the fade. A GPU-composited canvas can escape the card's overflow + border-radius
+   clipping, leaving square pixels past the rounded corner, so each canvas is rounded to its
+   card's radius itself. */
 .tile-pixels,
 .service-card__pixels,
 .link-card__pixels,
@@ -1305,6 +1294,11 @@ a.lang-switch__item:hover {
 .process-note__pixels,
 .btn__pixels,
 .nav-dropdown__pixels {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: -1;
+  pointer-events: none;
   border-radius: var(--card-radius, var(--radius-lg));
 }
 
@@ -1362,13 +1356,8 @@ a.lang-switch__item:hover {
 
 /* corner of pixel mosaic, the sphere's material on every card */
 .service-card__pixels {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: -1;
   width: 62%;
   height: 58%;
-  pointer-events: none;
   -webkit-mask-image: radial-gradient(130% 130% at 100% 0%, #000 35%, transparent 75%);
   mask-image: radial-gradient(130% 130% at 100% 0%, #000 35%, transparent 75%);
 }
@@ -1641,12 +1630,6 @@ a.lang-switch__item:hover {
   overflow-x: clip;
 }
 
-.process__title {
-  max-width: 20ch;
-  margin-inline: auto;
-  text-align: center;
-}
-
 .process-stage {
   position: relative;
   margin-top: clamp(24px, 3vw, 48px);
@@ -1722,13 +1705,8 @@ a.lang-switch__item:hover {
 }
 
 .process-note__pixels {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: -1;
   width: 34%;
   height: 60%;
-  pointer-events: none;
   -webkit-mask-image: radial-gradient(120% 120% at 100% 0%, #000 22%, transparent 68%);
   mask-image: radial-gradient(120% 120% at 100% 0%, #000 22%, transparent 68%);
 }
@@ -1772,21 +1750,27 @@ a.lang-switch__item:hover {
   color: var(--ink);
 }
 
-.process-note__label::before {
+/* A pixel marks a label; when its card is active or hovered it lays down a short trail of
+   pixels behind it. The skills panel sets lighter blues for the night ground. */
+.process-note__label::before,
+.domains__area::before,
+.skills-panel__area::before {
   content: '';
   flex-shrink: 0;
   width: 8px;
   height: 8px;
-  background: var(--blue);
+  background: var(--pixel, var(--blue));
   box-shadow:
-    -10px 0 0 -8px var(--blue-300),
+    -10px 0 0 -8px var(--pixel-trail, var(--blue-300)),
     -20px 0 0 -8px var(--blue-100);
   transition: box-shadow 0.5s var(--ease);
 }
 
-.process-note__card.is-active .process-note__label::before {
+.process-note__card.is-active .process-note__label::before,
+.domains__cell:hover .domains__area::before,
+.skills-panel__cell:hover .skills-panel__area::before {
   box-shadow:
-    -10px 0 0 0 var(--blue-300),
+    -10px 0 0 0 var(--pixel-trail, var(--blue-300)),
     -20px 0 0 0 var(--blue-100);
 }
 
@@ -1947,7 +1931,6 @@ a.lang-switch__item:hover {
 }
 
 .domains__cell {
-  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -1974,26 +1957,8 @@ a.lang-switch__item:hover {
   color: var(--muted);
 }
 
-.domains__area::before {
-  content: '';
-  flex-shrink: 0;
-  width: 8px;
-  height: 8px;
-  background: var(--blue);
-  box-shadow:
-    -10px 0 0 -8px var(--blue-300),
-    -20px 0 0 -8px var(--blue-100);
-  transition: box-shadow 0.5s var(--ease);
-}
-
 .domains__cell:hover {
   background: var(--surface-2);
-}
-
-.domains__cell:hover .domains__area::before {
-  box-shadow:
-    -10px 0 0 0 var(--blue-300),
-    -20px 0 0 0 var(--blue-100);
 }
 
 .domains__certs {
@@ -2065,7 +2030,6 @@ a.lang-switch__item:hover {
 
 .clients__heading {
   font: inherit;
-  margin: 0;
 }
 
 .clients__name {
@@ -2150,7 +2114,8 @@ a.lang-switch__item:hover {
 
 /* Intro: the block's heading with its chip, beside the opening paragraph set large and
    inked word by word as it scrolls into reading position. */
-.svc-intro__grid {
+.svc-intro__grid,
+.svc-approach__grid {
   display: grid;
   grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
   gap: clamp(28px, 6vw, 112px);
@@ -2168,13 +2133,16 @@ a.lang-switch__item:hover {
   height: 56px;
 }
 
-.svc-intro__title {
-  max-width: 16ch;
+.svc-intro__title,
+.svc-approach__title {
   font-size: clamp(1.625rem, 1.2rem + 1.3vw, 2.375rem);
   font-weight: 330;
   line-height: 1.12;
   letter-spacing: -0.03em;
-  text-wrap: balance;
+}
+
+.svc-intro__title {
+  max-width: 16ch;
 }
 
 .svc-intro__statement {
@@ -2183,18 +2151,12 @@ a.lang-switch__item:hover {
   line-height: 1.26;
   letter-spacing: -0.028em;
   color: var(--ink);
-  text-wrap: pretty;
 }
 
 /* What DANAU provides: a night band lit from below, the items as large light lines, each with
    a square pixel that ignites as the line arrives. */
 .svc-list {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
   padding-block: clamp(88px, 11vw, 160px) clamp(170px, 19vw, 260px);
-  background: var(--night);
-  color: var(--white);
 }
 
 .svc-list__glow {
@@ -2204,11 +2166,7 @@ a.lang-switch__item:hover {
 }
 
 .svc-list__mountains {
-  position: absolute;
-  inset: auto 0 0;
-  width: 100%;
   height: clamp(200px, 30vw, 380px);
-  z-index: -1;
   -webkit-mask-image: linear-gradient(to top, #000 50%, transparent 100%);
   mask-image: linear-gradient(to top, #000 50%, transparent 100%);
 }
@@ -2255,19 +2213,8 @@ a.lang-switch__item:hover {
 }
 
 /* How the work is done: heading and answer side by side over a hairline. */
-.svc-approach__grid {
-  display: grid;
-  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
-  gap: clamp(28px, 6vw, 112px);
-  align-items: start;
-}
-
 .svc-approach__title {
   max-width: 14ch;
-  font-size: clamp(1.625rem, 1.2rem + 1.3vw, 2.375rem);
-  font-weight: 330;
-  line-height: 1.12;
-  letter-spacing: -0.03em;
 }
 
 /* the approach paragraph as a path: one pixel node per sentence, joined by a drawn line */
@@ -2312,7 +2259,6 @@ a.lang-switch__item:hover {
   line-height: 1.5;
   letter-spacing: -0.016em;
   color: var(--ink-2);
-  text-wrap: pretty;
 }
 
 .svc-intro + .svc-approach {
@@ -2396,13 +2342,8 @@ a.lang-switch__item:hover {
 }
 
 .link-card__pixels {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: -1;
   width: 40%;
   height: 100%;
-  pointer-events: none;
   -webkit-mask-image: radial-gradient(120% 120% at 100% 0%, #000 30%, transparent 72%);
   mask-image: radial-gradient(120% 120% at 100% 0%, #000 30%, transparent 72%);
 }
@@ -2481,11 +2422,7 @@ a.lang-switch__item:hover {
 }
 
 .cta-band__mountains {
-  position: absolute;
-  inset: auto 0 0;
-  width: 100%;
   height: 90%;
-  z-index: -1;
   -webkit-mask-image: linear-gradient(to top, #000 50%, transparent 100%);
   mask-image: linear-gradient(to top, #000 50%, transparent 100%);
 }
@@ -2737,20 +2674,10 @@ a.lang-switch__item:hover {
 }
 
 .skills-panel__mountains {
-  position: absolute;
-  inset: auto 0 0;
-  width: 100%;
   /* stays inside the panel's bottom padding when the grid stacks tall */
   height: min(42%, 260px);
-  z-index: -1;
   -webkit-mask-image: linear-gradient(to top, #000 45%, transparent 100%);
   mask-image: linear-gradient(to top, #000 45%, transparent 100%);
-}
-
-.skills-panel__title {
-  max-width: 20ch;
-  margin-inline: auto;
-  text-align: center;
 }
 
 .skills-panel__grid {
@@ -2786,24 +2713,8 @@ a.lang-switch__item:hover {
   font-size: 0.875rem;
   font-weight: 450;
   color: rgba(255, 255, 255, 0.66);
-}
-
-.skills-panel__area::before {
-  content: '';
-  flex-shrink: 0;
-  width: 8px;
-  height: 8px;
-  background: var(--blue-300);
-  box-shadow:
-    -10px 0 0 -8px var(--blue-200),
-    -20px 0 0 -8px var(--blue-100);
-  transition: box-shadow 0.5s var(--ease);
-}
-
-.skills-panel__cell:hover .skills-panel__area::before {
-  box-shadow:
-    -10px 0 0 0 var(--blue-200),
-    -20px 0 0 0 var(--blue-100);
+  --pixel: var(--blue-300);
+  --pixel-trail: var(--blue-200);
 }
 
 .skills-panel__name {
@@ -2829,7 +2740,6 @@ a.lang-switch__item:hover {
 }
 
 .info-card {
-  position: relative;
   display: block;
   padding: 28px;
   border-radius: var(--radius-lg);
@@ -2837,8 +2747,6 @@ a.lang-switch__item:hover {
 }
 
 .info-card--main {
-  overflow: hidden;
-  isolation: isolate;
   padding-block: 32px 36px;
   background:
     radial-gradient(80% 70% at 100% 120%, rgba(24, 24, 236, 0.85), transparent 70%),
@@ -2848,13 +2756,8 @@ a.lang-switch__item:hover {
 }
 
 .info-card__pixels {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: -1;
   width: 55%;
   height: 100%;
-  pointer-events: none;
   -webkit-mask-image: radial-gradient(120% 120% at 100% 0%, #000 25%, transparent 72%);
   mask-image: radial-gradient(120% 120% at 100% 0%, #000 25%, transparent 72%);
 }
@@ -3147,8 +3050,6 @@ a.lang-switch__item:hover {
   display: grid;
   gap: 12px;
   margin-top: 18px;
-  padding: 0;
-  list-style: none;
 }
 
 .legal__list li {
@@ -3198,7 +3099,6 @@ a.lang-switch__item:hover {
 }
 
 .cookie-register__title {
-  margin: 0;
   font-size: 1.125rem;
   font-weight: 520;
   letter-spacing: -0.015em;
@@ -3209,12 +3109,6 @@ a.lang-switch__item:hover {
   margin: 0 0 0 auto;
   font-size: 0.875rem;
   color: var(--subtle);
-}
-
-.cookie-register__items {
-  margin: 0;
-  padding: 0;
-  list-style: none;
 }
 
 .cookie-item {
@@ -3236,7 +3130,6 @@ a.lang-switch__item:hover {
 }
 
 .cookie-item__purpose {
-  margin: 0;
   font-size: 1.0625rem;
   line-height: 1.6;
   color: var(--muted);
@@ -3312,7 +3205,6 @@ a.lang-switch__item:hover {
 
 .cookie-bar__text {
   flex: 1;
-  margin: 0;
   font-size: 0.875rem;
   line-height: 1.55;
 }
@@ -3462,9 +3354,6 @@ a.lang-switch__item:hover {
   padding: 0;
   border: 0;
   background: none;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
 }
 
 /* company identification: a quiet full-width line under the copyright row */
@@ -3484,7 +3373,6 @@ a.lang-switch__item:hover {
 }
 
 .site-footer__wordmark {
-  display: block;
   width: 100%;
   height: auto;
   aspect-ratio: 134 / 42.138;
@@ -3507,7 +3395,6 @@ a.lang-switch__item:hover {
 }
 
 .loader__canvas {
-  display: block;
   width: 100%;
   height: 100%;
   max-width: none;
@@ -3572,16 +3459,13 @@ a.lang-switch__item:hover {
     translate: none;
   }
 
-  .process-orb {
-    aspect-ratio: auto;
-  }
-
   .process-note--1 {
     order: 1;
   }
 
   .process-orb {
     order: 2;
+    aspect-ratio: auto;
   }
 
   .process-note--2 {
@@ -3677,7 +3561,8 @@ a.lang-switch__item:hover {
   }
 }
 
-/* Static fallback for the client list (set from Home.tsx when the pinned panel cannot fit). */
+/* The client list as a plain list: in the prerendered page, and wherever the pinned panel
+   cannot fit (set from Home.tsx). */
 .clients.is-static {
   height: auto;
 }
@@ -3707,10 +3592,20 @@ a.lang-switch__item:hover {
 
 .clients.is-static .clients__text-inline {
   display: block;
+  max-width: 62ch;
   margin-top: 10px;
   font-size: 1.0625rem;
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.78);
+}
+
+/* names below the heading's size */
+.clients.is-static .clients__name {
+  font-size: clamp(1.375rem, 1rem + 1.4vw, 2rem);
+}
+
+.clients.is-static .clients__title {
+  margin-bottom: 48px;
 }
 
 @media (max-width: 960px) {
@@ -3778,11 +3673,9 @@ a.lang-switch__item:hover {
     margin-inline: 0;
   }
 
-
   .service-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-
 
 }
 
@@ -3838,17 +3731,6 @@ a.lang-switch__item:hover {
     grid-column: 1 / -1;
   }
 
-
-}
-
-@media (max-width: 560px) {
-  .hub,
-  .skills-panel__grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 640px) {
   .domains {
     grid-template-columns: 1fr;
   }
@@ -3885,12 +3767,18 @@ a.lang-switch__item:hover {
   }
 }
 
+@media (max-width: 560px) {
+  .hub,
+  .skills-panel__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 380px) {
   .related__grid {
     grid-template-columns: 1fr;
   }
 }
-
 
 /* Two-column diagram on tablets and small laptops: notes beside the sphere instead of one long list. */
 @media (min-width: 641px) and (max-width: 1200px) {
@@ -4058,20 +3946,6 @@ a.lang-switch__item:hover {
   }
 }
 
-/* The static client list on short screens: names below the heading's size. */
-.clients.is-static .clients__name {
-  font-size: clamp(1.375rem, 1rem + 1.4vw, 2rem);
-}
-
-.clients.is-static .clients__title {
-  margin-bottom: 48px;
-}
-
-.clients.is-static .clients__text-inline {
-  max-width: 62ch;
-}
-
-
 /* Phones: notes and result stack as aligned full-width cards; the result becomes a blue card the
    sphere rises out of, like its text on the blurred half on desktop. */
 @media (max-width: 640px) {
@@ -4083,7 +3957,6 @@ a.lang-switch__item:hover {
   .process-orb {
     position: relative;
   }
-
 
   .process-note__card {
     padding: 22px 22px 24px;

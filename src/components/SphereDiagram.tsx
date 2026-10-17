@@ -3,7 +3,7 @@ import { useEffect, useId, useRef, useState, useSyncExternalStore, type CSSPrope
 import { useHover } from '../hooks/useHover'
 import { PixelCluster } from './PixelCluster'
 import { PixelSphere } from './PixelSphere'
-import { EASE_OUT } from './Reveal'
+import { EASE_IO, EASE_OUT } from '../lib/motion'
 
 // Geometry in the stage's viewBox units (1200 x 720). Mirrored stages flip it horizontally.
 const W = 1200
@@ -43,7 +43,6 @@ const T = {
   result: 1.3,
   live: 2.8,
 }
-const EASE_IO = [0.65, 0, 0.35, 1] as const
 
 interface Note {
   label: string

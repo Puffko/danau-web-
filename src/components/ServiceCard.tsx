@@ -2,6 +2,7 @@ import { useInView } from 'motion/react'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import type { Service } from '../data/site'
+import { useHover } from '../hooks/useHover'
 import { useI18n } from '../i18n'
 import { ArrowRight, ServiceIcon } from './Icons'
 import { PixelCluster } from './PixelCluster'
@@ -18,7 +19,7 @@ interface Props {
 }
 
 export function ServiceCard({ service, compact = false, face = false, moreLabel, seed = 0 }: Props) {
-  const [active, setActive] = useState(false)
+  const [active, hover] = useHover()
   const { t, servicePath } = useI18n()
 
   const chip = (
@@ -39,10 +40,7 @@ export function ServiceCard({ service, compact = false, face = false, moreLabel,
     <Link
       to={servicePath(service)}
       className={`service-card${compact ? ' service-card--compact' : ''}${face ? ' service-card--face' : ''}${active ? ' is-active' : ''}`}
-      onPointerEnter={() => setActive(true)}
-      onPointerLeave={() => setActive(false)}
-      onFocus={() => setActive(true)}
-      onBlur={() => setActive(false)}
+      {...hover}
     >
       {face ? (
         <>

@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { hash, noise2 } from '../lib/noise'
+import { fitCanvas } from '../lib/canvas'
+import { prefersReducedMotion } from '../lib/motion'
 import { LETTERS, SYMBOL } from './Logo'
 
 /**
@@ -74,7 +76,7 @@ export function PixelWordmark({
     const canvas = ref.current
     const ctx = canvas?.getContext('2d')
     if (!canvas || !ctx) return
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const reduce = prefersReducedMotion()
     let cells: Cell[] = []
     let w = 0
     let h = 0
@@ -90,10 +92,7 @@ export function PixelWordmark({
       w = r.width
       h = r.height
       if (!w || !h) return
-      const dpr = Math.min(window.devicePixelRatio || 1, 2)
-      canvas.width = Math.round(w * dpr)
-      canvas.height = Math.round(h * dpr)
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      fitCanvas(canvas, ctx, w, h)
 
       const cols = w < 600 ? Math.round(columns * 0.6) : columns
       cell = w / cols

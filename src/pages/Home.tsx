@@ -3,7 +3,8 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, ArrowUpRight } from '../components/Icons'
 import { PixelMountains } from '../components/PixelMountains'
-import { EASE_OUT, Reveal, RevealText } from '../components/Reveal'
+import { Reveal, RevealText } from '../components/Reveal'
+import { EASE_OUT } from '../lib/motion'
 import { PixelCluster } from '../components/PixelCluster'
 import { SphereDiagram } from '../components/SphereDiagram'
 import { useHover } from '../hooks/useHover'
@@ -34,13 +35,13 @@ function Hero() {
           {/* the lead's words follow the headline in, then the buttons */}
           <RevealText as="p" immediate className="hero__text" text={home.hero.text} delay={0.7} stagger={0.014} />
           <Reveal immediate delay={1.25} className="hero__actions">
-            <Link to={paths.contact} className="btn btn--pill btn--light">
+            <Link to={paths.contact} className="btn btn--light">
               <span>{home.hero.primary}</span>
               <ArrowUpRight />
             </Link>
             <a
               href={`#${paths.servicesAnchor}`}
-              className="btn btn--pill btn--ghost"
+              className="btn btn--ghost"
               onClick={(e) => {
                 const target = document.getElementById(paths.servicesAnchor)
                 if (!target) return
@@ -64,7 +65,7 @@ function Partner() {
   return (
     <section id="o-nas" className="section partner" aria-labelledby="partner-title">
       <div className="container">
-        <SectionTitle id="partner-title" className="display-2 process__title" text={partner.title} />
+        <SectionTitle id="partner-title" className="display-2 section-title--center" text={partner.title} />
         <SphereDiagram
           mirrored
           resultLast
@@ -113,7 +114,7 @@ function Process() {
   return (
     <section className="section process" aria-labelledby="process-title">
       <div className="container">
-        <SectionTitle id="process-title" className="display-2 process__title" text={process.title} />
+        <SectionTitle id="process-title" className="display-2 section-title--center" text={process.title} />
         <SphereDiagram
           resultLast
           notes={[

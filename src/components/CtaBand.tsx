@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom'
 import { useI18n } from '../i18n'
 import { ArrowUpRight } from './Icons'
 import { PixelMountains } from './PixelMountains'
-import { EASE_OUT, RevealText } from './Reveal'
+import { EASE_OUT } from '../lib/motion'
+import { RevealText } from './Reveal'
 
 interface Props {
   title: string
@@ -30,7 +31,7 @@ export function CtaBand({ title, action, seed = 7 }: Props) {
           <PixelMountains className="cta-band__mountains" variant="low" seed={seed} />
           <div className="cta-band__inner">
             <RevealText as="h2" className="cta-band__title" text={title} />
-            <Link to={paths.contact} className="btn btn--pill btn--light">
+            <Link to={paths.contact} className="btn btn--light">
               <span>{action ?? t.ui.ctaAction}</span>
               <ArrowUpRight />
             </Link>

@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react'
 import type { IllustrationName } from '../data/site'
 import { hash } from '../lib/noise'
+import { fitCanvas } from '../lib/canvas'
+import { prefersReducedMotion } from '../lib/motion'
 import { ART } from './illustrations'
 
 /**
@@ -56,7 +58,7 @@ export function PixelGlyph({ name, className, tone = 'dark', pace = 1, live = tr
     const canvas = ref.current
     const ctx = canvas?.getContext('2d')
     if (!canvas || !ctx) return
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const reduce = prefersReducedMotion()
     const art = ART[name]
     let cells: Cell[] = []
     let size = 0
@@ -70,10 +72,7 @@ export function PixelGlyph({ name, className, tone = 'dark', pace = 1, live = tr
     const build = () => {
       size = canvas.getBoundingClientRect().width
       if (!size) return
-      const dpr = Math.min(window.devicePixelRatio || 1, 2)
-      canvas.width = Math.round(size * dpr)
-      canvas.height = Math.round(size * dpr)
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      fitCanvas(canvas, ctx, size, size)
 
       const n = size < 220 ? 26 : 34
       cell = size / n

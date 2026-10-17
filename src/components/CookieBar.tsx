@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useI18n } from '../i18n'
 import { OPEN_EVENT, setConsent, storedConsent, type Consent } from '../lib/consent'
-import { EASE_OUT } from './Reveal'
+import { EASE_OUT } from '../lib/motion'
 
 /**
  * The cookie bar: a small night card at the foot of the screen, shown until the visitor accepts or
@@ -51,10 +51,10 @@ export function CookieBar({ ready }: { ready: boolean }) {
           </p>
           {/* both choices carry the same weight: rejecting is as easy as accepting */}
           <div className="cookie-bar__actions">
-            <button type="button" className="btn btn--pill btn--light cookie-bar__btn" onClick={() => choose('denied')}>
+            <button type="button" className="btn btn--light cookie-bar__btn" onClick={() => choose('denied')}>
               {copy.reject}
             </button>
-            <button type="button" className="btn btn--pill btn--light cookie-bar__btn" onClick={() => choose('granted')}>
+            <button type="button" className="btn btn--light cookie-bar__btn" onClick={() => choose('granted')}>
               {copy.accept}
             </button>
           </div>
