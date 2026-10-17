@@ -29,16 +29,14 @@ export const contact = {
 
 export type ServiceDetailBlock =
   | { kind: 'text'; title: string; body: string; listTitle?: string; list?: string[] }
-  | { kind: 'link'; title: string; body: string; service: ServiceId }
+  | { kind: 'link'; body: string; service: ServiceId }
 
 export interface Service {
   id: ServiceId
   /** URL slug in this language. */
   slug: string
-  /** Short name used in navigation and footer. */
-  navLabel: string
-  /** Card title on the home page. */
-  cardTitle: string
+  /** The one name used everywhere: cards, navigation, footer, structured data. */
+  name: string
   cardText: string
   icon: ServiceIconName
   illustration: IllustrationName

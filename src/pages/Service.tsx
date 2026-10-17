@@ -22,7 +22,7 @@ import NotFound from './NotFound'
  */
 export default function Service() {
   const { slug } = useParams()
-  const { lang, t, servicePath, serviceById } = useI18n()
+  const { lang, t, serviceById } = useI18n()
   const service = serviceBySlug(lang, slug)
   if (!service) return <NotFound />
 
@@ -45,12 +45,12 @@ export default function Service() {
 
       {service.blocks.map((block, i) => (
         <Block
-          key={block.title}
+          key={i}
           block={block}
           first={i === 0}
           service={service}
           seed={index * 5 + i}
-          linkTo={block.kind === 'link' ? servicePath(serviceById(block.service)!) : undefined}
+          linked={block.kind === 'link' ? serviceById(block.service) : undefined}
         />
       ))}
 
@@ -77,20 +77,22 @@ function Block({
   first,
   service,
   seed,
-  linkTo,
+  linked,
 }: {
   block: ServiceDetailBlock
   first: boolean
   service: ServiceData
   seed: number
-  linkTo?: string
+  /** The service a link block points to; the card carries its name. */
+  linked?: ServiceData
 }) {
+  const { servicePath } = useI18n()
   if (block.kind === 'link') {
     return (
       <section className="section section--tight svc-link">
         <div className="container">
           <Reveal>
-            <LinkCard to={linkTo!} title={block.title} body={block.body} />
+            <LinkCard to={servicePath(linked!)} title={linked!.name} body={block.body} />
           </Reveal>
         </div>
       </section>

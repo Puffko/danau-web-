@@ -6,8 +6,7 @@ const services: Service[] = [
   {
     id: 'projektove-riadenie',
     slug: 'project-management',
-    navLabel: 'Project management',
-    cardTitle: 'Project / programme management',
+    name: 'Project and programme management',
     cardText:
       'We prepare documentation for funding calls, project proposals and public procurement. We set up project management, take on expert oversight and keep the documentation in order throughout delivery.',
     icon: 'project',
@@ -24,7 +23,7 @@ const services: Service[] = [
         list: [
           'Preparation of documentation for funding calls',
           'expert documentation for public procurement',
-          'project management under Act No. 401/2023',
+          'project management under Decree No. 401/2023 Coll.',
           'project documentation during delivery',
         ],
       },
@@ -39,8 +38,7 @@ const services: Service[] = [
   {
     id: 'kyberneticka-bezpecnost',
     slug: 'cybersecurity',
-    navLabel: 'Cybersecurity',
-    cardTitle: 'Cybersecurity',
+    name: 'Cybersecurity',
     cardText:
       'We help organisations prepare for an audit, review the state of their processes, complete their documentation, manage corrective actions and secure cybersecurity manager (MKB) expertise through outsourcing or ongoing support.',
     icon: 'security',
@@ -60,7 +58,7 @@ const services: Service[] = [
           'documentation',
           'guidance during the audit',
           'outsourced cybersecurity manager (MKB)',
-          'risk analyses and BCM',
+          'risk analyses and business continuity management (BCM)',
         ],
       },
       {
@@ -74,8 +72,7 @@ const services: Service[] = [
   {
     id: 'gdpr-a-dpo',
     slug: 'gdpr-and-dpo',
-    navLabel: 'GDPR and DPO',
-    cardTitle: 'GDPR and outsourced DPO',
+    name: 'GDPR and outsourced DPO',
     cardText:
       'We help set up personal data protection, GDPR documentation, processes and responsibilities. We also provide an external data protection officer or senior support for an internal DPO.',
     icon: 'gdpr',
@@ -95,7 +92,7 @@ const services: Service[] = [
           'gap assessment',
           'GDPR documentation and records',
           'process setup',
-          'support with data subject rights, incidents and DPIAs',
+          'support with data subject rights, incidents and data protection impact assessments (DPIAs)',
         ],
       },
       {
@@ -109,8 +106,7 @@ const services: Service[] = [
   {
     id: 'analyza-a-data',
     slug: 'analysis-and-data',
-    navLabel: 'Analytics and data',
-    cardTitle: 'Analytical services',
+    name: 'Analytical services',
     cardText:
       'We analyse processes, the organisation’s needs and the functionality of information systems. The client gains a basis for an informed decision, a change or the procurement of a solution.',
     icon: 'analytics',
@@ -126,7 +122,6 @@ const services: Service[] = [
       },
       {
         kind: 'link',
-        title: 'Data governance - data management',
         body: 'We help set up a basic framework for working with data, responsibilities, data roles and principles that support data quality and its use in decision-making, reporting and further development.',
         service: 'data-governance',
       },
@@ -136,15 +131,14 @@ const services: Service[] = [
   {
     id: 'data-governance',
     slug: 'data-governance',
-    navLabel: 'Data governance',
-    cardTitle: 'Data governance and data management',
+    name: 'Data governance and data management',
     cardText:
       'We help introduce data management, rules for working with data, responsibilities and data principles that support running the organisation and the further development of its IT.',
     icon: 'data',
     illustration: 'database',
     heroTitle: 'We set up data governance so that it supports reliable data and its real value',
     heroText:
-      'We help organisations understand their processes, needs and information systems so that analysis becomes the foundation for real change.',
+      'We help organisations decide who is responsible for data, how it is handled and how its quality is kept.',
     blocks: [
       {
         kind: 'text',
@@ -167,8 +161,7 @@ const services: Service[] = [
   {
     id: 'realizacia-it',
     slug: 'it-delivery',
-    navLabel: 'IT delivery',
-    cardTitle: 'Delivery of IT projects',
+    name: 'IT project delivery',
     cardText:
       'We deliver solutions in asset management, data warehousing, websites and corporate identity. We connect expert design with practical delivery.',
     icon: 'delivery',
@@ -286,7 +279,7 @@ const about: Content['about'] = {
     { name: 'Lead Auditor ISO/IEC 27001', area: 'Information security' },
     { name: 'ITIL', area: 'IT service management' },
     { name: 'TOGAF', area: 'Enterprise architecture' },
-    { name: 'MKB', area: 'Cybersecurity' },
+    { name: 'Cybersecurity manager (MKB)', area: 'Cybersecurity' },
     { name: 'Cybersecurity audit', area: 'Cybersecurity' },
     { name: 'Certified DPOs', area: 'Personal data protection' },
   ],
@@ -322,7 +315,7 @@ const contactPage: Content['contactPage'] = {
 }
 
 const footer: Content['footer'] = {
-  claim: 'An expert partner for public authorities, state institutions and commercial companies.',
+  claim: 'Tell us what you need to solve.',
   servicesTitle: 'Services',
   linksTitle: 'Quick links',
   contactTitle: 'Contact',

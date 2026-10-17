@@ -30,7 +30,7 @@ export function Footer() {
             <ul>
               {t.services.map((s) => (
                 <li key={s.id}>
-                  <Link to={servicePath(s)}>{s.navLabel}</Link>
+                  <Link to={servicePath(s)}>{s.name}</Link>
                 </li>
               ))}
             </ul>

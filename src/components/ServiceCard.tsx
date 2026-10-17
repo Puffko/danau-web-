@@ -50,7 +50,7 @@ export function ServiceCard({ service, compact = false, face = false, moreLabel,
             {chip}
           </ServiceFace>
           <div className="service-card__body">
-            <h3 className="service-card__title">{service.cardTitle}</h3>
+            <h3 className="service-card__title">{service.name}</h3>
             <p className="service-card__text">{service.cardText}</p>
             {more}
           </div>
@@ -66,7 +66,7 @@ export function ServiceCard({ service, compact = false, face = false, moreLabel,
             sparse
           />
           {chip}
-          <h3 className="service-card__title">{compact ? service.navLabel : service.cardTitle}</h3>
+          <h3 className="service-card__title">{service.name}</h3>
           {!compact && <p className="service-card__text">{service.cardText}</p>}
           {more}
         </>

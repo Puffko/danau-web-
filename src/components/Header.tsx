@@ -238,7 +238,7 @@ export function Header() {
                             <span className="chip chip--sm">
                               <ServiceIcon name={s.icon} width={18} height={18} />
                             </span>
-                            <span className="nav-dropdown__label">{s.navLabel}</span>
+                            <span className="nav-dropdown__label">{s.name}</span>
                             <ArrowRight className="nav-dropdown__arrow" />
                           </NavLink>
                         </motion.li>
@@ -313,7 +313,7 @@ export function Header() {
                   <li key={s.id}>
                     <Link to={servicePath(s)}>
                       <ServiceIcon name={s.icon} width={16} height={16} />
-                      {s.navLabel}
+                      {s.name}
                     </Link>
                   </li>
                 ))}

@@ -135,7 +135,7 @@ function AreasHub({ active, onActive }: { active: ServiceId | null; onActive: (i
               <span className="chip">
                 <ServiceIcon name={service.icon} width={20} height={20} />
               </span>
-              <span className="hub__label">{service.navLabel}</span>
+              <span className="hub__label">{service.name}</span>
             </Link>
           </Reveal>
         )),

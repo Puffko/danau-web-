@@ -166,7 +166,8 @@ function Clients() {
   const { clients } = useI18n().t.home
   const items = clients.items
   const [active, setActive] = useState(0)
-  const [isStatic, setIsStatic] = useState(false)
+  // The prerendered page gets the plain list: every description once, readable without JS.
+  const [isStatic, setIsStatic] = useState(() => typeof window === 'undefined')
   const innerRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] })
 
@@ -268,21 +269,24 @@ function Clients() {
                 </li>
               ))}
             </ol>
-            <div className="clients__detail" aria-live="polite" hidden={isStatic}>
-              <motion.div
-                key={active}
-                initial={{ opacity: 0, y: 18, filter: 'blur(6px)' }}
-                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                transition={{ duration: 0.6, ease: EASE_OUT }}
-              >
-                <p className="clients__text">{items[active].text}</p>
-              </motion.div>
-              <div className="clients__progress" aria-hidden="true">
-                {items.map((_, i) => (
-                  <span key={i} className={i <= active ? 'is-on' : undefined} />
-                ))}
+            {/* the pinned layout shows the active description beside the names (the list copy is hidden) */}
+            {!isStatic && (
+              <div className="clients__detail" aria-live="polite">
+                <motion.div
+                  key={active}
+                  initial={{ opacity: 0, y: 18, filter: 'blur(6px)' }}
+                  animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                  transition={{ duration: 0.6, ease: EASE_OUT }}
+                >
+                  <p className="clients__text">{items[active].text}</p>
+                </motion.div>
+                <div className="clients__progress" aria-hidden="true">
+                  {items.map((_, i) => (
+                    <span key={i} className={i <= active ? 'is-on' : undefined} />
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

@@ -6,8 +6,7 @@ const services: Service[] = [
   {
     id: 'projektove-riadenie',
     slug: 'projektove-riadenie',
-    navLabel: 'Projektové riadenie',
-    cardTitle: 'Projektové / programové riadenie',
+    name: 'Projektové a programové riadenie',
     cardText:
       'Pripravujeme podklady pre výzvy, projektové zámery a verejné obstarávanie. Nastavujeme riadenie projektu, preberáme odborný dohľad a zabezpečujeme dokumentáciu počas celej realizácie.',
     icon: 'project',
@@ -24,7 +23,7 @@ const services: Service[] = [
         list: [
           'Prípravu podkladov pre výzvy',
           'odborné podklady pre verejné obstarávanie',
-          'vedenie projektov podľa 401/2023',
+          'vedenie projektov podľa vyhlášky č. 401/2023 Z. z.',
           'projektovú dokumentáciu počas realizácie',
         ],
       },
@@ -39,10 +38,9 @@ const services: Service[] = [
   {
     id: 'kyberneticka-bezpecnost',
     slug: 'kyberneticka-bezpecnost',
-    navLabel: 'Kybernetická bezpečnosť',
-    cardTitle: 'Kybernetická bezpečnosť',
+    name: 'Kybernetická bezpečnosť',
     cardText:
-      'Pomáhame organizáciám pripraviť sa na audit, overiť stav procesov, doplniť dokumentáciu, riadiť nápravné opatrenia a zabezpečiť odbornú kapacitu MKB formou outsourcingu alebo priebežnej podpory.',
+      'Pomáhame organizáciám pripraviť sa na audit, overiť stav procesov, doplniť dokumentáciu, riadiť nápravné opatrenia a zabezpečiť odbornú kapacitu manažéra kybernetickej bezpečnosti (MKB) formou outsourcingu alebo priebežnej podpory.',
     icon: 'security',
     illustration: 'shield',
     heroTitle: 'Pripravíme vašu organizáciu na audit a posilníme riadenie kybernetickej bezpečnosti',
@@ -55,12 +53,12 @@ const services: Service[] = [
         body: 'Kybernetická bezpečnosť zasahuje do procesov, dokumentácie, aktív, rizík, kontinuity činností aj zodpovedností vo vnútri organizácie. Potrebné je mať bezpečnosť uchopenú systematicky, preukázateľne a dlhodobo udržateľne.',
         listTitle: 'Čo zabezpečujeme',
         list: [
-          'Prípravu na audit KB',
+          'Prípravu na audit kybernetickej bezpečnosti',
           'validáciu procesov',
           'dokumentáciu',
           'vedenie počas auditu',
-          'outsourcing MKB',
-          'rizikové analýzy a BCM',
+          'outsourcing manažéra kybernetickej bezpečnosti (MKB)',
+          'rizikové analýzy a riadenie kontinuity činností (BCM)',
         ],
       },
       {
@@ -74,8 +72,7 @@ const services: Service[] = [
   {
     id: 'gdpr-a-dpo',
     slug: 'gdpr-a-dpo',
-    navLabel: 'GDPR a DPO',
-    cardTitle: 'GDPR a outsourcing DPO',
+    name: 'GDPR a outsourcing DPO',
     cardText:
       'Pomáhame nastaviť ochranu osobných údajov, GDPR dokumentáciu, procesy a zodpovednosti. Poskytujeme aj externú zodpovednú osobu alebo seniornú podporu interného DPO.',
     icon: 'gdpr',
@@ -95,7 +92,7 @@ const services: Service[] = [
           'gap assessment',
           'GDPR dokumentáciu a evidencie',
           'nastavenie procesov',
-          'podporu pri právach dotknutých osôb, incidentoch a DPIA',
+          'podporu pri právach dotknutých osôb, incidentoch a posúdení vplyvu na ochranu údajov (DPIA)',
         ],
       },
       {
@@ -109,8 +106,7 @@ const services: Service[] = [
   {
     id: 'analyza-a-data',
     slug: 'analyza-a-data',
-    navLabel: 'Analytika a dáta',
-    cardTitle: 'Analytické činnosti',
+    name: 'Analytické činnosti',
     cardText:
       'Analyzujeme procesy, potreby organizácie a funkcionalitu informačných systémov. Klient získava podklady pre kvalifikované rozhodnutie, zmenu alebo obstarávanie riešenia.',
     icon: 'analytics',
@@ -126,7 +122,6 @@ const services: Service[] = [
       },
       {
         kind: 'link',
-        title: 'Data governance - manažment dát',
         body: 'Pomáhame nastaviť základný rámec práce s dátami, zodpovednosti, dátové roly a princípy, ktoré podporujú kvalitu dát a ich využitie v rozhodovaní, reportingu a ďalšom rozvoji.',
         service: 'data-governance',
       },
@@ -136,15 +131,14 @@ const services: Service[] = [
   {
     id: 'data-governance',
     slug: 'data-governance',
-    navLabel: 'Data governance',
-    cardTitle: 'Data governance a manažment dát',
+    name: 'Data governance a manažment dát',
     cardText:
       'Pomáhame zavádzať dátový manažment, pravidlá práce s dátami, zodpovednosti a dátové princípy, ktoré podporujú riadenie organizácie aj ďalší rozvoj IT.',
     icon: 'data',
     illustration: 'database',
-    heroTitle: 'Nastavíme dátové riadenie tak, aby podporovalo spoľahlivé a reálnu hodnotu dát',
+    heroTitle: 'Nastavíme dátové riadenie tak, aby podporovalo spoľahlivé dáta a ich reálnu hodnotu',
     heroText:
-      'Pomáhame organizáciám pochopiť procesy, potreby a informačné systémy tak, aby sa z analýzy stal základ pre reálnu zmenu.',
+      'Pomáhame organizáciám určiť, kto za dáta zodpovedá, ako sa s nimi pracuje a ako sa stráži ich kvalita.',
     blocks: [
       {
         kind: 'text',
@@ -167,8 +161,7 @@ const services: Service[] = [
   {
     id: 'realizacia-it',
     slug: 'realizacia-it',
-    navLabel: 'Realizácia IT',
-    cardTitle: 'Realizácia IT projektov',
+    name: 'Realizácia IT projektov',
     cardText:
       'Dodávame riešenia v oblastiach asset managementu, datawarehouse, webových stránok a corporate identity. Prepájame odborný návrh s praktickou realizáciou.',
     icon: 'delivery',
@@ -291,7 +284,7 @@ const about = {
     { name: 'Lead Auditor ISO/IEC 27001', area: 'Informačná bezpečnosť' },
     { name: 'ITIL', area: 'Riadenie IT služieb' },
     { name: 'TOGAF', area: 'Enterprise architektúra' },
-    { name: 'MKB', area: 'Kybernetická bezpečnosť' },
+    { name: 'Manažér kybernetickej bezpečnosti (MKB)', area: 'Kybernetická bezpečnosť' },
     { name: 'Audit kybernetickej bezpečnosti', area: 'Kybernetická bezpečnosť' },
     { name: 'Certifikovaní DPO', area: 'Ochrana osobných údajov' },
   ],
@@ -327,7 +320,7 @@ const contactPage = {
 }
 
 const footer = {
-  claim: 'Odborný partner pre orgány verejnej moci, štátne inštitúcie a komerčné spoločnosti.',
+  claim: 'Povedzte nám, čo potrebujete vyriešiť.',
   servicesTitle: 'Služby',
   linksTitle: 'Rýchle odkazy',
   contactTitle: 'Kontakt',

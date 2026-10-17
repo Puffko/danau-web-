@@ -23,11 +23,14 @@
       #root [style*='transform'] { transform: none !important; }
       #root [style*='filter'] { filter: none !important; }
     </style>
-    <noscript><style>.loader { display: none; }</style></noscript>
+    <!-- without JS: no first-load screen, and a night card behind the text the pixel sphere would frame -->
+    <noscript><style>
+      .loader { display: none; }
+      .process-orb__solution { padding: 28px; border-radius: 24px; background: #05061a; }
+    </style></noscript>
   </head>
   <body>
     <div id="root"></div>
-    <noscript>Pre plnú verziu stránky danau.sk zapnite JavaScript, alebo nás kontaktujte na info@danau.sk.</noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -80,7 +80,7 @@ const organization = () => ({
     addressLocality: contact.city.slice(7),
     addressCountry: 'SK',
   },
-  knowsAbout: CONTENT.sk.services.map((s) => s.cardTitle),
+  knowsAbout: CONTENT.sk.services.map((s) => s.name),
 })
 
 export function headFor(pathname: string): Head {
@@ -134,7 +134,7 @@ export function headFor(pathname: string): Head {
 
   const pageType = kind === 'about' ? 'AboutPage' : kind === 'contact' ? 'ContactPage' : 'WebPage'
   const crumbs = [{ name: t.meta.breadcrumbHome, url: absolute(PATHS[lang].home) }]
-  if (kind === 'service' && service) crumbs.push({ name: service.navLabel, url: canonical })
+  if (kind === 'service' && service) crumbs.push({ name: service.name, url: canonical })
   else if (kind !== 'home') crumbs.push({ name: title.split(' | ')[0].split(' – ')[0], url: canonical })
 
   const graph: Record<string, unknown>[] = [
@@ -171,8 +171,7 @@ export function headFor(pathname: string): Head {
     graph.push({
       '@type': 'Service',
       '@id': `${canonical}#service`,
-      name: service.cardTitle,
-      serviceType: service.navLabel,
+      name: service.name,
       description: service.cardText,
       url: canonical,
       inLanguage: lang,
@@ -187,7 +186,7 @@ export function headFor(pathname: string): Head {
       itemListElement: t.services.map((s, i) => ({
         '@type': 'ListItem',
         position: i + 1,
-        name: s.cardTitle,
+        name: s.name,
         url: absolute(servicePath(lang, s)),
       })),
     })
@@ -254,7 +253,7 @@ export function llmsTxt() {
   const sk = CONTENT.sk
   const en = CONTENT.en
   const list = (lang: Lang) =>
-    CONTENT[lang].services.map((s) => `- [${s.cardTitle}](${absolute(servicePath(lang, s))}): ${s.cardText}`).join('\n')
+    CONTENT[lang].services.map((s) => `- [${s.name}](${absolute(servicePath(lang, s))}): ${s.cardText}`).join('\n')
   return `# ${contact.company}
 
 > ${sk.home.hero.text}
